@@ -5,5 +5,12 @@
 		"lastName": "nachname",
 		"fullTime": true,
 		"projects": ["nope"]
+	},
+	{
+		"id": "dyhgrehaerhsggdsg",
+		"firstName": "vorname2",
+		"lastName": "nachname2",
+		"fullTime": false,
+		"projects": ["nope"]
 	}
 ]

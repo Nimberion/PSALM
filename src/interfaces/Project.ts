@@ -7,13 +7,13 @@ export interface EmployeeAvailability {
 }
 
 export interface Event {
-	id: number;
+	id: string;
 	title: string;
 	staffAvailability: Array<EmployeeAvailability>;
 }
 
 export interface Project {
-	id: number;
+	id: string;
 	title: string;
 	numberOfRequiredStaff: number;
 	events: Array<Event>;

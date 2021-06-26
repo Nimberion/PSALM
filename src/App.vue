@@ -11,7 +11,9 @@
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
 	import { writeFile, readTextFile, createDir, readDir } from "@tauri-apps/api/fs";
-	import { Employee } from "./interfaces/Employee";
+	import { Employee } from "@/interfaces/Employee";
+	import store from "@/store/index";
+	import { pathExists } from "@/utils";
 
 	@Component({
 		name: "App",
@@ -26,18 +28,18 @@
 		}
 
 		async createDir(): Promise<void> {
-			if ((await readDir("")).find((element) => element.path === "data") === undefined) {
+			if (!(await pathExists("", "data"))) {
 				await createDir("data");
 			}
 
-			if ((await readDir("data")).find((element) => element.path === "data\\projects") === undefined) {
+			if (!(await pathExists("data", "data\\projects"))) {
 				await createDir("data/projects");
 			}
 		}
 
 		async readStaff(): Promise<void> {
-			if ((await readDir("data")).find((element) => element.path === "data\\staff.json")) {
-				this.staff = JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>;
+			if (await pathExists("data", "data\\staff.json")) {
+				store.commit("updateStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
 			}
 		}
 	}
