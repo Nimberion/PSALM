@@ -7,6 +7,6 @@ export interface Employee {
 	projects: Array<string>;
 }
 
-export function addEmployee(id = newID(), firstName = "", lastName = "", fullTime = false, projects = []): Employee {
+export function newEmployee(id = newID(), firstName = "", lastName = "", fullTime = false, projects: Array<string> = []): Employee {
 	return { id, firstName, lastName, fullTime, projects };
 }

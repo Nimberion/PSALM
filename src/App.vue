@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" class="min-w-[600px] p-2 pr-4">
 		<div id="nav">
 			<router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
 			<router-link to="/staff">Mitarbeiter</router-link>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
-	import { writeFile, readTextFile, createDir, readDir } from "@tauri-apps/api/fs";
+	import { readTextFile, createDir } from "@tauri-apps/api/fs";
 	import { Employee } from "@/interfaces/Employee";
 	import store from "@/store/index";
 	import { pathExists } from "@/utils";

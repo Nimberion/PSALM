@@ -1,15 +1,15 @@
 [
 	{
 		"id": "dyhgrehaerheh",
-		"firstName": "vorname",
-		"lastName": "nachname",
+		"firstName": "Peter",
+		"lastName": "Mustermann",
 		"fullTime": true,
 		"projects": ["nope"]
 	},
 	{
 		"id": "dyhgrehaerhsggdsg",
-		"firstName": "vorname2",
-		"lastName": "nachname2",
+		"firstName": "John",
+		"lastName": "Smith",
 		"fullTime": false,
 		"projects": ["nope"]
 	}
