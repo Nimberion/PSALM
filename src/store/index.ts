@@ -1,4 +1,4 @@
-import { Employee, newEmployee } from "@/interfaces/Employee";
+import { Employee } from "@/interfaces/Employee";
 import Vue from "vue";
 import Vuex from "vuex";
 

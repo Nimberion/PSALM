@@ -1,5 +1,5 @@
 <template>
-	<div class="grid grid-rows-[repeat(5,auto)] gap-2 border p-2 ml-1">
+	<div class="grid grid-rows-[repeat(5,auto)] gap-2 border p-2 ml-1 bg-white rounded shadow-lg">
 		<button class="place-self-center bg-gray-400 p-2 py-1 border border-gray-600 rounded max-w-max text-sm" @click="addEmployee">Mitarbeiter hinzufügen</button>
 
 		<label name="Vorname" title="Vorname">

@@ -1,10 +1,10 @@
 <template>
-	<div id="app" class="min-w-[600px] p-2">
-		<div id="nav">
-			<router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
-			<router-link to="/staff">Mitarbeiter</router-link>
-		</div>
-		<router-view />
+	<div class="min-w-[600px] grid grid-rows-[auto,1fr] bg-white shadow-lg">
+		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center p-2">
+			<router-link to="/" class="px-4">Home</router-link>
+			<router-link to="/about" class="px-4">About</router-link>
+		</nav>
+		<router-view class="min-h-[calc(100vh-3.5rem)] p-2 bg-blue-400" />
 	</div>
 </template>
 
@@ -40,26 +40,3 @@
 		}
 	}
 </script>
-
-<style>
-	#app {
-		font-family: Avenir, Helvetica, Arial, sans-serif;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		text-align: center;
-		color: #2c3e50;
-	}
-
-	#nav {
-		padding: 30px;
-	}
-
-	#nav a {
-		font-weight: bold;
-		color: #2c3e50;
-	}
-
-	#nav a.router-link-exact-active {
-		color: #42b983;
-	}
-</style>
