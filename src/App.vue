@@ -1,5 +1,5 @@
 <template>
-	<div class="min-w-[700px] grid grid-rows-[auto,1fr] bg-blue-400 shadow-lg min-h-screen">
+	<div class="min-w-[350px] grid grid-rows-[auto,1fr] bg-[#B2C596] shadow-lg min-h-screen">
 		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
 			<router-link to="/" class="px-4">Home</router-link>
 			<router-link to="/about" class="px-4">About</router-link>

@@ -1,14 +1,25 @@
 <template>
-	<div class="grid grid-cols-[auto,auto] grid-rows-[auto,auto] bg-white rounded shadow-lg p-4">
+	<div class="max-w-max md:grid md:grid-cols-[auto,auto] md:grid-rows-[auto,auto] bg-white rounded shadow-lg p-4">
 		<h2 class="col-span-2 font-semibold text-center mb-4">Mitarbeiter</h2>
 		<!-- STAFF LIST -->
-		<ul class="w-[300px] h-[max-content] border mr-1 p-2 text-center bg-white rounded shadow-lg">
-			<li class="cursor-pointer p-1" :class="{ 'bg-gray-400 rounded': employee.id === id }" v-for="employee in staff" :key="employee.id" @click="setEmployee(employee)">
+		<ul class="w-[300px] h-[max-content] border text-center bg-white rounded shadow-lg mb-4 md:mb-0 md:mr-1 p-2">
+			<li class="cursor-pointer p-1" :class="{ 'bg-[#33658A] rounded text-white': employee.id === id }" v-for="employee in staff" :key="employee.id" @click="setEmployee(employee)">
 				<span>{{ employee.firstName }} {{ employee.lastName }}</span>
 				<button class="text-sm font-extrabold text-red-700 ml-2" @click="triggerDeleteModal(employee)">X</button>
 			</li>
 		</ul>
-		<EditStaffForm class="w-[300px]" :_first-name="firstName" :_last-name="lastName" :_full-time="fullTime" @add-employee="addEmployee" @save-employee="saveEmployee" @change="editEmployee" />
+
+		<EditStaffForm class="w-[300px] md:ml-1" :_first-name="firstName" :_last-name="lastName" :_full-time="fullTime" @add-employee="addEmployee" @save-employee="saveEmployee" @change="editEmployee" />
+		<div v-if="showDeleteModal === true" class="absolute top-0 left-0 min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)]" @click="showDeleteModal = false">
+			<div class="grid grid-cols-2 grid-rows-[repeat(3,auto)] gap-4 bg-white rounded p-4" @click.stop>
+				<h2 class="col-span-2 font-semibold text-center">Achtung!</h2>
+				<p class="col-span-2">
+					Bist du sicher, dass du <span class="font-semibold">{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}</span> löschen möchtest?
+				</p>
+				<button class="max-w-max place-self-end bg-[#33658A] text-white rounded text-sm p-2 py-1" @click="deleteEmployee">Fortfahren</button>
+				<button class="max-w-max place-self-start bg-[#D23833] text-white rounded text-sm p-2 py-1" @click="showDeleteModal = false">Abrechnen</button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -84,7 +95,10 @@
 		triggerDeleteModal(employeeToDelete: Employee): void {
 			this.showDeleteModal = true;
 			this.employeeToDelete = employeeToDelete;
-			console.log(employeeToDelete.id);
+		}
+
+		deleteEmployee(): void {
+			console.log(this.employeeToDelete.id);
 		}
 	}
 </script>
