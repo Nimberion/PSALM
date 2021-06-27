@@ -1,5 +1,5 @@
 <template>
-	<div id="app" class="min-w-[600px] p-2 pr-4">
+	<div id="app" class="min-w-[600px] p-2">
 		<div id="nav">
 			<router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
 			<router-link to="/staff">Mitarbeiter</router-link>
@@ -23,21 +23,17 @@
 
 		async created(): Promise<void> {
 			await this.createDir();
-			await this.readStaff();
+			await this.readStaffJSON();
 			//console.log((await readDir("")).find((element) => element.name === "data" && element.path === "data"));
 		}
 
 		async createDir(): Promise<void> {
-			if (!(await pathExists("", "data"))) {
-				await createDir("data");
-			}
-
-			if (!(await pathExists("data", "data\\projects"))) {
-				await createDir("data/projects");
+			if (!(await pathExists("", "data\\projects"))) {
+				await createDir("data/projects", { recursive: true });
 			}
 		}
 
-		async readStaff(): Promise<void> {
+		async readStaffJSON(): Promise<void> {
 			if (await pathExists("data", "data\\staff.json")) {
 				store.commit("updateStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
 			}

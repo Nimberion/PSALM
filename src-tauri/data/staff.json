@@ -1,16 +1,1 @@
-[
-	{
-		"id": "dyhgrehaerheh",
-		"firstName": "Peter",
-		"lastName": "Mustermann",
-		"fullTime": true,
-		"projects": ["nope"]
-	},
-	{
-		"id": "dyhgrehaerhsggdsg",
-		"firstName": "John",
-		"lastName": "Smith",
-		"fullTime": false,
-		"projects": ["nope"]
-	}
-]
+[{"id":"2qwcf6yjb","firstName":"Pia","lastName":"Müller","fullTime":false,"projects":[]},{"id":"yuel5eedv","firstName":"John","lastName":"Smith","fullTime":true,"projects":[]},{"id":"63l4c08em","firstName":"Hannes","lastName":"Waader","fullTime":false,"projects":[]}]
