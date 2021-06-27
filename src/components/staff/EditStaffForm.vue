@@ -1,23 +1,23 @@
 <template>
-	<div class="grid grid-rows-[repeat(5,auto)] gap-2 border p-2 ml-1 bg-white rounded shadow-lg">
-		<button class="place-self-center bg-gray-400 p-2 py-1 border border-gray-600 rounded max-w-max text-sm" @click="addEmployee">Mitarbeiter hinzufügen</button>
+	<div class="h-[max-content] grid grid-rows-[repeat(5,auto)] gap-2 border p-2 ml-1 bg-white rounded shadow-lg text-sm">
+		<button class="max-w-max place-self-center bg-gray-400 border border-gray-600 rounded p-2 py-1" @click="addEmployee">Mitarbeiter hinzufügen</button>
 
 		<label name="Vorname" title="Vorname">
-			<p class="text-left font-semibold text-sm">Vorname:</p>
+			<p class="text-left font-semibold">Vorname:</p>
 			<input class="w-full rounded p-1 px-2" type="text" :value="firstName" @input="$emit('change', 'firstName', $event)" autocomplete="anyrandomstring" />
 		</label>
 
 		<label name="Nachname" title="Nachname">
-			<p class="text-left font-semibold text-sm">Nachname:</p>
+			<p class="text-left font-semibold">Nachname:</p>
 			<input class="w-full rounded p-1 px-2" type="text" :value="lastName" @input="$emit('change', 'lastName', $event)" autocomplete="anyrandomstring" />
 		</label>
 
 		<label class="text-left" name="Hauptamtlich?" title="Hauptamtlich?">
-			<span class="font-semibold text-sm mr-2">Hauptamtlich?</span>
+			<span class="font-semibold mr-2">Hauptamtlich?</span>
 			<input class="rounded place-self-center" type="checkbox" :checked="fullTime" @input="$emit('change', 'fullTime', $event)" />
 		</label>
 
-		<button class="bg-gray-400 p-2 py-1 border border-gray-600 rounded max-w-max place-self-center text-sm" @click="saveEmployee">Speichern</button>
+		<button class="max-w-max place-self-center bg-gray-400 border border-gray-600 rounded p-2 py-1" @click="saveEmployee">Speichern</button>
 	</div>
 </template>
 

@@ -1,10 +1,12 @@
 <template>
-	<div class="min-w-[600px] grid grid-rows-[auto,1fr] bg-white shadow-lg">
-		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center p-2">
+	<div class="min-w-[700px] grid grid-rows-[auto,1fr] bg-blue-400 shadow-lg min-h-screen">
+		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
 			<router-link to="/" class="px-4">Home</router-link>
 			<router-link to="/about" class="px-4">About</router-link>
 		</nav>
-		<router-view class="min-h-[calc(100vh-3.5rem)] p-2 bg-blue-400" />
+		<div>
+			<router-view class="p-2" />
+		</div>
 	</div>
 </template>
 
