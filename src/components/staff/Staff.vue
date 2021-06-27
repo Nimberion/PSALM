@@ -11,10 +11,10 @@
 
 		<EditStaffForm class="w-[300px] md:ml-1" :_first-name="firstName" :_last-name="lastName" :_full-time="fullTime" @add-employee="addEmployee" @save-employee="saveEmployee" @change="editEmployee" />
 		<div v-if="showDeleteModal === true" class="absolute top-0 left-0 min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)]" @click="showDeleteModal = false">
-			<div class="grid grid-cols-2 grid-rows-[repeat(3,auto)] gap-4 bg-white rounded p-4" @click.stop>
-				<h2 class="col-span-2 font-semibold text-center">Achtung!</h2>
+			<div class="grid grid-cols-2 grid-rows-[repeat(3,auto)] gap-4 bg-white rounded shadow-lg p-4 z-50" @click.stop>
+				<h2 class="col-span-2 bg-[#33658A] text-white font-semibold text-center rounded p-1">Achtung!</h2>
 				<p class="col-span-2">
-					Bist du sicher, dass du <span class="font-semibold">{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}</span> löschen möchtest?
+					Bist du sicher, dass du <span class="font-semibold">"{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}"</span> löschen möchtest?
 				</p>
 				<button class="max-w-max place-self-end bg-[#33658A] text-white rounded text-sm p-2 py-1" @click="deleteEmployee">Fortfahren</button>
 				<button class="max-w-max place-self-start bg-[#D23833] text-white rounded text-sm p-2 py-1" @click="showDeleteModal = false">Abrechnen</button>
@@ -99,6 +99,7 @@
 
 		deleteEmployee(): void {
 			console.log(this.employeeToDelete.id);
+			this.showDeleteModal = false;
 		}
 	}
 </script>
