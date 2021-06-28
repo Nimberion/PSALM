@@ -1,5 +1,12 @@
 <template>
-	<input v-if="type === 'text'" type="text" :value="value" class="rounded focus:ring-primary focus:ring-2 border-0 focus:border-0 focus:-translate-x-1 focus:-translate-y-1 focus:shadow-input p-0 px-1" @change="update" />
+	<input
+		v-if="type === 'text'"
+		type="text"
+		:value="value"
+		class="rounded focus:ring-primary focus:ring-2 border-0 focus:border-0 focus:-translate-x-1 focus:-translate-y-1 focus:shadow-input p-0 px-1"
+		autocomplete="randomStuffToDisable"
+		@change="update"
+	/>
 	<input v-else-if="type === 'checkbox'" type="checkbox" :checked="value" class="place-self-center rounded text-primary focus:ring-primary focus:border-primary cursor-pointer" @change="update" />
 </template>
 
