@@ -24,7 +24,10 @@
 		</ul>
 		<div class="flex justify-center">
 			<button class="flex justify-center min-w-[4rem] bg-[#33658A] text-white rounded p-2 mr-4" @click="addEmployee"><img src="@/assets/user-plus-solid.svg" class="h-4" /></button>
-			<button class="flex justify-center min-w-[4rem] bg-[#33658A] text-white rounded p-2 ml-4" @click="saveStaff"><img src="@/assets/save-solid.svg" class="h-4" /></button>
+			<button class="flex justify-center min-w-[4rem] bg-[#33658A] text-white rounded p-2 ml-4" @click="saveStaff">
+				<!-- <img src="@/assets/save-solid.svg" class="h-4" /> -->
+				<Icon name="save" />
+			</button>
 		</div>
 	</div>
 </template>
@@ -33,9 +36,11 @@
 	import { Employee, newEmployee } from "@/interfaces/Employee";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
+	import Icon from "@/components/common/Icon.vue";
 
 	@Component({
 		name: "About",
+		components: { Icon },
 	})
 	export default class About extends Vue {
 		displayAddEmployee = false;
@@ -48,6 +53,10 @@
 
 		created(): void {
 			this.tempStaff = JSON.parse(JSON.stringify(this.staff));
+			// this.tempStaff = [...this.staff];
+			// tempStaff = Vue.util.extend({}, this.staff);
+			console.log(this.tempStaff);
+			console.log(this.staff);
 		}
 
 		addEmployee(): void {
