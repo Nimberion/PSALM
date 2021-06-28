@@ -12,8 +12,8 @@
 		// @Prop({ required: true }) type!: string;
 		@Prop({ required: true }) value!: boolean;
 
-		updateCheckbox(): void {
-			this.$emit("input", !this.value);
+		updateCheckbox(e: { target: HTMLInputElement }): void {
+			this.$emit("input", e.target.checked);
 		}
 	}
 </script>

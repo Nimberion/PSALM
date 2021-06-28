@@ -6,7 +6,7 @@ export interface EmployeeAvailability {
 	indisposed: boolean;
 }
 
-export interface Event {
+export interface ProjectEvent {
 	id: string;
 	title: string;
 	staffAvailability: Array<EmployeeAvailability>;

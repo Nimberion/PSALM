@@ -13,9 +13,9 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<div class="w-full col-span-4 border-b border-gray-500"></div>
 				<!-- EMPLOYEE INPUTS -->
-				<TextInput type="text" v-model="employee.firstName" placeholder="Vorname" />
-				<TextInput type="text" v-model="employee.lastName" placeholder="Nachname" />
-				<Checkbox type="checkbox" v-model="employee.fullTime" />
+				<Input type="text" v-model="employee.firstName" placeholder="Vorname" />
+				<Input type="text" v-model="employee.lastName" placeholder="Nachname" />
+				<Input type="checkbox" v-model="employee.fullTime" />
 				<button class="place-self-center" @click="triggerDeleteModal(employee)"><Icon name="trash" class="text-danger" /></button>
 			</li>
 		</ul>
@@ -46,14 +46,12 @@
 	import { Employee, newEmployee } from "@/interfaces/Employee";
 	import { pathExists } from "@/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
-
-	import Checkbox from "@/components/common/Checkbox.vue";
 	import Icon from "@/components/common/Icon.vue";
-	import TextInput from "@/components/common/TextInput.vue";
+	import Input from "@/components/common/Input.vue";
 
 	@Component({
 		name: "Staff",
-		components: { Checkbox, Icon, TextInput },
+		components: { Icon, Input },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];

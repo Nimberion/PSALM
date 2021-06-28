@@ -7,37 +7,32 @@
 <script lang="ts">
 	// import { Employee, newEmployee } from "@/interfaces/Employee";
 	// import store from "@/store";
-	// import { Component, Vue } from "vue-property-decorator";
+	import { Component, Vue } from "vue-property-decorator";
 	// import Icon from "@/components/common/Icon.vue";
 	// import TextInput from "@/components/common/TextInput.vue";
 	// import Checkbox from "@/components/common/TextInput.vue";
 
-	// @Component({
-	// 	name: "About",
-	// 	components: { Checkbox, Icon, TextInput },
-	// })
-	// export default class About extends Vue {
-	// 	tempStaff: Array<Employee> = [];
-
-	// 	get staff(): Array<Employee> {
-	// 		return store.getters.sortedStaff;
-	// 	}
-
-	// 	created(): void {
-	// 		this.tempStaff = JSON.parse(JSON.stringify(this.staff));
-	// 	}
-
-	// 	updateCheckbox(nativeValue: boolean, value: boolean): void {
-	// 		nativeValue = value;
-	// 	}
-
-	// 	addEmployee(): void {
-	// 		this.tempStaff.push(newEmployee());
-	// 	}
-
-	// 	saveStaff(): void {
-	// 		add mutation in store which sorts as well
-	// 		store.state.staff = this.tempStaff;
-	// 	}
-	// }
+	@Component({
+		name: "About",
+		components: {},
+	})
+	export default class About extends Vue {
+		// 	tempStaff: Array<Employee> = [];
+		// 	get staff(): Array<Employee> {
+		// 		return store.getters.sortedStaff;
+		// 	}
+		// 	created(): void {
+		// 		this.tempStaff = JSON.parse(JSON.stringify(this.staff));
+		// 	}
+		// 	updateCheckbox(nativeValue: boolean, value: boolean): void {
+		// 		nativeValue = value;
+		// 	}
+		// 	addEmployee(): void {
+		// 		this.tempStaff.push(newEmployee());
+		// 	}
+		// 	saveStaff(): void {
+		// 		add mutation in store which sorts as well
+		// 		store.state.staff = this.tempStaff;
+		// 	}
+	}
 </script>
