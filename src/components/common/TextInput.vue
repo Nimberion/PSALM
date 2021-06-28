@@ -1,8 +1,5 @@
 <template>
-	<label :name="labelName" :title="label">
-		<p class="text-left font-semibold">{{ label }}:</p>
-		<input class="w-full rounded p-1 px-2" type="text" :value="value" @input="$emit('change', inputEmit, $event)" autocomplete="anyrandomstring" />
-	</label>
+	<input type="text" class="rounded focus:ring-primary focus:ring-2 border-0 focus:border-0 focus:-translate-x-1 focus:-translate-y-1 focus:shadow-input p-0 px-1" />
 </template>
 
 <script lang="ts">
@@ -12,9 +9,14 @@
 		name: "TextInput",
 	})
 	export default class TextInput extends Vue {
-		@Prop({ required: true }) label!: boolean;
-		@Prop({ required: true }) labelName!: string;
-		@Prop({ required: true }) inputEmit!: string;
-		@Prop({ required: true }) value!: string;
+		// @Prop({ required: true }) type!: string;
+		// @Prop({ required: true }) value!: string;
+		// updateCheckbox(): void {
+		// 	this.$emit("input", !this.value);
+		// }
+		// updateText(value: string): void {
+		// 	console.log(value as string);
+		// 	this.$emit("input", this.value as string);
+		// }
 	}
 </script>

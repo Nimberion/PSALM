@@ -9,7 +9,15 @@ module.exports = {
 	purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
 	darkMode: false,
 	theme: {
-		extend: {},
+		extend: {
+			boxShadow: {
+				input: "0.4rem 0.4rem 0.5rem 0.0rem rgba(0,0,0,0.25)",
+			},
+			colors: {
+				primary: "#33658A",
+				danger: "#B91C1C",
+			},
+		},
 	},
 	variants: {
 		backgroundColor: ["hover", "responsive"],
@@ -18,6 +26,7 @@ module.exports = {
 		scrollbar: ["rounded"],
 		extend: {
 			filter: ["hover", "focus"],
+			boxShadow: ["active"],
 		},
 	},
 	plugins: [forms, scrollbar, typography, aspectRatio],
