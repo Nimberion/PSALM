@@ -1,7 +1,7 @@
 <template>
 	<!-- :class="{ 'bg-primary rounded text-white': employee.id === id }"
 	min-w von window = 500px-->
-	<div class="w-[max-content] h-[max-content] border text-center bg-white rounded shadow-lg p-2 m-2">ABOUT</div>
+	<div class="w-[max-content] h-[max-content] border text-center bg-white rounded shadow-lg p-2 m-2">ABOUT{{ day }}</div>
 </template>
 
 <script lang="ts">
@@ -17,6 +17,9 @@
 		components: {},
 	})
 	export default class About extends Vue {
+		today = new Date(1992, 11, 19);
+		options = { year: "numeric" as const, month: "2-digit" as const, day: "2-digit" as const };
+		day = this.today.toLocaleTimeString("de-DE", this.options);
 		// 	tempStaff: Array<Employee> = [];
 		// 	get staff(): Array<Employee> {
 		// 		return store.getters.sortedStaff;

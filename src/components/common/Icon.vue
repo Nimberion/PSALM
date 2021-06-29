@@ -1,6 +1,20 @@
 <template>
+	<!-- FOLDER-OPEN -->
+	<svg v-if="name === 'folder-open'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="folder-open" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+		<path
+			fill="currentColor"
+			d="M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z"
+		></path>
+	</svg>
+	<!-- FOLDER-PLUS -->
+	<svg v-else-if="name === 'folder-plus'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="folder-plus" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+		<path
+			fill="currentColor"
+			d="M464,128H272L208,64H48A48,48,0,0,0,0,112V400a48,48,0,0,0,48,48H464a48,48,0,0,0,48-48V176A48,48,0,0,0,464,128ZM359.5,296a16,16,0,0,1-16,16h-64v64a16,16,0,0,1-16,16h-16a16,16,0,0,1-16-16V312h-64a16,16,0,0,1-16-16V280a16,16,0,0,1,16-16h64V200a16,16,0,0,1,16-16h16a16,16,0,0,1,16,16v64h64a16,16,0,0,1,16,16Z"
+		></path>
+	</svg>
 	<!-- HOME -->
-	<svg v-if="name === 'home'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+	<svg v-else-if="name === 'home'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="home" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
 		<path
 			fill="currentColor"
 			d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"

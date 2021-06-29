@@ -1,5 +1,5 @@
 <template>
-	<div class="min-w-[350px] grid grid-rows-[auto,1fr] bg-[#B2C596] shadow-lg min-h-screen">
+	<div class="min-w-[100vw] grid grid-rows-[auto,1fr] bg-secondary shadow-lg min-h-screen">
 		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
 			<router-link to="/" class="px-4">Home</router-link>
 			<router-link to="/about" class="px-4">About</router-link>
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
-	import { readTextFile, createDir } from "@tauri-apps/api/fs";
+	import { readTextFile, createDir, readDir } from "@tauri-apps/api/fs";
 	import { Employee } from "@/interfaces/Employee";
 	import store from "@/store/index";
 	import { pathExists } from "@/utils";
@@ -26,6 +26,7 @@
 		async created(): Promise<void> {
 			await this.createDir();
 			await this.readStaffJSON();
+			await this.readProjectsJSON();
 			//console.log((await readDir("")).find((element) => element.name === "data" && element.path === "data"));
 		}
 
@@ -38,6 +39,19 @@
 		async readStaffJSON(): Promise<void> {
 			if (await pathExists("data", "data\\staff.json")) {
 				store.commit("updateStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
+			}
+		}
+
+		async readProjectsJSON(): Promise<void> {
+			if ((await readDir("data\\projects")) !== undefined) {
+				console.log();
+				const projectsDir = await readDir("data\\projects");
+				const projectList: Array<string> = [];
+
+				for (let i = 0; i <= projectsDir.length - 1; i++) {
+					projectList.push(projectsDir[i].name as string);
+				}
+				store.commit("updateProjectList", projectList);
 			}
 		}
 	}
