@@ -13,10 +13,10 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<div class="w-full col-span-4 border-b border-gray-500"></div>
 				<!-- EMPLOYEE INPUTS -->
-				<Input type="text" v-model="employee.firstName" placeholder="Vorname" />
-				<Input type="text" v-model="employee.lastName" placeholder="Nachname" />
-				<Input type="checkbox" v-model="employee.fullTime" />
-				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(employee)"><Icon name="trash" class="text-danger" /></button>
+				<PsalmInput type="text" v-model="employee.firstName" placeholder="Vorname" />
+				<PsalmInput type="text" v-model="employee.lastName" placeholder="Nachname" />
+				<PsalmInput type="checkbox" v-model="employee.fullTime" />
+				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
 			<!-- NO ENTRYS -->
 			<li v-if="tempStaff.length === 0" class="text-center">
@@ -26,8 +26,8 @@
 			</li>
 		</ul>
 		<div class="flex justify-center">
-			<Button icon="user-plus" color="primary" @click="addEmployee" />
-			<Button icon="save" color="primary" @click="saveStaff" />
+			<PsalmButton icon="user-plus" color="primary" @click="addEmployee" />
+			<PsalmButton icon="save" color="primary" @click="saveStaff" />
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -38,8 +38,8 @@
 					Bist du sicher, dass du <span class="font-semibold">"{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}"</span> löschen möchtest?
 				</p>
 				<div class="flex justify-center">
-					<Button color="danger" @click="deleteEmployee">Löschen</Button>
-					<Button color="primary" @click="showDeleteModal = false">Abrechnen </Button>
+					<PsalmButton color="danger" @click="deleteEmployee">Löschen</PsalmButton>
+					<PsalmButton color="primary" @click="showDeleteModal = false">Abrechnen </PsalmButton>
 				</div>
 			</div>
 		</div>
@@ -52,13 +52,13 @@
 	import { Employee, newEmployee } from "@/interfaces/Employee";
 	import { pathExists } from "@/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
-	import Button from "@/components/common/Button.vue";
-	import Icon from "@/components/common/Icon.vue";
-	import Input from "@/components/common/Input.vue";
+	import PsalmButton from "@/components/common/PsalmButton.vue";
+	import PsalmIcon from "@/components/common/PsalmIcon.vue";
+	import PsalmInput from "@/components/common/PsalmInput.vue";
 
 	@Component({
 		name: "Staff",
-		components: { Button, Icon, Input },
+		components: { PsalmButton, PsalmIcon, PsalmInput },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];

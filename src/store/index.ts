@@ -32,8 +32,8 @@ export default new Vuex.Store({
 		},
 		//###
 
-		updateProject(currentState, { id, newState }: { id: string; newState: Project }) {
-			currentState.projects.set(id, newState);
+		updateProjects(currentState, newState: Map<string, Project>) {
+			currentState.projects = newState;
 
 			// projects sorting here
 		},

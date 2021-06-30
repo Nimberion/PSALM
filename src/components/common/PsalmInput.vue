@@ -26,9 +26,9 @@
 	import { Component, Prop, Vue } from "vue-property-decorator";
 
 	@Component({
-		name: "Input",
+		name: "PsalmInput",
 	})
-	export default class Input extends Vue {
+	export default class PsalmInput extends Vue {
 		@Prop({ required: true }) type!: string;
 		@Prop({ required: false }) dblclick!: string;
 		@Prop({ required: true }) value!: string | boolean;

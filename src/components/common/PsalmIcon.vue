@@ -48,9 +48,9 @@
 	import { Component, Prop, Vue } from "vue-property-decorator";
 
 	@Component({
-		name: "Icon",
+		name: "PsalmIcon",
 	})
-	export default class Icon extends Vue {
+	export default class PsalmIcon extends Vue {
 		@Prop({ required: true }) name!: string;
 	}
 </script>

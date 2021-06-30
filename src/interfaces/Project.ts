@@ -2,10 +2,22 @@ import { newID } from "@/utils";
 import { Employee } from "./Employee";
 
 export interface EmployeeAvailability {
-	available: boolean;
-	deployed: boolean;
-	reserve: boolean;
-	indisposed: boolean;
+	available: Available;
+	deployed: Deployed;
+	// reserve: boolean;
+	// indisposed: boolean;
+}
+
+export enum Available {
+	true = "TRUE",
+	false = "FALSE",
+	indisposed = "INDISPOSED",
+}
+
+export enum Deployed {
+	true = "TRUE",
+	false = "FALSE",
+	reserve = "RESERVE",
 }
 
 export interface ProjectDay {
@@ -23,8 +35,8 @@ export interface Project {
 	projectDays: Array<ProjectDay>;
 }
 
-export function newEmployeeAvailability(available = false, deployed = false, reserve = false, indisposed = false) {
-	return { available, deployed, reserve, indisposed };
+export function newEmployeeAvailability(available = Available.false, deployed = Deployed.false) {
+	return { available, deployed };
 }
 
 export function newProjectDay(staff: Array<Employee>, id = newID(), date = new Date(), time = "", participant = ""): ProjectDay {
