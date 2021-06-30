@@ -2,17 +2,16 @@
 	<div class="bg-white rounded border shadow-lg px-2 py-4">
 		<h2 class="text-xl text-center font-semibold mb-4">Projekte</h2>
 		<!-- LIST HEADER -->
-		<div class="grid grid-cols-[2rem,1fr,2rem] font-semibold">
-			<div></div>
+		<div class="grid grid-cols-[1fr,2rem] font-semibold">
 			<div class="px-1" title="Titel">Titel</div>
 		</div>
 		<ul class="">
-			<li class="grid grid-cols-[2rem,1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
+			<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
 				<!-- HORIZONTAL DIVIDER -->
 				<div class="w-full col-span-4 border-b border-gray-500"></div>
 				<!-- PROJECTS INPUTS -->
-				<button class="place-self-center" title="Öffnen" @click="saveProjects"><PsalmIcon name="folder-open" class="text-primary" /></button>
-				<PsalmInput type="text" v-model="project.title" placeholder="Titel" dblclick="dblclick" @dblclick="saveProjects" />
+				<router-link to="/about" v-if="!editMode" class="px-1 hover:text-primary">{{ project.title }}</router-link>
+				<PsalmInput v-if="editMode" type="text" v-model="project.title" placeholder="Titel" />
 				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(project)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
 			<!-- NO ENTRYS -->
@@ -25,7 +24,8 @@
 
 		<div class="flex justify-center">
 			<PsalmButton icon="folder-plus" color="primary" @click="addProject" />
-			<PsalmButton icon="save" color="primary" @click="saveProjects" />
+			<PsalmButton v-if="editMode" icon="save" color="primary" @click="saveProjects" />
+			<PsalmButton v-if="!editMode" icon="" color="primary" @click="editMode = true">Edit</PsalmButton>
 		</div>
 	</div>
 </template>
@@ -37,7 +37,8 @@
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newProject, Project } from "@/interfaces/Project";
-	import { newID } from "@/utils";
+	import { newID, pathExists } from "@/utils";
+	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 
 	@Component({
 		name: "ProjectList",
@@ -46,12 +47,24 @@
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();
 		projectsArray: Array<Project> = [];
+		editMode = false;
 
-		get projectList(): Array<string> {
-			return store.state.projectList;
+		// get projectsArray(): Array<Project> {
+		// 	return Array.from(this.tempProjects, ([name, value]) => value);
+		// }
+
+		// set projectsArray(value: Array<Project>) {
+		// 	this.projectsArray = value;
+		// }
+
+		created(): void {
+			this.tempProjects = new Map(store.state.projects);
+			this.updateProjectsArray();
 		}
 
 		triggerDeleteModal(project: Project): void {
+			console.log("project deleted");
+
 			this.tempProjects.delete(project.id);
 
 			//CREATE ARRAY FOR v-for LOOP
@@ -59,6 +72,8 @@
 		}
 
 		addProject(): void {
+			this.editMode = true;
+
 			const id = newID();
 			this.tempProjects.set(id, newProject(id, []));
 
@@ -68,15 +83,35 @@
 			console.log("added", this.tempProjects.entries());
 		}
 
-		saveProjects(): void {
-			//sort thempProjects here
+		async saveProjects(): Promise<void> {
+			//SORT TEMP-PROJECTS
+			// temp
+			// this.tempProjects.sort((e1, e2) => {
+			// 	return e1.lastName >= e2.lastName ? 1 : -1;
+			// });
 
+			// SEARCH FOR EDITED PROJECTS
+			// temp
+
+			// PUSH TEMP-PROJECTS TO STORE
 			store.commit("updateProjects", this.tempProjects);
 
-			this.tempProjects = store.state.projects;
+			this.tempProjects.forEach(async (value, key) => {
+				// DELETE JSON FILE
+				if (await pathExists("data\\projects", `data\\projects\\${key}.json`)) {
+					await removeFile(`data/projects/${key}.json`);
+				}
 
-			//CREATE ARRAY FOR v-for LOOP
+				// WRITE JSON FILE
+				await writeFile({ contents: JSON.stringify(value), path: `data/projects/${key}.json` });
+				console.log("Save complete");
+			});
+
+			// CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
+
+			//temp
+			this.editMode = false;
 			console.log("saved", this.tempProjects.entries());
 		}
 

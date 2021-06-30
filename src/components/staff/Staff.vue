@@ -13,9 +13,14 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<div class="w-full col-span-4 border-b border-gray-500"></div>
 				<!-- EMPLOYEE INPUTS -->
-				<PsalmInput type="text" v-model="employee.firstName" placeholder="Vorname" />
-				<PsalmInput type="text" v-model="employee.lastName" placeholder="Nachname" />
-				<PsalmInput type="checkbox" v-model="employee.fullTime" />
+				<PsalmInput v-if="editMode" type="text" v-model="employee.firstName" placeholder="Vorname" />
+				<PsalmInput v-if="editMode" type="text" v-model="employee.lastName" placeholder="Nachname" />
+				<PsalmInput v-if="editMode" type="checkbox" v-model="employee.fullTime" />
+				<!-- EMPLOYEE LIST -->
+				<div v-if="!editMode" class="px-1">{{ employee.firstName }}</div>
+				<div v-if="!editMode" class="px-1">{{ employee.lastName }}</div>
+				<PsalmInput v-if="!editMode" type="checkbox" state="disabled" disabled v-model="employee.fullTime" />
+
 				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
 			<!-- NO ENTRYS -->
@@ -27,7 +32,8 @@
 		</ul>
 		<div class="flex justify-center">
 			<PsalmButton icon="user-plus" color="primary" @click="addEmployee" />
-			<PsalmButton icon="save" color="primary" @click="saveStaff" />
+			<PsalmButton v-if="editMode" icon="save" color="primary" @click="saveStaff" />
+			<PsalmButton v-if="!editMode" icon="" color="primary" @click="editMode = true">Edit</PsalmButton>
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -39,7 +45,7 @@
 				</p>
 				<div class="flex justify-center">
 					<PsalmButton color="danger" @click="deleteEmployee">Löschen</PsalmButton>
-					<PsalmButton color="primary" @click="showDeleteModal = false">Abrechnen </PsalmButton>
+					<PsalmButton color="primary" @click="showDeleteModal = false">Abrechnen</PsalmButton>
 				</div>
 			</div>
 		</div>
@@ -66,8 +72,11 @@
 		showDeleteModal = false;
 		employeeToDelete = newEmployee();
 
+		editMode = false;
+
 		get staff(): Array<Employee> {
-			return store.getters.sortedStaff;
+			// return store.getters.sortedStaff;
+			return store.state.staff;
 		}
 
 		created(): void {
@@ -83,10 +92,16 @@
 		}
 
 		addEmployee(): void {
+			this.editMode = true;
 			this.tempStaff.push(newEmployee());
 		}
 
 		async saveStaff(): Promise<void> {
+			//SORT TEMP-STAFF
+			this.tempStaff.sort((e1, e2) => {
+				return e1.lastName >= e2.lastName ? 1 : -1;
+			});
+
 			// PUSH TEMP-STAFF TO STORE
 			store.commit("updateStaff", this.tempStaff);
 
@@ -96,10 +111,9 @@
 			}
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(store.state.staff), path: "data/staff.json" });
-			console.log("Save complete");
 
-			// UPDATE TEMP-STAFF ORDER
-			this.tempStaff = JSON.parse(JSON.stringify(this.staff));
+			this.editMode = false;
+			console.log("Save complete");
 		}
 
 		triggerDeleteModal(employeeToDelete: Employee): void {

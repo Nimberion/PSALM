@@ -16,6 +16,7 @@
 	import { Employee } from "@/interfaces/Employee";
 	import store from "@/store/index";
 	import { pathExists } from "@/utils";
+	import { Project } from "./interfaces/Project";
 
 	@Component({
 		name: "App",
@@ -27,7 +28,6 @@
 			await this.createDir();
 			await this.readStaffJSON();
 			await this.readProjectsJSON();
-			//console.log((await readDir("")).find((element) => element.name === "data" && element.path === "data"));
 		}
 
 		async createDir(): Promise<void> {
@@ -43,16 +43,20 @@
 		}
 
 		async readProjectsJSON(): Promise<void> {
-			if ((await readDir("data\\projects")) !== undefined) {
-				console.log();
-				const projectsDir = await readDir("data\\projects");
-				const projectList: Array<string> = [];
+			const projectsDir = await readDir("data\\projects");
+			const projects: Map<string, Project> = new Map();
 
-				for (let i = 0; i <= projectsDir.length - 1; i++) {
-					projectList.push(projectsDir[i].name as string);
-				}
-				store.commit("updateProjectList", projectList);
+			for (let i = 0; i < projectsDir.length; i++) {
+				const filename: string = projectsDir[i].name?.split(".json")[0] as string;
+				projects.set(filename, JSON.parse(await readTextFile(`data/projects/${filename}.json`)));
 			}
+			store.commit("updateProjects", projects);
 		}
+
+		// async readDoodleTXT(): Promise<void> {
+		// 	if (await pathExists("data", "data\\doodle.txt")) {
+		// 		console.log(await readBinaryFile("data/doodle.txt"));
+		// 	}
+		// }
 	}
 </script>
