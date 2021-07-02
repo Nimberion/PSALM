@@ -1,5 +1,10 @@
 <template>
 	<div class="min-w-[100vw] grid grid-rows-[auto,1fr] bg-secondary shadow-lg min-h-screen">
+		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br p-2" @click="$router.push('/')">
+			<PsalmIcon name="home" />
+		</button>
+
+		<!-- </button> -->
 		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
 			<router-link to="/" class="px-4">Home</router-link>
 			<router-link to="/about" class="px-4">About</router-link>
@@ -17,13 +22,13 @@
 	import store from "@/store/index";
 	import { pathExists } from "@/utils";
 	import { Project } from "./interfaces/Project";
+	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 
 	@Component({
 		name: "App",
+		components: { PsalmIcon },
 	})
 	export default class App extends Vue {
-		staff: Array<Employee> = [];
-
 		async created(): Promise<void> {
 			await this.createDir();
 			await this.readStaffJSON();
@@ -52,11 +57,5 @@
 			}
 			store.commit("updateProjects", projects);
 		}
-
-		// async readDoodleTXT(): Promise<void> {
-		// 	if (await pathExists("data", "data\\doodle.txt")) {
-		// 		console.log(await readBinaryFile("data/doodle.txt"));
-		// 	}
-		// }
 	}
 </script>
