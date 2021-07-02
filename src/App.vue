@@ -1,16 +1,19 @@
 <template>
 	<div class="min-w-[100vw] grid grid-rows-[auto,1fr] bg-secondary shadow-lg min-h-screen">
-		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br p-2" @click="$router.push('/')">
+		<!-- HOME BUTTON -->
+		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')">
 			<PsalmIcon name="home" />
 		</button>
-
-		<!-- </button> -->
-		<nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
+		<!-- <nav class="grid grid-cols-[auto,auto,auto] gap-2 place-content-center items-center bg-white p-2">
 			<router-link to="/" class="px-4">Home</router-link>
 			<router-link to="/about" class="px-4">About</router-link>
-		</nav>
+		</nav> -->
 		<div>
-			<router-view class="p-2" />
+			<router-view v-if="!loading" class="p-2" />
+		</div>
+		<!-- LOADING SCREEN -->
+		<div v-if="loading" class="grid place-items-center absolute min-h-screen min-w-[100vw] bg-primary z-50">
+			<h1 class="text-4xl text-white text-center">LOADING...</h1>
 		</div>
 	</div>
 </template>
@@ -29,10 +32,20 @@
 		components: { PsalmIcon },
 	})
 	export default class App extends Vue {
+		loading = true;
+
 		async created(): Promise<void> {
-			await this.createDir();
-			await this.readStaffJSON();
-			await this.readProjectsJSON();
+			Promise.allSettled([await this.createDir(), await this.readStaffJSON(), await this.readProjectsJSON()])
+				.then((results) => {
+					results.forEach((result) => {
+						if (result.status === "rejected") {
+							window.alert(`Error! \n${result.reason}`);
+						}
+					});
+				})
+				.finally(() => {
+					this.loading = false;
+				});
 		}
 
 		async createDir(): Promise<void> {
