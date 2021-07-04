@@ -1,16 +1,28 @@
 <template>
 	<div class="flex flex-col place-items-center">
+		<!-- <div class="h-screen w-screen grid grid-cols-1 grid-rows-[auto,1fr] place-items-center"> -->
+		<!-- HEADER -->
 		<div class="flex place-items-center border bg-white rounded shadow-lg m-2 p-2">
-			<h2 class="text-xl text-center font-semibold">{{ project.title }}</h2>
-			<PsalmIcon name="save" class="ml-2 text-[1.25rem] text-primary" />
-			<div class="ml-2">Cancel</div>
+			<h2 class="text-xl font-semibold border-r border-gray-400 pr-2">{{ project.title }}</h2>
+			<PsalmIcon name="calendar-plus" class="text-primary text-xl ml-2" />
+			<PsalmIcon name="save" class="text-primary text-xl ml-2" />
 		</div>
 
-		<div class="flex max-h-[calc(100vh-5.75rem)] max-w-[calc(100vw-2rem)] border bg-white rounded shadow-lg m-2 px-2 py-4">
-			<section class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${days.length * 2},3rem);`">
-				<!-- grid-rows-[auto,repeat(${staff.length},auto)] -->
-				<div class="grid row-span-2 sticky top-0 left-0 bg-white border-gray-400 border-r border-b z-10">Filter?</div>
+		<!-- TABLE WRAPPER -->
+		<div class="flex max-h-[calc(100vh-5.75rem-4px)] max-w-[calc(100vw-2rem-2px)] border bg-white rounded shadow-lg m-2 px-2 py-4">
+			<!-- TABLE -->
+			<section class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${days.length * 2},3rem) auto;`">
+				<!-- TOP-LEFT CORNER -->
+				<div class="flex flex-col justify-end items-end row-span-2 sticky top-0 left-0 bg-white border-gray-400 border-r border-b z-10">
+					<div class="w-24 text-xs text-center font-semibold">Statistik</div>
+					<div class="flex text-xs text-center border-t border-gray-400">
+						<div class="w-8 border-l border-gray-400">Kann</div>
+						<div class="w-8 border-l border-gray-400">Ist</div>
+						<div class="w-8 border-l border-gray-400">Soll</div>
+					</div>
+				</div>
 
+				<!-- DAY HEADER LOOP -->
 				<div
 					v-for="day in days"
 					:key="`data-${day.id}`"
@@ -20,17 +32,35 @@
 					<p class="overflow-ellipsis overflow-hidden">10:30 - 14:60</p>
 					<p class="overflow-ellipsis overflow-hidden">Marienschule</p>
 				</div>
+
+				<!-- TOP-RIGHT CORNER -->
+				<div class="grid row-span-2 sticky top-0 right-0 bg-white border-gray-400 border-l border-b z-10"></div>
+
+				<!-- "Kann" AND "Ist" LOOP -->
 				<template v-for="day in days">
 					<div :key="`available-header-${day.id}`" class="grid col-span-1 auto-cols-max sticky top-[calc(3.75rem+1px)] bg-white border-gray-400 border-l border-b px-1 text-xs place-content-center">Kann</div>
 					<div :key="`deployed-header-${day.id}`" class="grid col-span-1 auto-cols-max sticky top-[calc(3.75rem+1px)] bg-white border-gray-400 border-l border-b px-1 text-xs place-content-center">Ist</div>
 				</template>
 
-				<template v-for="employee in staff">
-					<div :key="employee.id" class="grid auto-cols-max sticky left-0 bg-white border-gray-400 border-r border-t px-1">{{ employee.name }}</div>
+				<!-- ROWS LOOP -->
+				<template v-for="(employee, index) in staff">
+					<!-- STAFF LOOP -->
+					<div :key="employee.id" class="flex justify-between whitespace-nowrap sticky left-0 bg-white border-gray-400 border-r border-t" :class="{ 'bg-gray-200': index % 2 === 0 }">
+						<div class="px-1">{{ employee.name }}</div>
+						<!-- STATISTIC DATA -->
+						<div class="flex text-center">
+							<div class="w-8 border-l border-gray-400">2</div>
+							<div class="w-8 border-l border-gray-400">3</div>
+							<div class="w-8 border-l border-gray-400">13</div>
+						</div>
+					</div>
+					<!-- PROJECT DAYS LOOP -->
 					<template v-for="day in days">
-						<div :key="`available-${day.id}-${employee.id}`" class="grid auto-cols-max border-gray-400 border-t border-l place-content-center">#1</div>
-						<div :key="`deployed-${day.id}-${employee.id}`" class="grid auto-cols-max border-gray-400 border-t border-l place-content-center">#2</div>
+						<div :key="`available-${day.id}-${employee.id}`" class="grid auto-cols-max border-gray-400 border-t border-l place-content-center" :class="{ 'bg-gray-200': index % 2 === 0 }">#1</div>
+						<div :key="`deployed-${day.id}-${employee.id}`" class="grid auto-cols-max border-gray-400 border-t border-l place-content-center" :class="{ 'bg-gray-200': index % 2 === 0 }">#2</div>
 					</template>
+					<!-- RIGHT STAFF LIST -->
+					<div :key="`left-side-${employee.id}`" class="px-1 whitespace-nowrap sticky right-0 bg-white border-gray-400 border-l border-t" :class="{ 'bg-gray-200': index % 2 === 0 }">{{ employee.name }}</div>
 				</template>
 			</section>
 		</div>
@@ -83,6 +113,16 @@
 			{ id: 29, name: "Hannes2" },
 			{ id: 30, name: "Paul4" },
 			{ id: 31, name: "Gerda5" },
+			{ id: 32, name: "Paul" },
+			{ id: 33, name: "Paul4" },
+			{ id: 34, name: "Gerda5" },
+			{ id: 35, name: "Anna" },
+			{ id: 36, name: "Hannes" },
+			{ id: 37, name: "Paul" },
+			{ id: 38, name: "Gerda" },
+			{ id: 39, name: "Hannes2" },
+			{ id: 40, name: "Paul4" },
+			{ id: 41, name: "Gerda5" },
 		];
 		days = [
 			{ id: 101, name: "16.03.2021" },
@@ -101,6 +141,10 @@
 			{ id: 114, name: "day14" },
 			{ id: 115, name: "day15" },
 			{ id: 116, name: "day16" },
+			{ id: 117, name: "day7" },
+			{ id: 118, name: "day8" },
+			{ id: 119, name: "day9" },
+			{ id: 120, name: "day10" },
 		];
 
 		get project(): Project {
