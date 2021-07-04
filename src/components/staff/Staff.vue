@@ -31,9 +31,9 @@
 			</li>
 		</ul>
 		<div class="flex justify-center">
-			<PsalmButton icon="user-plus" class="bg-primary" @click="addEmployee" />
-			<PsalmButton v-if="editMode" icon="save" class="bg-primary" @click="saveStaff" />
-			<PsalmButton v-if="!editMode" icon="" class="bg-primary" @click="editMode = true">Edit</PsalmButton>
+			<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
+			<PsalmButton v-if="editMode" title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
+			<PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
 		</div>
 
 		<!-- DELETE MODAL -->

@@ -23,9 +23,9 @@
 		</ul>
 
 		<div class="flex justify-center">
-			<PsalmButton icon="folder-plus" class="bg-primary" @click="addProject" />
-			<PsalmButton v-if="editMode" icon="save" class="bg-primary" @click="saveProjects" />
-			<PsalmButton v-if="!editMode" icon="" class="bg-primary" @click="editMode = true">Edit</PsalmButton>
+			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
+			<PsalmButton v-if="editMode" title="Projekte speichern" icon="save" class="bg-primary" @click="saveProjects" />
+			<PsalmButton v-if="!editMode" title="Projekte bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
 		</div>
 	</div>
 </template>
