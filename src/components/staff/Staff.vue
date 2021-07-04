@@ -31,9 +31,9 @@
 			</li>
 		</ul>
 		<div class="flex justify-center">
-			<PsalmButton icon="user-plus" color="primary" @click="addEmployee" />
-			<PsalmButton v-if="editMode" icon="save" color="primary" @click="saveStaff" />
-			<PsalmButton v-if="!editMode" icon="" color="primary" @click="editMode = true">Edit</PsalmButton>
+			<PsalmButton icon="user-plus" class="bg-primary" @click="addEmployee" />
+			<PsalmButton v-if="editMode" icon="save" class="bg-primary" @click="saveStaff" />
+			<PsalmButton v-if="!editMode" icon="" class="bg-primary" @click="editMode = true">Edit</PsalmButton>
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -44,8 +44,8 @@
 					Bist du sicher, dass du <span class="font-semibold">"{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}"</span> löschen möchtest?
 				</p>
 				<div class="flex justify-center">
-					<PsalmButton color="danger" @click="deleteEmployee">Löschen</PsalmButton>
-					<PsalmButton color="primary" @click="showDeleteModal = false">Abrechnen</PsalmButton>
+					<PsalmButton class="bg-danger" @click="deleteEmployee">Löschen</PsalmButton>
+					<PsalmButton class="bg-primary" @click="showDeleteModal = false">Abrechnen</PsalmButton>
 				</div>
 			</div>
 		</div>
