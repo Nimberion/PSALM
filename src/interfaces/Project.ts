@@ -1,13 +1,6 @@
 import { newID } from "@/utils";
 import { Employee } from "./Employee";
 
-export interface EmployeeAvailability {
-	available: Available;
-	deployed: Deployed;
-	// reserve: boolean;
-	// indisposed: boolean;
-}
-
 export enum Available {
 	true = "TRUE",
 	false = "FALSE",
@@ -18,6 +11,12 @@ export enum Deployed {
 	true = "TRUE",
 	false = "FALSE",
 	reserve = "RESERVE",
+}
+export interface EmployeeAvailability {
+	available: Available;
+	deployed: Deployed;
+	// reserve: boolean;
+	// indisposed: boolean;
 }
 
 export interface ProjectDay {
@@ -32,10 +31,11 @@ export interface Project {
 	id: string;
 	title: string;
 	numberOfRequiredStaff: number;
+	staff: Array<string>;
 	projectDays: Array<ProjectDay>;
 }
 
-export function newEmployeeAvailability(available = Available.false, deployed = Deployed.false) {
+export function newEmployeeAvailability(available = Available.false, deployed = Deployed.false): EmployeeAvailability {
 	return { available, deployed };
 }
 
@@ -47,8 +47,8 @@ export function newProjectDay(staff: Array<Employee>, id = newID(), date = new D
 	return { id, date, time, participant, staffAvailability };
 }
 
-export function newProject(id: string, staff: Array<Employee>, title = "", numberOfRequiredStaff = Number(""), projectDays = [newProjectDay(staff)]) {
-	return { id, title, numberOfRequiredStaff, projectDays };
+export function newProject(id: string, title = "", numberOfRequiredStaff = Number(""), projectDays = [newProjectDay([])], staff = [] as Array<string>): Project {
+	return { id, title, numberOfRequiredStaff, staff, projectDays };
 }
 
 // export function test(): void {

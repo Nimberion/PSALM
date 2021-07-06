@@ -8,7 +8,7 @@
 		<ul class="">
 			<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-500"></div>
+				<div class="w-full col-span-4 border-b border-gray-400"></div>
 				<!-- PROJECTS INPUTS -->
 				<router-link :to="`/project/${project.id}`" v-if="!editMode" class="px-1 hover:text-primary">{{ project.title }}</router-link>
 				<PsalmInput v-if="editMode" type="text" v-model="project.title" placeholder="Titel" />
@@ -17,7 +17,7 @@
 			<!-- NO ENTRYS -->
 			<li v-if="projectsArray.length === 0" class="text-center">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-500"></div>
+				<div class="w-full col-span-4 border-b border-gray-400"></div>
 				<p>Keine Einträge</p>
 			</li>
 		</ul>
@@ -66,6 +66,7 @@
 			console.log("project deleted");
 
 			this.tempProjects.delete(project.id);
+			//delete json-file
 
 			//CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
@@ -75,7 +76,7 @@
 			this.editMode = true;
 
 			const id = newID();
-			this.tempProjects.set(id, newProject(id, []));
+			this.tempProjects.set(id, newProject(id));
 
 			//CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();

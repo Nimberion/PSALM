@@ -11,7 +11,7 @@
 		<ul class="">
 			<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto]" v-for="employee in tempStaff" :key="employee.id">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-500"></div>
+				<div class="w-full col-span-4 border-b border-gray-400"></div>
 				<!-- EMPLOYEE INPUTS -->
 				<PsalmInput v-if="editMode" type="text" v-model="employee.firstName" placeholder="Vorname" />
 				<PsalmInput v-if="editMode" type="text" v-model="employee.lastName" placeholder="Nachname" />
@@ -26,7 +26,7 @@
 			<!-- NO ENTRYS -->
 			<li v-if="tempStaff.length === 0" class="text-center">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-500"></div>
+				<div class="w-full col-span-4 border-b border-gray-400"></div>
 				<p>Keine Einträge</p>
 			</li>
 		</ul>

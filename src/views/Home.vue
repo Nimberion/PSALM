@@ -8,8 +8,8 @@
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
-	import ProjectList from "@/components/projects/ProjectList.vue";
-	import Staff from "@/components/staff/Staff.vue";
+	import ProjectList from "@/components/home/ProjectList.vue";
+	import Staff from "@/components/home/Staff.vue";
 
 	@Component({
 		name: "Home",
