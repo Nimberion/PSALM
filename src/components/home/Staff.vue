@@ -21,7 +21,7 @@
 				<div v-if="!editMode" class="px-1">{{ employee.lastName }}</div>
 				<PsalmInput v-if="!editMode" type="checkbox" state="disabled" disabled v-model="employee.fullTime" />
 
-				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>
+				<button class="place-self-center button-hover" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
 			<!-- NO ENTRYS -->
 			<li v-if="tempStaff.length === 0" class="text-center">

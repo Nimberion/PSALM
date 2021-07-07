@@ -12,7 +12,7 @@
 			<!-- CONTENT -->
 			<div class="p-6">
 				<div class="grid grid-cols-[auto,1fr] items-center gap-6">
-					<PsalmIcon name="exclamation-triangle" class="text-4xl" />
+					<PsalmIcon name="exclamation-triangle" class="text-4xl text-gray-400" />
 					<div class="">
 						<p v-if="type === 'employee'">
 							Bist du sicher, dass du <span class="font-semibold">"{{ objectToDelete.firstName }} {{ objectToDelete.lastName }}"</span> löschen möchtest?
@@ -31,7 +31,7 @@
 				<!-- BUTTONS -->
 				<div class="flex justify-center">
 					<PsalmButton class="bg-danger" @click="$emit('confirm')">Bestätigen</PsalmButton>
-					<PsalmButton class="bg-primary" @click="$emit('cancel')">Abrechnen</PsalmButton>
+					<PsalmButton class="bg-primary" @click="$emit('cancel')">Abbrechen</PsalmButton>
 				</div>
 			</div>
 		</div>
