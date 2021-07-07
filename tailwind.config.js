@@ -17,6 +17,7 @@ module.exports = {
 				primary: "#33658A",
 				secondary: "#B2C596",
 				danger: "#B91C1C",
+				warning: "#e9d603",
 			},
 		},
 	},

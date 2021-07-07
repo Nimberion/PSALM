@@ -1,5 +1,5 @@
 <template>
-	<button class="flex justify-center min-w-[6rem] text-white rounded p-2 m-4 mb-0" @click="$emit('click')">
+	<button class="flex justify-center min-w-[6rem] text-white rounded select-none p-2 m-4 mb-0" @click="$emit('click')">
 		<PsalmIcon v-if="icon" :name="icon" />
 		<span class="text-sm leading-4"><slot /></span>
 	</button>

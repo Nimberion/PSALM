@@ -27,12 +27,16 @@
 			<PsalmButton v-if="editMode" title="Projekte speichern" icon="save" class="bg-primary" @click="saveProjects" />
 			<PsalmButton v-if="!editMode" title="Projekte bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
 		</div>
+
+		<!-- DELETE MODAL -->
+		<DeleteModal v-if="showDeleteModal === true" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
 <script lang="ts">
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
+	import DeleteModal from "@/components/common/DeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
@@ -42,27 +46,21 @@
 
 	@Component({
 		name: "ProjectList",
-		components: { PsalmButton, PsalmIcon, PsalmInput },
+		components: { DeleteModal, PsalmButton, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();
 		projectsArray: Array<Project> = [];
 		editMode = false;
-
-		// get projectsArray(): Array<Project> {
-		// 	return Array.from(this.tempProjects, ([name, value]) => value);
-		// }
-
-		// set projectsArray(value: Array<Project>) {
-		// 	this.projectsArray = value;
-		// }
+		showDeleteModal = false;
+		projectToDelete = newProject(newID());
 
 		created(): void {
 			this.tempProjects = new Map(store.state.projects);
 			this.updateProjectsArray();
 		}
 
-		triggerDeleteModal(project: Project): void {
+		triggerDeleteModalalt(project: Project): void {
 			console.log("project deleted");
 
 			this.tempProjects.delete(project.id);
@@ -70,6 +68,23 @@
 
 			//CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
+		}
+
+		triggerDeleteModal(projectToDelete: Project): void {
+			this.projectToDelete = projectToDelete;
+			this.showDeleteModal = true;
+		}
+
+		async deleteProject(): Promise<void> {
+			this.tempProjects.delete(this.projectToDelete.id);
+
+			if (await pathExists("data\\projects", `data\\projects\\${this.projectToDelete.id}.json`)) {
+				await removeFile(`data/projects/${this.projectToDelete.id}.json`);
+			}
+
+			store.commit("updateProjects", this.tempProjects);
+			this.updateProjectsArray();
+			this.showDeleteModal = false;
 		}
 
 		addProject(): void {
@@ -80,8 +95,6 @@
 
 			//CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
-
-			console.log("added", this.tempProjects.entries());
 		}
 
 		async saveProjects(): Promise<void> {

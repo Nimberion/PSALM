@@ -44,8 +44,6 @@
 			switch (this.type) {
 				case "checkbox":
 					this.$emit("input", e.target.checked as boolean);
-					console.log(this.state);
-
 					break;
 				case "number":
 					this.$emit("input", e.target.valueAsNumber);

@@ -2,7 +2,9 @@
 	<!--### TABLE OF CONTENT ###
 		##
 		##  CALENDAR-PLUS
+		##  CLOSE
 		##  EDIT
+		##  EXCLAMATION-TRIANGLE
 		##  FOLDER-OPEN
 		##  FOLDER-PLUS
 		##  HOME
@@ -20,11 +22,31 @@
 			d="M436 160H12c-6.6 0-12-5.4-12-12v-36c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48v36c0 6.6-5.4 12-12 12zM12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm316 140c0-6.6-5.4-12-12-12h-60v-60c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v60h-60c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h60v60c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-60h60c6.6 0 12-5.4 12-12v-40z"
 		></path>
 	</svg>
+	<!-- CLOSE -->
+	<svg
+		v-else-if="name === 'close'"
+		xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		width="1em"
+		height="1em"
+		preserveAspectRatio="xMidYMid meet"
+		viewBox="0 0 24 24"
+		style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg)"
+	>
+		<path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="currentColor" />
+	</svg>
 	<!-- EDIT -->
 	<svg v-else-if="name === 'edit'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="edit" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
 		<path
 			fill="currentColor"
 			d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"
+		></path>
+	</svg>
+	<!-- EXCLAMATION-TRIANGLE -->
+	<svg v-else-if="name === 'exclamation-triangle'" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation-triangle" class="h-[1em]" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+		<path
+			fill="currentColor"
+			d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
 		></path>
 	</svg>
 	<!-- FOLDER-OPEN -->

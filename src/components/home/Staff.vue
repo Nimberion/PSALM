@@ -37,18 +37,7 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<div v-if="showDeleteModal === true" class="absolute top-0 left-0 bottom-0 h-full min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)]" @click="showDeleteModal = false">
-			<div class="grid grid-cols-1 grid-rows-[repeat(3,auto)] gap-4 bg-white rounded shadow-lg p-4 z-50" @click.stop>
-				<h2 class="bg-primary text-white font-semibold text-center rounded p-1">Achtung!</h2>
-				<p class="col-span-2">
-					Bist du sicher, dass du <span class="font-semibold">"{{ employeeToDelete.firstName }} {{ employeeToDelete.lastName }}"</span> löschen möchtest?
-				</p>
-				<div class="flex justify-center">
-					<PsalmButton class="bg-danger" @click="deleteEmployee">Löschen</PsalmButton>
-					<PsalmButton class="bg-primary" @click="showDeleteModal = false">Abrechnen</PsalmButton>
-				</div>
-			</div>
-		</div>
+		<DeleteModal v-if="showDeleteModal === true" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
@@ -58,13 +47,14 @@
 	import { Employee, newEmployee } from "@/interfaces/Employee";
 	import { pathExists } from "@/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import DeleteModal from "@/components/common/DeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 
 	@Component({
 		name: "Staff",
-		components: { PsalmButton, PsalmIcon, PsalmInput },
+		components: { DeleteModal, PsalmButton, PsalmIcon, PsalmInput },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];
@@ -83,13 +73,9 @@
 			this.tempStaff = JSON.parse(JSON.stringify(this.staff));
 		}
 
-		test(): void {
-			window.alert("Hello world!");
-		}
-
-		updateCheckbox(nativeValue: boolean, value: boolean): void {
-			nativeValue = value;
-		}
+		// updateCheckbox(nativeValue: boolean, value: boolean): void {
+		// 	nativeValue = value;
+		// }
 
 		addEmployee(): void {
 			this.editMode = true;
@@ -117,8 +103,8 @@
 		}
 
 		triggerDeleteModal(employeeToDelete: Employee): void {
-			this.showDeleteModal = true;
 			this.employeeToDelete = employeeToDelete;
+			this.showDeleteModal = true;
 		}
 
 		deleteEmployee(): void {

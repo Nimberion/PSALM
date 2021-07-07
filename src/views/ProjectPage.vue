@@ -9,12 +9,16 @@
 			<button class="ml-2" title="Speichern"><PsalmIcon name="save" class="text-primary text-xl" /></button>
 		</div>
 
+		<div v-if="projectStaffEditMode" class="flex max-h-[calc(100vh-5.75rem-4px)] max-w-[calc(100vw-2rem-2px)] border bg-white rounded shadow-lg z-50 m-2 px-2 py-4">
+			<ProjectStaff :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
+		</div>
+
 		<!-- TABLE WRAPPER -->
 		<div class="flex max-h-[calc(100vh-5.75rem-4px)] max-w-[calc(100vw-2rem-2px)] border bg-white rounded shadow-lg m-2 px-2 py-4">
 			<!-- PROJECT-STAFF-EDITOR -->
-			<ProjectStaff v-if="projectStaffEditMode" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
+			<!-- <ProjectStaff v-if="projectStaffEditMode" :project-staff="tempProject.staff" @update="updateTempProjectStaff" /> -->
 			<!-- TABLE -->
-			<section v-if="!projectStaffEditMode" class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${days.length * 2},3rem) auto;`">
+			<section class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${days.length * 2},3rem) auto;`">
 				<!-- TOP-LEFT CORNER -->
 				<div class="flex flex-col justify-end items-end row-span-2 sticky top-0 left-0 bg-white border-gray-400 border-r-2 border-b-2 z-10">
 					<div class="w-24 text-xs text-center font-semibold">Statistik</div>
