@@ -1,11 +1,11 @@
 <template>
 	<section class="">
 		<h2 class="text-center font-semibold mb-4">Mitarbeiter</h2>
-		<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
+		<ul class="grid grid-cols-[repeat(2,auto)] md:grid-cols-[repeat(3,auto)] lg:grid-cols-[repeat(4,auto)] gap-x-8">
 			<li v-for="employee in staff" :key="employee.id">
 				<label class="grid grid-cols-[auto,1fr] cursor-pointer">
 					<input type="checkbox" v-model="tempProjectStaff" :value="employee.id" class="cursor-pointer place-self-center rounded text-primary focus:ring-primary focus:border-primary mr-2" @change="updateTempProjectStaff" />
-					<span>{{ employee.firstName }} {{ employee.lastName }}</span>
+					<span class="">{{ employee.firstName }} {{ employee.lastName }}</span>
 				</label>
 			</li>
 		</ul>

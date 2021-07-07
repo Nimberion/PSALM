@@ -1,5 +1,5 @@
 <template>
-	<button class="flex justify-center min-w-[6rem] text-white rounded select-none p-2 m-4 mb-0 button-hover" @click="$emit('click')">
+	<button class="flex justify-center min-w-[6rem] text-white rounded select-none p-2 m-4 mb-0 filter hover:bg-gradient-to-t from-[rgba(0,0,0,0.2)] to-[rgba(0,0,0,0.2)]" @click="$emit('click')">
 		<PsalmIcon v-if="icon" :name="icon" />
 		<span class="text-sm leading-4"><slot /></span>
 	</button>
@@ -15,6 +15,5 @@
 	})
 	export default class PsalmButton extends Vue {
 		@Prop({ required: false }) icon!: string;
-		// @Prop({ required: true }) color!: string;
 	}
 </script>

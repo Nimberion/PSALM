@@ -23,6 +23,10 @@ export default new Vuex.Store({
 		updateProjects(currentState, newState: Map<string, Project>) {
 			currentState.projects = newState;
 		},
+
+		updateProject(currentState, newState) {
+			currentState.projects.set(newState.id, newState);
+		},
 	},
 	actions: {},
 	modules: {},

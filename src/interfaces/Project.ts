@@ -13,10 +13,9 @@ export enum Deployed {
 	reserve = "RESERVE",
 }
 export interface EmployeeAvailability {
+	employeeId: string;
 	available: Available;
 	deployed: Deployed;
-	// reserve: boolean;
-	// indisposed: boolean;
 }
 
 export interface ProjectDay {
@@ -24,7 +23,7 @@ export interface ProjectDay {
 	date: Date;
 	time: string;
 	participant: string;
-	staffAvailability: Map<string, EmployeeAvailability>;
+	staffAvailability: Array<EmployeeAvailability>;
 }
 
 export interface Project {
@@ -35,14 +34,14 @@ export interface Project {
 	projectDays: Array<ProjectDay>;
 }
 
-export function newEmployeeAvailability(available = Available.false, deployed = Deployed.false): EmployeeAvailability {
-	return { available, deployed };
+export function newEmployeeAvailability(employeeId: string, available = Available.false, deployed = Deployed.false): EmployeeAvailability {
+	return { employeeId, available, deployed };
 }
 
 export function newProjectDay(staff: Array<Employee>, id = newID(), date = new Date(), time = "", participant = ""): ProjectDay {
-	const staffAvailability: Map<string, EmployeeAvailability> = new Map();
+	const staffAvailability: Array<EmployeeAvailability> = [];
 
-	staff.forEach((e) => staffAvailability.set(e.id, newEmployeeAvailability()));
+	staff.forEach((e) => staffAvailability.push(newEmployeeAvailability(e.id)));
 
 	return { id, date, time, participant, staffAvailability };
 }

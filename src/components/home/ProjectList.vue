@@ -10,9 +10,9 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<div class="w-full col-span-4 border-b border-gray-400"></div>
 				<!-- PROJECTS INPUTS -->
-				<router-link :to="`/project/${project.id}`" v-if="!editMode" class="px-1 hover:text-primary">{{ project.title }}</router-link>
+				<router-link :to="`/project/${project.id}`" v-if="!editMode" class="px-1 hover:text-primary min-h-[1.5rem]">{{ project.title }}</router-link>
 				<PsalmInput v-if="editMode" type="text" v-model="project.title" placeholder="Titel" />
-				<button class="place-self-center" title="Löschen" @click="triggerDeleteModal(project)"><PsalmIcon name="trash" class="text-danger" /></button>
+				<button class="place-self-center filter hover:brightness-[0.8]" title="Löschen" @click="triggerDeleteModal(project)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
 			<!-- NO ENTRYS -->
 			<li v-if="projectsArray.length === 0" class="text-center">

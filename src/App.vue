@@ -12,8 +12,12 @@
 			<router-view v-if="!loading" class="p-2" />
 		</div>
 		<!-- LOADING SCREEN -->
-		<div v-if="loading" class="grid place-items-center absolute min-h-screen min-w-[100vw] bg-primary z-50">
-			<h1 class="text-4xl text-white text-center">LOADING...</h1>
+		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
+			<div class="grid place-items-center text-white text-center">
+				<img class="h-[30vh] shadow-lg" src="@/../src-tauri/icons/icon.png" alt="logo" />
+				<h1 class="text-[15vh] font-black leading-none">PSALM</h1>
+				<h3 class="text-[3vh]">Project Staff And Labor Management</h3>
+			</div>
 		</div>
 	</div>
 </template>
@@ -44,7 +48,9 @@
 					});
 				})
 				.finally(() => {
-					this.loading = false;
+					setTimeout(() => {
+						this.loading = false;
+					}, 1000);
 				});
 		}
 
@@ -72,12 +78,3 @@
 		}
 	}
 </script>
-
-<style>
-	.button-hover:hover {
-		background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
-	}
-	.background-gradient {
-		background-image: linear-gradient(primary, rgba(0, 0, 0, 0.1));
-	}
-</style>
