@@ -21,6 +21,10 @@
 			<section class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${tempProject.projectDays.length * 2},3rem) auto;`">
 				<!-- TOP-LEFT CORNER -->
 				<div class="flex flex-col justify-end items-end row-span-2 sticky top-0 left-0 bg-white border-gray-400 border-r-2 border-b-2 z-10">
+					<div class="w-full h-full text-xs font-semibold">
+						<span>Benötigte Mitarbeiter: </span>
+						<PsalmInput class="text-center text-xs" type="number" v-model="tempProject.numberOfRequiredStaff" />
+					</div>
 					<div class="w-24 text-xs text-center font-semibold">Statistik</div>
 					<div class="flex text-xs text-center border-t border-gray-400">
 						<div class="w-8 border-l border-gray-400">Kann</div>
@@ -57,9 +61,9 @@
 						<div class="px-1">{{ employee.firstName }} {{ employee.lastName }}</div>
 						<!-- STATISTIC DATA -->
 						<div class="h-full flex">
-							<div class="w-8 grid place-items-center border-l border-gray-400">2</div>
-							<div class="w-8 grid place-items-center border-l border-gray-400">3</div>
-							<div class="w-8 grid place-items-center border-l border-gray-400">13</div>
+							<div class="w-8 grid place-items-center border-l border-gray-400">{{ getNumberOfAvailabilities(tempProject, employee.id) }}</div>
+							<div class="w-8 grid place-items-center border-l border-gray-400">{{ getNumberOfDeployments(tempProject, employee.id) }}</div>
+							<div class="w-8 grid place-items-center border-l border-gray-400">{{ getSetPointOfDeployments(tempProject, staff, employee) }}</div>
 						</div>
 					</div>
 					<!-- PROJECT DAYS LOOP -->
@@ -84,14 +88,27 @@
 <script lang="ts">
 	// import { Employee, newEmployee } from "@/interfaces/Employee";
 	// import store from "@/store";
-	import { Available, Deployed, EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/interfaces/Project";
+	import {
+		Available,
+		Deployed,
+		EmployeeAvailability,
+		findEmployeeAvailability,
+		getNumberOfAvailabilities,
+		getNumberOfDeployments,
+		getSetPointOfDeployments,
+		newEmployeeAvailability,
+		newProject,
+		newProjectDay,
+		Project,
+		ProjectDay,
+	} from "@/interfaces/Project";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { findEmployeeAvailability, newID, pathExists } from "@/utils";
+	import { newID, pathExists } from "@/utils";
 	import { Employee } from "@/interfaces/Employee";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 
@@ -171,6 +188,18 @@
 			//temp
 			this.editMode = false;
 			console.log("saved", this.tempProject);
+		}
+
+		getNumberOfAvailabilities(project: Project, employeeId: string): number {
+			return getNumberOfAvailabilities(project, employeeId);
+		}
+
+		getNumberOfDeployments(project: Project, employeeId: string): number {
+			return getNumberOfDeployments(project, employeeId);
+		}
+
+		getSetPointOfDeployments(project: Project, staff: Array<Employee>, employee: Employee): number | string {
+			return getSetPointOfDeployments(project, staff, employee);
 		}
 	}
 </script>

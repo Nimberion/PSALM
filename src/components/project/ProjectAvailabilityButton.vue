@@ -2,7 +2,12 @@
 	<button class="flex justify-center text-white select-none m-1" :title="buttonTitle" @click="toggleEmployeeAvailability">
 		<ProjectAvailabilityIcon
 			class="text-primary text-2xl"
-			:class="{ 'text-success': currentAvailability === 'TRUE', 'text-danger': currentAvailability === 'INDISPOSED', 'text-warning': currentAvailability === 'RESERVE' }"
+			:class="{
+				'text-primary': currentAvailability === 'TRUE' && column === 'available',
+				'text-danger': currentAvailability === 'INDISPOSED',
+				'text-warning': currentAvailability === 'RESERVE',
+				'text-success': currentAvailability === 'TRUE' && column !== 'available',
+			}"
 			:name="currentAvailability"
 		/>
 	</button>
@@ -11,8 +16,7 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from "vue-property-decorator";
 	import ProjectAvailabilityIcon from "@/components/project/ProjectAvailabilityIcon.vue";
-	import { Available, Deployed, EmployeeAvailability, ProjectDay } from "@/interfaces/Project";
-	import { findEmployeeAvailability } from "@/utils";
+	import { Available, Deployed, EmployeeAvailability, findEmployeeAvailability, ProjectDay } from "@/interfaces/Project";
 
 	@Component({
 		name: "ProjectAvailabilityButton",

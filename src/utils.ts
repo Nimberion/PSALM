@@ -8,7 +8,3 @@ export function newID(): string {
 export async function pathExists(dir: string, path: string): Promise<boolean> {
 	return (await readDir(dir)).find((element) => element.path === path) !== undefined;
 }
-
-export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvailability>, employeeId: string): EmployeeAvailability | undefined {
-	return staffAvailability.find((element) => element.employeeId === employeeId);
-}
