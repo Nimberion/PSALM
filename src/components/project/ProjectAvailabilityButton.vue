@@ -1,7 +1,7 @@
 <template>
-	<button class="flex justify-center text-white select-none m-1" :title="buttonTitle" @click="toggleEmployeeAvailability">
+	<button class="flex justify-center relative text-white select-none m-1" :title="buttonTitle" @click="toggleEmployeeAvailability">
 		<ProjectAvailabilityIcon
-			class="text-primary text-2xl"
+			class="text-primary text-2xl z-10"
 			:class="{
 				'text-primary': currentAvailability === 'TRUE' && column === 'available',
 				'text-danger': currentAvailability === 'INDISPOSED',
@@ -10,6 +10,8 @@
 			}"
 			:name="currentAvailability"
 		/>
+		<!-- CHECKBOX BG -->
+		<span class="bg-white w-4 h-4 absolute z-0 top-1/2 bottom-1/2 my-auto" />
 	</button>
 </template>
 

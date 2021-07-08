@@ -21,6 +21,7 @@ module.exports = {
 				warning: "#F6AE2D",
 				danger: "#B91C1C",
 				darkPrimary: "#2F4858",
+				highlight: "#f8f1d8",
 			},
 		},
 	},
