@@ -51,7 +51,7 @@ export function newProject(id: string, title = "", numberOfRequiredStaff = Numbe
 }
 
 export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvailability>, employeeId: string): EmployeeAvailability | undefined {
-	return staffAvailability.find((element) => element.employeeId === employeeId);
+	return staffAvailability.find((e) => e.employeeId === employeeId);
 }
 
 export function getNumberOfAvailabilities(project: Project, employeeId: string): number {

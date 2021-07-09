@@ -1,5 +1,5 @@
 <template>
-	<!-- :class="{ 'bg-primary rounded text-white': employee.id === id }"-->
+	<!-- bg-gradient-to-br from-[rgba(255,255,255,0.9)] to-[rgba(255,255,255,0.4)]-->
 	<div class="border bg-white rounded shadow-lg px-2 py-4">
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
@@ -8,12 +8,12 @@
 			<div class="px-1" title="Nachname">Nachname</div>
 			<div class="text-center" title="Hauptamtlich?">HA?</div>
 		</div>
-		<ul class="">
+		<ul>
 			<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto]" v-for="employee in tempStaff" :key="employee.id">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-400"></div>
+				<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
 				<!-- EMPLOYEE INPUTS -->
-				<PsalmInput v-if="editMode" type="text" v-model="employee.firstName" placeholder="Vorname" />
+				<PsalmInput v-if="editMode" class="mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" />
 				<PsalmInput v-if="editMode" type="text" v-model="employee.lastName" placeholder="Nachname" />
 				<PsalmInput v-if="editMode" type="checkbox" v-model="employee.fullTime" />
 				<!-- EMPLOYEE LIST -->
@@ -26,7 +26,7 @@
 			<!-- NO ENTRYS -->
 			<li v-if="tempStaff.length === 0" class="text-center">
 				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-400"></div>
+				<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
 				<p>Keine Einträge</p>
 			</li>
 		</ul>

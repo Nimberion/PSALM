@@ -1,5 +1,5 @@
 <template>
-	<div class="min-w-[100vw] bg-gradient-to-br from-info via-warning to-secondary min-h-screen">
+	<div class="min-w-[100vw] bg-gradient-to-br from-info-400 via-warning to-secondary min-h-screen">
 		<!-- HOME BUTTON -->
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')">
 			<PsalmIcon name="home" />

@@ -23,7 +23,7 @@
 				<div class="flex flex-col justify-end items-end row-span-2 sticky top-0 left-0 bg-white border-gray-400 border-r-2 border-b-2 z-30">
 					<div class="w-full h-full text-xs font-semibold">
 						<span>Benötigte Mitarbeiter: </span>
-						<PsalmInput class="text-center text-xs" type="number" v-model="tempProject.numberOfRequiredStaff" />
+						<PsalmInput class="w-6 text-center text-xs rounded" type="number" v-model="tempProject.numberOfRequiredStaff" />
 					</div>
 					<div class="w-24 text-xs text-center font-semibold">Statistik</div>
 					<div class="flex text-xs text-center border-t border-gray-400">
@@ -98,8 +98,6 @@
 </template>
 
 <script lang="ts">
-	// import { Employee, newEmployee } from "@/interfaces/Employee";
-	// import store from "@/store";
 	import {
 		Available,
 		Deployed,
@@ -131,7 +129,6 @@
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
 		tempProject: Project = newProject(newID());
-		editMode = false;
 
 		get project(): Project {
 			return store.state.projects.get(this.$route.path.split("/")[2]) as Project;
@@ -150,7 +147,7 @@
 		}
 
 		getNameById(id: string): string {
-			const employee = this.staff.find((element) => element.id === id);
+			const employee = this.staff.find((e) => e.id === id);
 			return `${employee?.firstName} ${employee?.lastName}`;
 		}
 
@@ -183,12 +180,13 @@
 			});
 		}
 
-		//delete unused staffAvailabilitys
-
 		async saveProject(): Promise<void> {
+			//delete unused staffAvailabilitys
+
 			// PUSH TEMP-PROJECTS TO STORE
 			store.commit("updateProject", this.tempProject);
 
+			// DELETE OLD JSON FILE
 			if (await pathExists("data\\projects", `data\\projects\\${this.tempProject.id}.json`)) {
 				await removeFile(`data/projects/${this.tempProject.id}.json`);
 			}
@@ -198,7 +196,6 @@
 			console.log("Save complete");
 
 			//temp
-			this.editMode = false;
 			console.log("saved", this.tempProject);
 		}
 

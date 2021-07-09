@@ -65,7 +65,6 @@
 					this.buttonTitle = "Reserve";
 					break;
 			}
-			// this.$emit("update:title", this.buttonTitle);
 		}
 
 		toggleEmployeeAvailability(): void {

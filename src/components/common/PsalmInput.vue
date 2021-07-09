@@ -14,19 +14,22 @@
 		:value="value"
 		min="0"
 		max="99"
-		class="appearance rounded focus:ring-primary focus:ring-2 border-0 focus:border-0 focus:-translate-x-1 focus:-translate-y-1 focus:shadow-input p-0"
+		class="bg-info-200 border-0 focus:bg-highlight focus:ring-0 p-0 px-1"
 		autocomplete="randomStuffToDisable"
 		@focus="$event.target.select()"
 		@change="update"
 	/>
-	<input
+	<!-- <input
 		v-else-if="type === 'text'"
 		type="text"
 		:value="value"
 		class="rounded focus:ring-primary focus:ring-2 border-0 focus:border-0 focus:-translate-x-1 focus:-translate-y-1 focus:shadow-input p-0 px-1"
 		autocomplete="randomStuffToDisable"
 		@change="update"
-	/>
+	/> -->
+	<!-- <div  class=""> -->
+	<input v-else-if="type === 'text'" type="text" :value="value" class="bg-info-200 border-0 focus:bg-highlight focus:ring-0 p-0 px-1 ]" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
+	<!-- </div> -->
 </template>
 
 <script lang="ts">
