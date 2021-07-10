@@ -40,7 +40,12 @@
 					class="h-[calc(3.75rem+1px)] grid col-span-2 sticky top-0 bg-white border-gray-400 border-l border-b border-r px-1 text-sm overflow-ellipsis whitespace-nowrap text-center place-content-center z-20"
 				>
 					<!-- <p class="min-h-[1.25rem] font-semibold overflow-ellipsis overflow-hidden">{{ day.date }}</p> -->
-					<input type="date" title="Datum bearbeiten" class="text-center font-semibold text-sm p-0 border-0 focus:border-0 focus:ring-0" v-model="day.date" />
+					<!-- <input type="date" title="Datum bearbeiten" class="text-center font-semibold text-sm p-0 border-0 focus:border-0 focus:ring-0" v-model="day.date" /> -->
+					<VueDatePicker v-model="day.date" format="DD.MM.YYYY" color="#be276b" no-header no-calendar-icon>
+						<template #activator="{ date }">
+							<p class="font-semibold">{{ date }}</p>
+						</template>
+					</VueDatePicker>
 					<p class="min-h-[1.25rem] overflow-ellipsis overflow-hidden">{{ day.time }}</p>
 					<p class="min-h-[1.25rem] overflow-ellipsis overflow-hidden">{{ day.participant }}</p>
 				</div>
@@ -121,10 +126,12 @@
 	import { newID, pathExists } from "@/utils";
 	import { Employee } from "@/interfaces/Employee";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import { VueDatePicker } from "@mathieustan/vue-datepicker";
+	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 
 	@Component({
 		name: "ProjectPage",
-		components: { ProjectAvailabilityButton, ProjectStaff, PsalmIcon, PsalmInput },
+		components: { ProjectAvailabilityButton, ProjectStaff, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
@@ -213,39 +220,37 @@
 	}
 </script>
 
-<style scoped>
-	/* ::-webkit-datetime-edit-fields-wrapper {
-		background: pink;
-	} */
-	/* ::-webkit-datetime-edit-text {
-		color: red;
-	} */
-	::-webkit-datetime-edit-month-field:focus {
-		background: transparent;
-		color: black;
+<style>
+	/* DATE-PICKER STYLING */
+	/* .vd-picker,
+	.vd-menu__content {
+		background-color: gray;
+		border-radius: 2px;
 	}
-	::-webkit-datetime-edit-day-field:focus {
-		background: transparent;
-		color: black;
-	}
-	::-webkit-datetime-edit-year-field:focus {
-		background: transparent;
-		color: black;
-	}
-	/* ::-webkit-inner-spin-button {
-		display: none;
-	} */
 
-	input[type="date"]::-webkit-calendar-picker-indicator {
-		background: transparent;
-		bottom: 0;
-		color: transparent;
-		cursor: pointer;
-		height: auto;
-		left: -1.5rem;
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: auto;
+	.vd-picker__table-day__effect,
+	.vd-picker__table-day__current {
+		border-radius: 2px;
 	}
+
+	.vd-picker__table-day__current {
+		border: 1px solid white;
+	}
+
+	.vd-icon,
+	.vd-picker__controls-label button:not(:hover):not(:focus),
+	.vd-picker__table-day__text,
+	.vd-picker__months-button,
+	.vd-picker__years-button {
+		color: white;
+	}
+
+	.vd-picker__months-button:hover,
+	.vd-picker__years-button:hover {
+		color: blue;
+	}
+
+	.vd-picker__table-weekday {
+		color: lightgray;
+	} */
 </style>

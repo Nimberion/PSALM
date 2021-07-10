@@ -10,6 +10,7 @@
     "tauri:serve": "vue-cli-service tauri:serve"
   },
   "dependencies": {
+    "@mathieustan/vue-datepicker": "^0.2.11",
     "@tailwindcss/aspect-ratio": "^0.2.1",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/postcss7-compat": "^2.0.2",

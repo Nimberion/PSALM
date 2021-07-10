@@ -27,8 +27,9 @@
 		autocomplete="randomStuffToDisable"
 		@change="update"
 	/> -->
-	<!-- <div  class=""> -->
-	<input v-else-if="type === 'text'" type="text" :value="value" class="bg-info-200 border-0 focus:bg-highlight focus:ring-0 p-0 px-1 ]" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
+	<!-- <div  class="relative w-full"> -->
+	<input v-else-if="type === 'text'" type="text" :value="value" class="bg-transparent border-0 focus:ring-0 p-0 px-1 soft-edges" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
+	<!-- <div class="absolute h-full w-full left-0 top-0 blur-sm bg-info-200 bg-opacity-30 z-0"></div> -->
 	<!-- </div> -->
 </template>
 
@@ -64,5 +65,13 @@
 	input[type="number"]::-webkit-outer-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
+	}
+
+	.soft-edges {
+		/* box-shadow: 5px 5px 10px 0 white inset, -5px -5px 10px 0 white inset; */
+	}
+	.soft-edges:focus {
+		/* background: radial-gradient(circle at bottom left, whsite 0%, transparent 50%); */
+		background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 5%, transparent 100%);
 	}
 </style>

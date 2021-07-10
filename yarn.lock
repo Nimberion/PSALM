@@ -951,6 +951,14 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@mathieustan/vue-datepicker@^0.2.11":
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/@mathieustan/vue-datepicker/-/vue-datepicker-0.2.11.tgz#58d420c04312417fb10978f838ef984c28389c2d"
+  integrity sha512-+EQvlAwnC0fn8UCUgYaGI1r027HzrIWIbqtcYZMQ8TRZbhzT3ILXlqRSxX4z547vF7dpmCjNyvpLAF5zFMnQug==
+  dependencies:
+    body-scroll-lock "^2.6.1"
+    dayjs "1.8.24"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1042,6 +1050,7 @@
     mini-svg-data-uri "^1.2.3"
 
 "@tailwindcss/postcss7-compat@^2.0.2", tailwindcss@>1.9.6, "tailwindcss@npm:@tailwindcss/postcss7-compat@^2.0.2":
+  name "@tailwindcss/postcss7-compat"
   version "2.2.4"
   resolved "https://registry.nlark.com/@tailwindcss/postcss7-compat/download/@tailwindcss/postcss7-compat-2.2.4.tgz#0e5b446e94cfdf892e4f76cecb703c8d698050f3"
   integrity sha1-DltEbpTP34kuT3bOy3A8jWmAUPM=
@@ -2403,6 +2412,11 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
+body-scroll-lock@^2.6.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-2.7.1.tgz#caf3f9c91773af1ffb684cd66ed9137b5b737014"
+  integrity sha512-hS53SQ8RhM0e4DsQ3PKz6Gr2O7Kpdh59TWU98GHjaQznL7y4dFycEPk7pFQAikqBaUSCArkc5E3pe7CWIt2fZA==
+
 bonjour@^3.5.0:
   version "3.5.0"
   resolved "https://registry.npm.taobao.org/bonjour/download/bonjour-3.5.0.tgz#8e890a183d8ee9a2393b3844c691a42bcf7bc9f5"
@@ -3609,6 +3623,11 @@ dashdash@^1.12.0:
   integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
   dependencies:
     assert-plus "^1.0.0"
+
+dayjs@1.8.24:
+  version "1.8.24"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.24.tgz#2ef8a2ab9425eaf3318fe78825be1c571027488d"
+  integrity sha512-bImQZbBv86zcOWOq6fLg7r4aqMx8fScdmykA7cSh+gH1Yh8AM0Dbw0gHYrsOrza6oBBnkK+/OaR+UAa9UsMrDw==
 
 de-indent@^1.0.2:
   version "1.0.2"

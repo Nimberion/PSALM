@@ -1,5 +1,6 @@
 <template>
-	<div class="min-w-[100vw] bg-gradient-to-br from-info-400 via-warning to-secondary min-h-screen">
+	<!-- bg-gradient-to-br from-info-400 via-warning to-secondary  -->
+	<div class="min-w-[100vw] min-h-screen bg-secondary bg-custom-gradient">
 		<!-- HOME BUTTON -->
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')">
 			<PsalmIcon name="home" />
@@ -78,3 +79,22 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.bg-custom-gradient {
+		background-image: repeating-linear-gradient(-25deg, transparent, transparent 80px, rgba(255, 255, 255, 0.2) 80px, rgba(255, 255, 255, 0.2) 100px),
+			repeating-linear-gradient(10deg, transparent, transparent 80px, rgba(255, 255, 255, 0.2) 80px, rgba(255, 255, 255, 0.2) 100px), linear-gradient(to bottom right, #86bbd8, #f6ae2d, #f26419);
+		background-size: 100% 100%, 100% 100%, 100% 100%;
+		background-position: 0 0, 0 0, 0 0;
+
+		background-repeat: no-repeat;
+
+		/* radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
+		radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
+		radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
+
+		28vw 28vh, 33vw 33vh, 38vw 38vh,
+
+		12vw 8vh, 65vw 40vh, 25vw 55vh, */
+	}
+</style>
