@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-white rounded border shadow-lg px-2 py-4">
+	<PsalmCard>
 		<h2 class="text-xl text-center font-semibold mb-4">Projekte</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,2rem] font-semibold">
@@ -30,7 +30,7 @@
 
 		<!-- DELETE MODAL -->
 		<DeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
-	</div>
+	</PsalmCard>
 </template>
 
 <script lang="ts">
@@ -38,6 +38,7 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import DeleteModal from "@/components/common/DeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
+	import PsalmCard from "@/components/common/PsalmCard.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newProject, Project } from "@/models/interfaces/Project";
@@ -46,7 +47,7 @@
 
 	@Component({
 		name: "ProjectList",
-		components: { DeleteModal, PsalmButton, PsalmIcon, PsalmInput },
+		components: { DeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();

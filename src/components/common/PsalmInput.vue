@@ -67,9 +67,6 @@
 		margin: 0;
 	}
 
-	.soft-edges {
-		/* box-shadow: 5px 5px 10px 0 white inset, -5px -5px 10px 0 white inset; */
-	}
 	.soft-edges:focus {
 		/* background: radial-gradient(circle at bottom left, whsite 0%, transparent 50%); */
 		background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 5%, transparent 100%);

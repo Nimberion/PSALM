@@ -1,6 +1,7 @@
 <template>
 	<!-- bg-gradient-to-br from-[rgba(255,255,255,0.7)] to-[rgba(255,255,255,0.3)] backdrop-blur -->
-	<div class="bg-white rounded shadow-lg px-2 py-4" :class="{ 'from-[rgba(245,170,170,0.5)]': editMode }">
+	<!-- <div class="bg-white rounded-sm shadow-card px-2 py-4"> -->
+	<PsalmCard>
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold">
@@ -38,7 +39,7 @@
 
 		<!-- DELETE MODAL -->
 		<DeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
-	</div>
+	</PsalmCard>
 </template>
 
 <script lang="ts">
@@ -51,10 +52,11 @@
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
+	import PsalmCard from "@/components/common/PsalmCard.vue";
 
 	@Component({
 		name: "Staff",
-		components: { DeleteModal, PsalmButton, PsalmIcon, PsalmInput },
+		components: { DeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];

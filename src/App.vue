@@ -6,7 +6,7 @@
 			<PsalmIcon name="home" />
 		</button>
 		<div>
-			<router-view v-if="!loading" class="p-2" />
+			<router-view v-if="!loading" class="" />
 		</div>
 		<!-- LOADING SCREEN -->
 		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
