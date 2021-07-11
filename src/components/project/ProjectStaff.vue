@@ -18,7 +18,7 @@
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { Employee } from "@/interfaces/Employee";
+	import { Employee } from "@/models/interfaces/Employee";
 
 	@Component({
 		name: "ProjectStaff",

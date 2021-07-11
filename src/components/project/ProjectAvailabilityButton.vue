@@ -18,7 +18,10 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from "vue-property-decorator";
 	import ProjectAvailabilityIcon from "@/components/project/ProjectAvailabilityIcon.vue";
-	import { Available, Deployed, EmployeeAvailability, findEmployeeAvailability, ProjectDay } from "@/interfaces/Project";
+	import { EmployeeAvailability, ProjectDay } from "@/models/interfaces/Project";
+	import { Available } from "@/models/enums/Available";
+	import { Deployed } from "@/models/enums/Deployed";
+	import { findEmployeeAvailability } from "@/utils/projects";
 
 	@Component({
 		name: "ProjectAvailabilityButton",
@@ -30,7 +33,7 @@
 		@Prop({ required: true }) employeeId!: string;
 
 		tempStaffAvailability: Array<EmployeeAvailability> = this.day.staffAvailability;
-		currentAvailability: Available | Deployed = Available.false;
+		currentAvailability: Available | Deployed = Available.FALSE;
 		buttonTitle = "";
 
 		created(): void {
@@ -74,16 +77,16 @@
 					break;
 				case "TRUE":
 					if (this.column === "available") {
-						this.currentAvailability = Available.indisposed;
+						this.currentAvailability = Available.INDISPOSED;
 					} else {
-						this.currentAvailability = Deployed.reserve;
+						this.currentAvailability = Deployed.RESERVE;
 					}
 					break;
 				case "INDISPOSED":
-					this.currentAvailability = Available.false;
+					this.currentAvailability = Available.FALSE;
 					break;
 				case "RESERVE":
-					this.currentAvailability = Deployed.false;
+					this.currentAvailability = Deployed.FALSE;
 					break;
 			}
 			this.$emit("change", this.day, this.employeeId, this.column, this.currentAvailability);

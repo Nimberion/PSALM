@@ -8,15 +8,13 @@
 			<button class="ml-2" title="Mitarbeiter bearbeiten" @click="projectStaffEditMode = !projectStaffEditMode"><PsalmIcon name="users-cog" class="text-primary text-xl" /></button>
 			<button class="ml-2" title="Speichern" @click="saveProject"><PsalmIcon name="save" class="text-primary text-xl" /></button>
 		</div>
-
+		<!-- PROJECT-STAFF-EDITOR -->
 		<div v-if="projectStaffEditMode" class="flex max-h-[calc(100vh-5.75rem-4px)] max-w-[calc(100vw-2rem-2px)] border bg-white rounded shadow-lg m-2 p-4">
 			<ProjectStaff :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
 		</div>
 
 		<!-- TABLE WRAPPER -->
 		<div class="flex max-h-[calc(100vh-5.75rem-4px)] max-w-[calc(100vw-2rem-2px)] border bg-white rounded shadow-lg m-2 px-2 py-4">
-			<!-- PROJECT-STAFF-EDITOR -->
-			<!-- <ProjectStaff v-if="projectStaffEditMode" :project-staff="tempProject.staff" @update="updateTempProjectStaff" /> -->
 			<!-- TABLE -->
 			<section class="grid overflow-scroll" :style="`grid-template-columns: auto repeat(${tempProject.projectDays.length * 2},3rem) auto;`">
 				<!-- TOP-LEFT CORNER -->
@@ -41,7 +39,7 @@
 				>
 					<!-- <p class="min-h-[1.25rem] font-semibold overflow-ellipsis overflow-hidden">{{ day.date }}</p> -->
 					<!-- <input type="date" title="Datum bearbeiten" class="text-center font-semibold text-sm p-0 border-0 focus:border-0 focus:ring-0" v-model="day.date" /> -->
-					<VueDatePicker v-model="day.date" format="DD.MM.YYYY" color="#be276b" no-header no-calendar-icon>
+					<VueDatePicker v-model="day.date" format="DD.MM.YYYY" color="#33658A" no-header no-calendar-icon>
 						<template #activator="{ date }">
 							<p class="font-semibold">{{ date }}</p>
 						</template>
@@ -103,31 +101,21 @@
 </template>
 
 <script lang="ts">
-	import {
-		Available,
-		Deployed,
-		EmployeeAvailability,
-		findEmployeeAvailability,
-		getNumberOfAvailabilities,
-		getNumberOfDeployments,
-		getSetPointOfDeployments,
-		newEmployeeAvailability,
-		newProject,
-		newProjectDay,
-		Project,
-		ProjectDay,
-	} from "@/interfaces/Project";
+	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { newID, pathExists } from "@/utils";
-	import { Employee } from "@/interfaces/Employee";
+	import { newID, pathExists } from "@/utils/utils";
+	import { Employee } from "@/models/interfaces/Employee";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 	import { VueDatePicker } from "@mathieustan/vue-datepicker";
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
+	import { Available } from "@/models/enums/Available";
+	import { Deployed } from "@/models/enums/Deployed";
+	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments } from "@/utils/projects";
 
 	@Component({
 		name: "ProjectPage",
@@ -200,10 +188,9 @@
 
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
-			console.log("Save complete");
 
 			//temp
-			console.log("saved", this.tempProject);
+			console.log("Save complete");
 		}
 
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {

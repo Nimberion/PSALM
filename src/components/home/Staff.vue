@@ -1,6 +1,6 @@
 <template>
 	<!-- bg-gradient-to-br from-[rgba(255,255,255,0.7)] to-[rgba(255,255,255,0.3)] backdrop-blur -->
-	<div class="bg-gradient-to-br from-[rgba(255,255,255,0.7)] to-[rgba(255,255,255,0.3)] bg-blend-screen bg-opacity-50 backdrop-blur-sm rounded-xl shadow-lg px-2 py-4" :class="{ 'from-[rgba(245,170,170,0.5)]': editMode }">
+	<div class="bg-white rounded shadow-lg px-2 py-4" :class="{ 'from-[rgba(245,170,170,0.5)]': editMode }">
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold">
@@ -37,15 +37,15 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<DeleteModal v-if="showDeleteModal === true" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
+		<DeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
 <script lang="ts">
 	import { Component, Vue } from "vue-property-decorator";
 	import store from "@/store/index";
-	import { Employee, newEmployee } from "@/interfaces/Employee";
-	import { pathExists } from "@/utils";
+	import { Employee, newEmployee } from "@/models/interfaces/Employee";
+	import { pathExists } from "@/utils/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 	import DeleteModal from "@/components/common/DeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";

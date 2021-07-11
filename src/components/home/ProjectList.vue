@@ -29,7 +29,7 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<DeleteModal v-if="showDeleteModal === true" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
+		<DeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
@@ -40,8 +40,8 @@
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { newProject, Project } from "@/interfaces/Project";
-	import { newID, pathExists } from "@/utils";
+	import { newProject, Project } from "@/models/interfaces/Project";
+	import { newID, pathExists } from "@/utils/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 
 	@Component({
@@ -130,7 +130,7 @@
 		}
 
 		updateProjectsArray(): void {
-			this.projectsArray = Array.from(this.tempProjects, ([name, value]) => value);
+			this.projectsArray = Array.from(this.tempProjects.values());
 		}
 	}
 </script>

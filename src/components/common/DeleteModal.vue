@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute left-0 bottom-0 h-full min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)] overflow-hidden" :style="`top: ${scrollY}px;`">
+	<div class="absolute left-0 bottom-0 right-0 top-0 h-full min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)] overflow-hidden z-50" :style="`top: ${scrollY}px;`">
 		<div class="w-[450px] bg-white shadow-lg z-50">
 			<!-- TITLE BAR -->
 			<div class="h-[30px] flex justify-between items-center shadow-lg select-none">
@@ -38,7 +38,7 @@
 				<!-- BUTTONS -->
 				<div class="flex justify-center">
 					<PsalmButton
-						class="bg-danger"
+						class="bg-primary"
 						@click="
 							$emit('confirm');
 							enableScrolling();
@@ -46,7 +46,7 @@
 						>Bestätigen</PsalmButton
 					>
 					<PsalmButton
-						class="bg-primary"
+						class="bg-gray-500"
 						@click="
 							$emit('cancel');
 							enableScrolling();
@@ -63,8 +63,8 @@
 	import { Component, Prop, Vue } from "vue-property-decorator";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
-	import { Employee } from "@/interfaces/Employee";
-	import { Project, ProjectDay } from "@/interfaces/Project";
+	import { Employee } from "@/models/interfaces/Employee";
+	import { Project, ProjectDay } from "@/models/interfaces/Project";
 
 	@Component({
 		name: "DeleteModal",

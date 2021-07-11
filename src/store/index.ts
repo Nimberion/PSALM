@@ -1,5 +1,5 @@
-import { Employee } from "@/interfaces/Employee";
-import { Project } from "@/interfaces/Project";
+import { Employee } from "@/models/interfaces/Employee";
+import { Project } from "@/models/interfaces/Project";
 import Vue from "vue";
 import Vuex from "vuex";
 

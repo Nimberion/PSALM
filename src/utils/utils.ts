@@ -1,5 +1,4 @@
 import { readDir } from "@tauri-apps/api/fs";
-import { EmployeeAvailability } from "./interfaces/Project";
 
 export function newID(): string {
 	return Math.random().toString(36).substr(2, 9);

@@ -1,4 +1,4 @@
-import { newID } from "@/utils";
+import { newID } from "@/utils/utils";
 export interface Employee {
 	id: string;
 	firstName: string;
