@@ -1,7 +1,7 @@
 <template>
-	<button class="flex justify-center relative text-white select-none m-1" :title="buttonTitle" @click="toggleEmployeeAvailability">
+	<button class="flex justify-center relative text-white select-none" :title="buttonTitle" @click="toggleEmployeeAvailability">
 		<ProjectAvailabilityIcon
-			class="text-primary text-2xl z-10"
+			class="text-primary text-2xl z-[1]"
 			:class="{
 				'text-primary': currentAvailability === 'TRUE' && column === 'available',
 				'text-danger': currentAvailability === 'INDISPOSED',

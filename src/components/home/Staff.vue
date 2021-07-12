@@ -1,7 +1,5 @@
 <template>
-	<!-- bg-gradient-to-br from-[rgba(255,255,255,0.7)] to-[rgba(255,255,255,0.3)] backdrop-blur -->
-	<!-- <div class="bg-white rounded-sm shadow-card px-2 py-4"> -->
-	<PsalmCard>
+	<PsalmCard class="px-2 py-4">
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold">

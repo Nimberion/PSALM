@@ -1,5 +1,5 @@
 <template>
-	<PsalmCard>
+	<PsalmCard class="px-2 py-4">
 		<h2 class="text-xl text-center font-semibold mb-4">Projekte</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,2rem] font-semibold">

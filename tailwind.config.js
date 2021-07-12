@@ -15,6 +15,7 @@ module.exports = {
 				card: "0 0 15px 1px rgba(0, 0, 0, 0.4)",
 			},
 			colors: {
+				inherit: "inherit",
 				primary: "#33658A",
 				secondary: "#F26419",
 				success: "#0c9c57",
