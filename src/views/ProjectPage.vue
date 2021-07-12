@@ -1,10 +1,10 @@
 <template>
 	<div class="flex flex-col place-items-center p-2">
 		<!-- HEADER -->
-		<PsalmCard class="flex place-items-center p-4">
-			<h2 class="text-xl font-semibold border-r border-gray-400 pr-2">{{ project.title }}</h2>
-			<button class="ml-2" title="Projekttag hinzufügen" @click="addProjectDay"><PsalmIcon name="calendar-plus" class="text-primary text-xl" /></button>
-			<button class="ml-2" title="Mitarbeiter bearbeiten" @click="projectStaffEditMode = !projectStaffEditMode"><PsalmIcon name="users-cog" class="text-primary text-xl" /></button>
+		<PsalmCard class="flex place-items-center p-4 max-w-[calc(100vw-2rem)">
+			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold overflow-ellipsis" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
+			<button class="ml-4" title="Veranstaltung hinzufügen" @click="addProjectDay"><PsalmIcon name="calendar-plus" class="text-primary text-xl" /></button>
+			<button class="ml-2" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode"><PsalmIcon name="users-cog" class="text-primary text-xl" /></button>
 			<button class="ml-2" title="Speichern" @click="saveProject"><PsalmIcon name="save" class="text-primary text-xl" /></button>
 		</PsalmCard>
 
@@ -14,7 +14,7 @@
 			<ProjectStaff v-if="projectStaffEditMode" class="max-h-[calc(100vh-6.75rem)] px-2 py-4" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
 
 			<!-- PROJECT TABLE -->
-			<PsalmCard class="flex max-h-[calc(100vh-6.75rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)]': projectStaffEditMode }">
+			<PsalmCard class="flex h-full max-h-[calc(100vh-6.75rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)]': projectStaffEditMode }">
 				<div class="overflow-scroll">
 					<table class="project-table">
 						<thead>
@@ -23,35 +23,35 @@
 									<div class="w-full h-full p-2">
 										<!-- #### -->
 										<span class="mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
-										<input v-model="tempProject.numberOfRequiredStaff" class="w-8 text-sm text-center focus:border-secondary focus:ring-0" type="number" min="0" max="99" maxlength="2" @focus="$event.target.select()" />
+										<PsalmInput v-model="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 									</div>
 								</th>
-								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" colspan="2" class="br-3px z-10" :class="{ showSecondStaffList: showSecondStaffList }">
-									<VueDatePicker v-model="day.date" class="border border-[#6b7280] active:border-secondary m-1 mt-0" format="DD.MM.YYYY" color="#33658A" no-header no-calendar-icon>
-										<template #activator="{ date }">
-											<span class="w-full font-semibold">{{ date }}</span>
-										</template>
-									</VueDatePicker>
+								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" colspan="2" class="br-3px z-10">
+									<div class="flex m-1 mt-0">
+										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" no-header no-calendar-icon>
+											<template #activator="{ date }">
+												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary">{{ date }}</span>
+											</template>
+										</VueDatePicker>
+										<button class="h-[calc(1.25rem+2px)] filter hover:brightness-[0.8] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)">
+											<PsalmIcon name="trash" class="text-danger" />
+										</button>
+									</div>
 								</th>
-								<th v-if="showSecondStaffList" rowspan="4" class="bl-3px sticky right-0 z-20"></th>
+								<th rowspan="4" class="hidden lg:table-cell bl-3px sticky right-0 z-20"></th>
 							</tr>
 							<tr>
 								<!-- TIME -->
 								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px overflow-ellipsis overflow-hidden z-10">
-									<input type="text" v-model="day.time" class="w-[6rem] text-sm text-center focus:border-secondary focus:ring-0 m-1 mt-0" placeholder="Zeitspanne" />
+									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" />
 								</th>
 							</tr>
 							<tr>
-								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]">
-									<div class="w-full h-full flex p-2">
-										<input type="checkbox" class="place-self-center text-black mr-2" @change="showSecondStaffList = !showSecondStaffList" />
-										<div class="">2. Mitarbeiterliste</div>
-									</div>
-								</th>
+								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"></th>
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
 								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px overflow-ellipsis overflow-hidden z-10">
-									<input type="text" v-model="day.participant" class="w-[6rem] text-sm text-center focus:border-secondary focus:ring-0 m-1 mt-0" placeholder="Teilnehmer" />
+									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" />
 								</th>
 							</tr>
 							<tr>
@@ -65,8 +65,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="employee in staff" :key="employee.id" :class="{ fullTime: employee.fullTime }">
-								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+							<tr v-for="employee in staff" :key="employee.id">
+								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left" :title="`${employee.firstName} ${employee.lastName}`">
 									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
 								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">
@@ -82,19 +82,26 @@
 									<td :key="`available-${day.id}`">
 										<ProjectAvailabilityButton class="w-full" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
-									<td :key="`deployed-${day.id}`" :class="{ showSecondStaffList: showSecondStaffList }">
+									<td :key="`deployed-${day.id}`">
 										<ProjectAvailabilityButton class="w-full" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
 								</template>
-								<td v-if="showSecondStaffList" class="bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+								<td
+									class="hidden lg:table-cell bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left"
+									:title="`${employee.firstName} ${employee.lastName}`"
+								>
 									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
+							</tr>
+							<tr v-if="tempProject.staff.length === 0">
+								<td colspan="6">Füge Mitarbeiter zu diesem Projekt hinzu.</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</PsalmCard>
 		</div>
+		<DeleteModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
@@ -102,6 +109,7 @@
 	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
+	import DeleteModal from "@/components/common/DeleteModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
@@ -119,12 +127,14 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { ProjectAvailabilityButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { DeleteModal, ProjectAvailabilityButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
 		tempProject: Project = newProject(newID());
+		projectDayToDelete: ProjectDay = newProjectDay([]);
 		showSecondStaffList = false;
+		showDeleteModal = false;
 
 		get project(): Project {
 			return store.state.projects.get(this.$route.path.split("/")[2]) as Project;
@@ -136,6 +146,10 @@
 
 		created(): void {
 			this.tempProject = JSON.parse(JSON.stringify(this.project));
+
+			if (this.tempProject.staff.length === 0) {
+				this.projectStaffEditMode = true;
+			}
 		}
 
 		addProjectDay(): void {
@@ -194,6 +208,21 @@
 			console.log("Save complete");
 		}
 
+		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
+			this.projectDayToDelete = projectDayToDelete;
+			this.showDeleteModal = true;
+		}
+
+		deleteProjectDay(): void {
+			this.tempProject.projectDays.splice(
+				this.tempProject.projectDays.findIndex((e) => e.id === this.projectDayToDelete.id),
+				1,
+			);
+
+			this.saveProject();
+			this.showDeleteModal = false;
+		}
+
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {
 			return getNumberOfAvailabilities(project, employeeId);
 		}
@@ -209,11 +238,6 @@
 </script>
 
 <style scoped>
-	.project-table input[type="number"],
-	.project-table input[type="text"] {
-		padding: 0 0.25rem;
-	}
-
 	input[type="number"]::-webkit-inner-spin-button,
 	input[type="number"]::-webkit-outer-spin-button {
 		-webkit-appearance: none;
@@ -306,7 +330,8 @@
 	}
 
 	/* REMOVING LAST RIGHT BORDER & PADDING */
-	.project-table .showSecondStaffList:nth-last-child(2),
+	.project-table td:nth-last-child(2),
+	.project-table tr:first-of-type th:nth-last-child(2),
 	.project-table td:last-of-type,
 	.project-table th:last-of-type {
 		--border-r: 0px !important;

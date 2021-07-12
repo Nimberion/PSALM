@@ -3,9 +3,15 @@
 		<h2 class="text-center font-semibold mb-4">Mitarbeiter</h2>
 		<ul class="px-2">
 			<li v-for="employee in staff" :key="employee.id">
-				<label class="grid grid-cols-[2rem,auto] cursor-pointer">
-					<input type="checkbox" v-model="tempProjectStaff" :value="employee.id" class="cursor-pointer place-self-center rounded text-primary focus:ring-primary focus:border-primary mr-2" @change="updateTempProjectStaff" />
-					<span class="overflow-ellipsis overflow-hidden whitespace-nowrap">{{ employee.firstName }} {{ employee.lastName }} </span>
+				<label class="grid grid-cols-[2rem,auto] cursor-pointer items-center">
+					<input
+						type="checkbox"
+						v-model="tempProjectStaff"
+						:value="employee.id"
+						class="h-[1.125rem] w-[1.125rem] border-2 border-primary place-self-center text-primary focus:ring-transparent rounded-sm focus:ring-0 cursor-pointer mr-2 my-1"
+						@change="updateTempProjectStaff"
+					/>
+					<span class="overflow-ellipsis overflow-hidden whitespace-nowrap" :title="`${employee.firstName} ${employee.lastName}`">{{ employee.firstName }} {{ employee.lastName }} </span>
 				</label>
 			</li>
 		</ul>

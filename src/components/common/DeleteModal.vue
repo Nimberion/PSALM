@@ -28,7 +28,7 @@
 							Bist du sicher, dass du <span class="font-semibold">"{{ objectToDelete.title }}"</span> löschen möchtest?
 						</p>
 						<p v-else-if="type === 'projectDay'">
-							Bist du sicher, dass du die Veranstaltung am <span class="font-semibold">{{ objectToDelete.date }}</span> löschen möchtest?
+							Bist du sicher, dass du die Veranstaltung am <span class="font-semibold">{{ projectDayDateToDelete }}</span> löschen möchtest?
 						</p>
 						<p v-else-if="type === 'projectEmployee'">
 							Bist du sicher, dass du <span class="font-semibold">"{{ objectToDelete.firstName }} {{ objectToDelete.lastName }}"</span> aus <span class="font-semibold">"{{ projectName }}"</span> entfernen möchtest?
@@ -76,9 +76,19 @@
 		@Prop({ required: false }) projectName!: string;
 
 		scrollY = window.scrollY;
+		projectDayDateToDelete = "";
 
 		created(): void {
 			document.body.classList.add("no-scroll");
+
+			// FORMAT DATE
+			if (this.type === "projectDay") {
+				const projectDayToDelete = this.objectToDelete as ProjectDay;
+
+				const splittedDate = projectDayToDelete.date.toString().split("-");
+
+				this.projectDayDateToDelete = `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
+			}
 		}
 
 		enableScrolling(): void {

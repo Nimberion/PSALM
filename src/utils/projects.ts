@@ -63,6 +63,8 @@ export function getSetPointOfDeployments(project: Project, staff: Array<Employee
 
 		if (setPointOfDeployments > employeeAvailability) {
 			return employeeAvailability;
+		} else if (isNaN(setPointOfDeployments)) {
+			return "0";
 		} else {
 			return setPointOfDeployments;
 		}

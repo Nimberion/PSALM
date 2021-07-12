@@ -12,13 +12,9 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
 				<!-- EMPLOYEE INPUTS -->
-				<PsalmInput v-if="editMode" class="mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" />
-				<PsalmInput v-if="editMode" type="text" v-model="employee.lastName" placeholder="Nachname" />
-				<PsalmInput v-if="editMode" type="checkbox" v-model="employee.fullTime" />
-				<!-- EMPLOYEE LIST -->
-				<div v-if="!editMode" class="px-1">{{ employee.firstName }}</div>
-				<div v-if="!editMode" class="px-1">{{ employee.lastName }}</div>
-				<PsalmInput v-if="!editMode" type="checkbox" state="disabled" disabled v-model="employee.fullTime" />
+				<PsalmInput class="my-1 mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" />
+				<PsalmInput class="my-1" type="text" v-model="employee.lastName" placeholder="Nachname" />
+				<PsalmInput type="checkbox" v-model="employee.fullTime" />
 
 				<button class="place-self-center filter hover:brightness-[0.8]" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>
 			</li>
@@ -31,8 +27,8 @@
 		</ul>
 		<div class="flex justify-center">
 			<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
-			<PsalmButton v-if="editMode" title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
-			<PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
+			<PsalmButton title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
+			<!-- <PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" /> -->
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -62,7 +58,7 @@
 		showDeleteModal = false;
 		employeeToDelete = newEmployee();
 
-		editMode = false;
+		// editMode = false;
 
 		get staff(): Array<Employee> {
 			// return store.getters.sortedStaff;
@@ -78,7 +74,6 @@
 		// }
 
 		addEmployee(): void {
-			this.editMode = true;
 			this.tempStaff.push(newEmployee());
 		}
 
@@ -98,7 +93,6 @@
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(store.state.staff), path: "data/staff.json" });
 
-			this.editMode = false;
 			console.log("Save complete");
 		}
 

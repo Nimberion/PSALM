@@ -11,7 +11,7 @@ export interface EmployeeAvailability {
 
 export interface ProjectDay {
 	id: string;
-	date: Date;
+	date: string;
 	time: string;
 	participant: string;
 	staffAvailability: Array<EmployeeAvailability>;
@@ -29,8 +29,9 @@ export function newEmployeeAvailability(employeeId: string, available = Availabl
 	return { employeeId, available, deployed };
 }
 
-export function newProjectDay(staff: Array<Employee>, id = newID(), date = new Date(), time = "", participant = ""): ProjectDay {
+export function newProjectDay(staff: Array<Employee>, id = newID(), date = "", time = "", participant = ""): ProjectDay {
 	const staffAvailability: Array<EmployeeAvailability> = [];
+	date = new Date().toISOString().split("T")[0];
 
 	staff.forEach((e) => staffAvailability.push(newEmployeeAvailability(e.id)));
 
