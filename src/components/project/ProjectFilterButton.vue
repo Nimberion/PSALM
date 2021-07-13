@@ -1,14 +1,19 @@
 <template>
-	<button class="w-full flex justify-center place-items-center text-black select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="getTitle">
-		<span class="text-xs mr-[0.125rem]">{{ prefix }}</span>
-		<!-- FILTER ICON -->
-		<!--'text-warning': currentAvailability === 'RESERVE',
-			'text-success': currentAvailability === 'TRUE' && column !== 'available', -->
+	<button
+		class="w-full flex justify-center place-items-center text-black select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0"
+		:class="{
+			stripes: (activeFilter.dayId !== dayId || activeFilter.column !== column) && activeFilter.dayId !== '',
+		}"
+		:title="updateTitle()"
+		@click="toggleFilter"
+	>
+		<span class="text-xs mr-[0.125rem]">{{ columnTitle }}</span>
 
+		<!-- FILTER ICON -->
 		<svg
 			class="text-gray-500 text-[0.9rem]"
 			:class="{
-				'text-secondary': currentFilter === day.id,
+				'text-secondary': activeFilter.dayId === dayId && activeFilter.column === column,
 			}"
 			xmlns="http://www.w3.org/2000/svg"
 			aria-hidden="true"
@@ -28,8 +33,8 @@
 </template>
 
 <script lang="ts">
+	import { ActiveFilter } from "@/models/interfaces/ActiveFilter";
 	import { Component, Prop, Vue } from "vue-property-decorator";
-	import { ProjectDay } from "@/models/interfaces/Project";
 
 	@Component({
 		name: "ProjectFilterButton",
@@ -37,57 +42,40 @@
 	})
 	export default class ProjectFilterButton extends Vue {
 		@Prop({ required: true }) column!: string; //available or deployed
-		@Prop({ required: true }) day!: ProjectDay;
-		@Prop({ required: true }) currentFilter!: string;
+		@Prop({ required: true }) dayId!: string;
+		@Prop({ required: true }) activeFilter!: ActiveFilter;
 
-		buttonTitle = "";
-		prefix = "";
-		active = false;
+		columnTitle = "";
 
 		created(): void {
 			if (this.column === "available") {
-				this.prefix = "Kann";
+				this.columnTitle = "Kann";
 			} else {
-				this.prefix = "Ist";
+				this.columnTitle = "Ist";
 			}
-
-			this.active = this.currentFilter === this.day.id;
-			this.getTitle();
 		}
 
-		getTitle(): void {
-			if (this.active) {
-				this.buttonTitle = "Filter deaktivieren";
+		updateTitle(): string {
+			if (this.activeFilter.dayId === this.dayId && this.activeFilter.column === this.column) {
+				return "Filter deaktivieren";
 			} else {
 				if (this.column === "available") {
-					this.buttonTitle = "Nur verfügbare Mitarbeiter anzeigen";
+					return "Nur verfügbare Mitarbeiter anzeigen";
 				} else {
-					this.buttonTitle = "Nur eingeteilte Mitarbeiter anzeigen";
+					return "Nur eingeteilte Mitarbeiter anzeigen";
 				}
 			}
 		}
 
-		// toggleEmployeeAvailability(): void {
-		// 	switch (this.currentAvailability) {
-		// 		case "FALSE":
-		// 			this.currentAvailability = "TRUE" as Available | Deployed;
-		// 			break;
-		// 		case "TRUE":
-		// 			if (this.column === "available") {
-		// 				this.currentAvailability = Available.INDISPOSED;
-		// 			} else {
-		// 				this.currentAvailability = Deployed.RESERVE;
-		// 			}
-		// 			break;
-		// 		case "INDISPOSED":
-		// 			this.currentAvailability = Available.FALSE;
-		// 			break;
-		// 		case "RESERVE":
-		// 			this.currentAvailability = Deployed.FALSE;
-		// 			break;
-		// 	}
-		// 	this.$emit("change", this.day, this.employeeId, this.column, this.currentAvailability);
-		// 	this.getTitle();
-		// }
+		toggleFilter(): void {
+			this.$emit("click");
+			this.updateTitle;
+		}
 	}
 </script>
+
+<style scoped>
+	.stripes {
+		background: repeating-linear-gradient(-45deg, #f8d3be, #f8d3be 1px, transparent 2px, transparent 5px) !important;
+	}
+</style>

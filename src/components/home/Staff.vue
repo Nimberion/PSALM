@@ -12,8 +12,8 @@
 				<!-- HORIZONTAL DIVIDER -->
 				<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
 				<!-- EMPLOYEE INPUTS -->
-				<PsalmInput class="my-1 mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" />
-				<PsalmInput class="my-1" type="text" v-model="employee.lastName" placeholder="Nachname" />
+				<PsalmInput class="my-1 mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" :title="employee.firstName" />
+				<PsalmInput class="my-1" type="text" v-model="employee.lastName" placeholder="Nachname" :title="employee.lastName" />
 				<PsalmInput type="checkbox" v-model="employee.fullTime" />
 
 				<button class="place-self-center filter hover:brightness-[0.8]" title="Löschen" @click="triggerDeleteModal(employee)"><PsalmIcon name="trash" class="text-danger" /></button>

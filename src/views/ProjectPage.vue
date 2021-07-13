@@ -2,7 +2,7 @@
 	<div class="flex flex-col place-items-center p-2">
 		<!-- HEADER -->
 		<PsalmCard class="flex place-items-center p-4 max-w-[calc(100vw-2rem)">
-			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold overflow-ellipsis" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
+			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
 			<button class="ml-4" title="Veranstaltung hinzufügen" @click="addProjectDay"><PsalmIcon name="calendar-plus" class="text-primary text-xl" /></button>
 			<button class="ml-2" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode"><PsalmIcon name="users-cog" class="text-primary text-xl" /></button>
 			<button class="ml-2" title="Speichern" @click="saveProject"><PsalmIcon name="save" class="text-primary text-xl" /></button>
@@ -40,21 +40,21 @@
 									</div>
 								</th>
 								<!-- EMPTY CELL FOR SECOND STAFF LIST -->
-								<th rowspan="4" class="hidden lg:table-cell bl-3px sticky right-0 z-20"></th>
+								<th rowspan="4" class="hidden lg:table-cell bl-3px sticky right-0 z-20 max-w-[150px] min-w-[150px]"></th>
 							</tr>
 							<tr>
 								<!-- TIME -->
 								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px z-10">
-									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0 overflow-ellipsis overflow-hidden" placeholder="Uhrzeit" :title="day.time" />
+									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" :title="day.time" />
 								</th>
 							</tr>
 							<tr>
 								<!-- EMPTY CELL FOR STAFF LIST -->
-								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"></th>
+								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"><button title="copy staff to clipboard">copy temp</button></th>
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
-								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px overflow-ellipsis overflow-hidden z-10">
-									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0 overflow-ellipsis overflow-hidden" placeholder="Teilnehmer" :title="day.participant" />
+								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px z-10">
+									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" :title="day.participant" />
 								</th>
 							</tr>
 							<tr>
@@ -65,10 +65,10 @@
 								<!-- HEADER FOR STAFF AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
 									<th :key="`available-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs z-10">
-										<ProjectFilterButton column="available" :day="day" />
+										<ProjectFilterButton column="available" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'available')" />
 									</th>
 									<th :key="`deployed-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs br-3px z-10">
-										<ProjectFilterButton column="deployed" :day="day" current-filter="" />
+										<ProjectFilterButton column="deployed" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'deployed')" />
 									</th>
 								</template>
 							</tr>
@@ -107,8 +107,8 @@
 								</td>
 							</tr>
 							<!-- NO EMPLOYEE SELECTED -->
-							<tr v-if="tempProject.staff.length === 0">
-								<td colspan="6">Füge Mitarbeiter zu diesem Projekt hinzu.</td>
+							<tr v-if="staff.length === 0">
+								<td :colspan="5 + tempProject.projectDays.length * 2">Keine Einträge</td>
 							</tr>
 						</tbody>
 					</table>
@@ -139,6 +139,7 @@
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
 	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments } from "@/utils/projects";
+	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 
 	@Component({
 		name: "ProjectPage",
@@ -151,13 +152,35 @@
 		showSecondStaffList = false;
 		showDeleteModal = false;
 		minDate = new Date();
+		activeFilter: ActiveFilter = resetActiveFilter();
 
 		get project(): Project {
 			return store.state.projects.get(this.$route.path.split("/")[2]) as Project;
 		}
 
 		get staff(): Array<Employee> {
-			return store.state.staff.filter((item) => this.tempProject.staff.includes(item.id));
+			let availableStaff: Array<EmployeeAvailability> | undefined = [];
+			let availableStaffIdArray: Array<string> = [];
+
+			const tempStaff = store.state.staff.filter((item) => this.tempProject.staff.includes(item.id));
+
+			if (this.activeFilter.dayId === "") {
+				return tempStaff;
+			} else {
+				if (this.activeFilter.column === "available") {
+					availableStaff = this.tempProject.projectDays.find((e) => e.id === this.activeFilter.dayId)?.staffAvailability.filter((item) => item.available === Available.TRUE);
+
+					availableStaff?.forEach((e) => availableStaffIdArray.push(e.employeeId));
+
+					return tempStaff.filter((item) => availableStaffIdArray.includes(item.id));
+				} else {
+					availableStaff = this.tempProject.projectDays.find((e) => e.id === this.activeFilter.dayId)?.staffAvailability.filter((item) => item.deployed !== Deployed.FALSE);
+
+					availableStaff?.forEach((e) => availableStaffIdArray.push(e.employeeId));
+
+					return tempStaff.filter((item) => availableStaffIdArray.includes(item.id));
+				}
+			}
 		}
 
 		created(): void {
@@ -170,13 +193,22 @@
 			}
 		}
 
+		getNameById(id: string): string {
+			const employee = this.staff.find((e) => e.id === id);
+			return `${employee?.firstName} ${employee?.lastName}`;
+		}
+
 		addProjectDay(): void {
 			this.tempProject.projectDays.push(newProjectDay(this.staff));
 		}
 
-		getNameById(id: string): string {
-			const employee = this.staff.find((e) => e.id === id);
-			return `${employee?.firstName} ${employee?.lastName}`;
+		toggleFilter(id: string, column: string): void {
+			if (id === this.activeFilter.dayId && column === this.activeFilter.column) {
+				this.activeFilter = resetActiveFilter();
+			} else {
+				this.activeFilter.dayId = id;
+				this.activeFilter.column = column;
+			}
 		}
 
 		updateEmployeeAvailability(day: ProjectDay, employeeId: string, column: string, newAvailability: Available | Deployed): void {

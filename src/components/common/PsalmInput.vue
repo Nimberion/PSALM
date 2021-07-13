@@ -8,9 +8,19 @@
 		:disabled="state"
 		@change="update"
 	/>
-	<input v-else-if="type === 'number'" type="number" :value="value" min="0" max="99" class="text-center focus:border-secondary focus:ring-0" autocomplete="randomStuffToDisable" @focus="$event.target.select()" @change="update" />
+	<input
+		v-else-if="type === 'number'"
+		type="number"
+		:value="value"
+		min="0"
+		max="99"
+		class="text-center focus:border-secondary focus:ring-0 overflow-ellipsis"
+		autocomplete="randomStuffToDisable"
+		@focus="$event.target.select()"
+		@change="update"
+	/>
 
-	<input v-else-if="type === 'text'" type="text" :value="value" class="focus:border-secondary focus:ring-0 px-1" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
+	<input v-else-if="type === 'text'" type="text" :value="value" class="focus:border-secondary focus:ring-0 px-1 overflow-ellipsis" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
 </template>
 
 <script lang="ts">
