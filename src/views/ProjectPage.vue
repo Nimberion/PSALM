@@ -29,7 +29,7 @@
 								<!-- DATE & DELETE -->
 								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" colspan="2" class="br-3px z-10">
 									<div class="flex m-1 mt-0">
-										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" no-header no-calendar-icon>
+										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" :minDate="minDate" no-header no-calendar-icon>
 											<template #activator="{ date }">
 												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary" :title="date">{{ date }}</span>
 											</template>
@@ -64,8 +64,12 @@
 								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+4rem)] z-30 br-3px">Soll</th>
 								<!-- HEADER FOR STAFF AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
-									<th :key="`available-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs z-10">Kann</th>
-									<th :key="`deployed-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs br-3px z-10">Ist</th>
+									<th :key="`available-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs z-10">
+										<ProjectFilterButton column="available" :day="day" />
+									</th>
+									<th :key="`deployed-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs br-3px z-10">
+										<ProjectFilterButton column="deployed" :day="day" current-filter="" />
+									</th>
 								</template>
 							</tr>
 						</thead>
@@ -121,6 +125,7 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
+	import ProjectFilterButton from "@/components/project/ProjectFilterButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
@@ -137,7 +142,7 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { PsalmDeleteModal, ProjectAvailabilityButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PsalmDeleteModal, ProjectAvailabilityButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
@@ -145,6 +150,7 @@
 		projectDayToDelete: ProjectDay = newProjectDay([]);
 		showSecondStaffList = false;
 		showDeleteModal = false;
+		minDate = new Date();
 
 		get project(): Project {
 			return store.state.projects.get(this.$route.path.split("/")[2]) as Project;
@@ -156,6 +162,8 @@
 
 		created(): void {
 			this.tempProject = JSON.parse(JSON.stringify(this.project));
+
+			this.minDate.setMonth(this.minDate.getMonth() - 12);
 
 			if (this.tempProject.staff.length === 0) {
 				this.projectStaffEditMode = true;
