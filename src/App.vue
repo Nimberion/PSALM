@@ -2,7 +2,7 @@
 	<!-- bg-gradient-to-br from-info-400 via-warning to-secondary  -->
 	<div class="min-w-[100vw] min-h-screen bg-secondary bg-custom-gradient">
 		<!-- HOME BUTTON -->
-		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')">
+		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')" title="Startseite">
 			<PsalmIcon name="home" />
 		</button>
 		<div>

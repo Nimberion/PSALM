@@ -58,10 +58,7 @@
 		showDeleteModal = false;
 		employeeToDelete = newEmployee();
 
-		// editMode = false;
-
 		get staff(): Array<Employee> {
-			// return store.getters.sortedStaff;
 			return store.state.staff;
 		}
 
@@ -69,18 +66,17 @@
 			this.tempStaff = JSON.parse(JSON.stringify(this.staff));
 		}
 
-		// updateCheckbox(nativeValue: boolean, value: boolean): void {
-		// 	nativeValue = value;
-		// }
-
 		addEmployee(): void {
 			this.tempStaff.push(newEmployee());
 		}
 
 		async saveStaff(): Promise<void> {
 			//SORT TEMP-STAFF
-			this.tempStaff.sort((e1, e2) => {
-				return e1.lastName >= e2.lastName ? 1 : -1;
+			this.tempStaff.sort((a, b) => {
+				const lastNameSortingResult = a.lastName.localeCompare(b.lastName, "de", { ignorePunctuation: true, sensitivity: "base" });
+				const firstNameSortingResult = a.firstName.localeCompare(b.firstName, "de", { ignorePunctuation: true, sensitivity: "base" });
+
+				return lastNameSortingResult !== 0 ? lastNameSortingResult : firstNameSortingResult;
 			});
 
 			// PUSH TEMP-STAFF TO STORE

@@ -26,8 +26,8 @@
 
 		<div class="flex justify-center">
 			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
-			<PsalmButton v-if="editMode" title="Projekte speichern" icon="save" class="bg-primary" @click="saveProjects" />
-			<PsalmButton v-if="!editMode" title="Projekte bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
+			<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
+			<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -60,16 +60,6 @@
 
 		created(): void {
 			this.tempProjects = new Map(store.state.projects);
-			this.updateProjectsArray();
-		}
-
-		triggerDeleteModalalt(project: Project): void {
-			console.log("project deleted");
-
-			this.tempProjects.delete(project.id);
-			//delete json-file
-
-			//CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
 		}
 
@@ -134,6 +124,10 @@
 
 		updateProjectsArray(): void {
 			this.projectsArray = Array.from(this.tempProjects.values());
+
+			this.projectsArray.sort((a, b) => {
+				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
+			});
 		}
 	}
 </script>

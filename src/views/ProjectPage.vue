@@ -11,26 +11,27 @@
 		<!-- CONTENT -->
 		<div class="flex">
 			<!-- PROJECT-STAFF-EDITOR -->
-			<ProjectStaff v-if="projectStaffEditMode" class="max-h-[calc(100vh-6.75rem)] px-2 py-4" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
+			<ProjectStaff v-if="projectStaffEditMode" class="max-h-[calc(100vh-6.875rem)] px-2 py-4" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
 
 			<!-- PROJECT TABLE -->
-			<PsalmCard class="flex h-full max-h-[calc(100vh-6.75rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)]': projectStaffEditMode }">
+			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)]': projectStaffEditMode }">
 				<div class="overflow-scroll">
 					<table class="project-table">
 						<thead>
 							<tr>
+								<!-- NEEDED STAFF -->
 								<th colspan="4" rowspan="2" class="sticky left-0 z-30 br-3px">
 									<div class="w-full h-full p-2">
-										<!-- #### -->
 										<span class="mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
 										<PsalmInput v-model="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 									</div>
 								</th>
+								<!-- DATE & DELETE -->
 								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" colspan="2" class="br-3px z-10">
 									<div class="flex m-1 mt-0">
 										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" no-header no-calendar-icon>
 											<template #activator="{ date }">
-												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary">{{ date }}</span>
+												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary" :title="date">{{ date }}</span>
 											</template>
 										</VueDatePicker>
 										<button class="h-[calc(1.25rem+2px)] filter hover:brightness-[0.8] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)">
@@ -38,26 +39,30 @@
 										</button>
 									</div>
 								</th>
+								<!-- EMPTY CELL FOR SECOND STAFF LIST -->
 								<th rowspan="4" class="hidden lg:table-cell bl-3px sticky right-0 z-20"></th>
 							</tr>
 							<tr>
 								<!-- TIME -->
-								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px overflow-ellipsis overflow-hidden z-10">
-									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" />
+								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px z-10">
+									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0 overflow-ellipsis overflow-hidden" placeholder="Uhrzeit" :title="day.time" />
 								</th>
 							</tr>
 							<tr>
+								<!-- EMPTY CELL FOR STAFF LIST -->
 								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"></th>
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
 								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px overflow-ellipsis overflow-hidden z-10">
-									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" />
+									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0 overflow-ellipsis overflow-hidden" placeholder="Teilnehmer" :title="day.participant" />
 								</th>
 							</tr>
 							<tr>
+								<!-- HEADER FOR STAFF STATISTICS -->
 								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[150px] z-30">Kann</th>
 								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+2rem)] z-30">Ist</th>
 								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+4rem)] z-30 br-3px">Soll</th>
+								<!-- HEADER FOR STAFF AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
 									<th :key="`available-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs z-10">Kann</th>
 									<th :key="`deployed-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs br-3px z-10">Ist</th>
@@ -65,10 +70,12 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="employee in staff" :key="employee.id">
+							<tr v-for="employee in staff" :key="employee.id" :class="{ fullTime: employee.fullTime }">
+								<!-- STAFF LIST -->
 								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left" :title="`${employee.firstName} ${employee.lastName}`">
 									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
+								<!-- EMPLOYEE STATISTICS -->
 								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">
 									{{ getNumberOfAvailabilities(tempProject, employee.id) }}
 								</td>
@@ -78,6 +85,7 @@
 								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">
 									{{ getSetPointOfDeployments(tempProject, staff, employee) }}
 								</td>
+								<!-- EMPLOYEE AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
 									<td :key="`available-${day.id}`">
 										<ProjectAvailabilityButton class="w-full" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
@@ -86,6 +94,7 @@
 										<ProjectAvailabilityButton class="w-full" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
 								</template>
+								<!-- SECOND STAFF LIST -->
 								<td
 									class="hidden lg:table-cell bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left"
 									:title="`${employee.firstName} ${employee.lastName}`"
@@ -93,6 +102,7 @@
 									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
 							</tr>
+							<!-- NO EMPLOYEE SELECTED -->
 							<tr v-if="tempProject.staff.length === 0">
 								<td colspan="6">Füge Mitarbeiter zu diesem Projekt hinzu.</td>
 							</tr>
@@ -191,9 +201,20 @@
 		}
 
 		async saveProject(): Promise<void> {
-			//delete unused staffAvailabilitys
+			//delete unused staffAvailabilitys?
 
-			// PUSH TEMP-PROJECTS TO STORE
+			//SORT projectDays
+			this.tempProject.projectDays.sort((a, b) => {
+				if (a.date > b.date) return 1;
+				if (a.date < b.date) return -1;
+
+				if (a.time > b.time) return 1;
+				if (a.time < b.time) return -1;
+
+				return a.participant.localeCompare(b.participant, "de", { ignorePunctuation: true, sensitivity: "base" });
+			});
+
+			// UPDTAE tempProject IN STORE
 			store.commit("updateProject", this.tempProject);
 
 			// DELETE OLD JSON FILE
@@ -238,12 +259,6 @@
 </script>
 
 <style scoped>
-	input[type="number"]::-webkit-inner-spin-button,
-	input[type="number"]::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
 	.project-table {
 		--border-color: #adadad;
 		--border-b: 1px;
@@ -319,12 +334,12 @@
 		padding-bottom: calc(var(--cell-padding) + var(--border-b));
 	}
 
-	/* BOLD BORDERS RIGHT tbody */
+	/* tbody BOLD BORDERS RIGHT  */
 	.project-table tbody tr td:nth-child(n + 4):nth-of-type(even):not(:last-of-type) {
 		--border-r: 3px;
 	}
 
-	/* REMOVING BOTTOM BORDER & PADDING ON thead */
+	/* thead REMOVING BOTTOM BORDER & PADDING */
 	.project-table tr:nth-child(-n + 2) th:not(:empty) {
 		--border-b: 0px;
 	}
@@ -337,7 +352,7 @@
 		--border-r: 0px !important;
 	}
 
-	/* REMOVING LAST BOTTOM BORDER & PADDING */
+	/* tbody REMOVING LAST BOTTOM BORDER & PADDING */
 	.project-table tbody tr:last-of-type td {
 		--border-b: 0px;
 	}
