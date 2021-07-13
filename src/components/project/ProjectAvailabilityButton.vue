@@ -1,5 +1,5 @@
 <template>
-	<button class="flex justify-center relative text-white select-none" :title="buttonTitle" @click="toggleEmployeeAvailability">
+	<button class="flex justify-center relative text-white select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability">
 		<ProjectAvailabilityIcon
 			class="text-primary text-2xl z-[1]"
 			:class="{

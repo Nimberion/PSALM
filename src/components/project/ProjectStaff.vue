@@ -8,7 +8,7 @@
 						type="checkbox"
 						v-model="tempProjectStaff"
 						:value="employee.id"
-						class="h-[1.125rem] w-[1.125rem] border-2 border-primary place-self-center text-primary focus:ring-transparent rounded-sm focus:ring-0 cursor-pointer mr-2 my-1"
+						class="h-[1.125rem] w-[1.125rem] border-2 border-primary place-self-center text-primary focus:ring-secondary focus:ring-1 cursor-pointer mr-2 my-1"
 						@change="updateTempProjectStaff"
 					/>
 					<span class="overflow-ellipsis overflow-hidden whitespace-nowrap" :title="`${employee.firstName} ${employee.lastName}`">{{ employee.firstName }} {{ employee.lastName }} </span>

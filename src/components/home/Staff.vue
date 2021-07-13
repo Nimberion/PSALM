@@ -32,7 +32,7 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<DeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
+		<PsalmDeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
 	</PsalmCard>
 </template>
 
@@ -42,7 +42,7 @@
 	import { Employee, newEmployee } from "@/models/interfaces/Employee";
 	import { pathExists } from "@/utils/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
-	import DeleteModal from "@/components/common/DeleteModal.vue";
+	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
@@ -50,7 +50,7 @@
 
 	@Component({
 		name: "Staff",
-		components: { DeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
+		components: { PsalmDeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];

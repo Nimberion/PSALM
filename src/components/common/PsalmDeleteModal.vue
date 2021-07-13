@@ -70,7 +70,7 @@
 		name: "DeleteModal",
 		components: { PsalmButton, PsalmIcon },
 	})
-	export default class DeleteModal extends Vue {
+	export default class PsalmDeleteModal extends Vue {
 		@Prop({ required: true }) objectToDelete!: Employee | Project | ProjectDay;
 		@Prop({ required: true }) type!: string;
 		@Prop({ required: false }) projectName!: string;

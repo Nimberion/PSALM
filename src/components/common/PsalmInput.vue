@@ -3,7 +3,7 @@
 		v-if="type === 'checkbox'"
 		type="checkbox"
 		:checked="value"
-		class="place-self-center text-primary focus:ring-secondary focus:ring-1 cursor-pointer"
+		class="h-[1.125rem] w-[1.125rem] place-self-center border-2 border-primary text-primary focus:ring-secondary focus:ring-1 cursor-pointer"
 		:class="{ 'cursor-default text-gray-500': state === 'disabled' }"
 		:disabled="state"
 		@change="update"

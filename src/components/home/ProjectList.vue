@@ -31,14 +31,14 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<DeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
+		<PsalmDeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
 	</PsalmCard>
 </template>
 
 <script lang="ts">
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
-	import DeleteModal from "@/components/common/DeleteModal.vue";
+	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
@@ -49,7 +49,7 @@
 
 	@Component({
 		name: "ProjectList",
-		components: { DeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
+		components: { PsalmDeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();

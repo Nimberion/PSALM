@@ -88,10 +88,10 @@
 								<!-- EMPLOYEE AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
 									<td :key="`available-${day.id}`">
-										<ProjectAvailabilityButton class="w-full" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
+										<ProjectAvailabilityButton class="mx-auto" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
 									<td :key="`deployed-${day.id}`">
-										<ProjectAvailabilityButton class="w-full" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
+										<ProjectAvailabilityButton class="mx-auto" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
 								</template>
 								<!-- SECOND STAFF LIST -->
@@ -111,7 +111,7 @@
 				</div>
 			</PsalmCard>
 		</div>
-		<DeleteModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
+		<PsalmDeleteModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
@@ -119,7 +119,7 @@
 	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
-	import DeleteModal from "@/components/common/DeleteModal.vue";
+	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
@@ -137,7 +137,7 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { DeleteModal, ProjectAvailabilityButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PsalmDeleteModal, ProjectAvailabilityButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
