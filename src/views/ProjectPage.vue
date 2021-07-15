@@ -2,10 +2,10 @@
 	<div class="flex flex-col place-items-center p-2 overflow-hidden">
 		<!-- HEADER -->
 		<PsalmCard class="flex place-items-center p-4 max-w-[calc(100vw-2rem)">
-			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
-			<button class="ml-4" title="Veranstaltung hinzufügen" @click="addProjectDay"><PsalmIcon name="calendar-plus" class="text-primary text-xl" /></button>
-			<button class="ml-2" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode"><PsalmIcon name="users-cog" class="text-primary text-xl" /></button>
-			<button class="ml-2" title="Speichern" @click="saveProject"><PsalmIcon name="save" class="text-primary text-xl" /></button>
+			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold mr-2" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
+			<ProjectButton icon="calendar-plus" title="Veranstaltung hinzufügen" @click="addProjectDay" />
+			<ProjectButton icon="users-cog" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode" />
+			<ProjectButton icon="save" title="Speichern" @click="saveProject" />
 		</PsalmCard>
 
 		<!-- CONTENT -->
@@ -37,9 +37,7 @@
 												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary" :title="date">{{ date }}</span>
 											</template>
 										</VueDatePicker>
-										<button class="h-[calc(1.25rem+2px)] filter hover:brightness-[0.8] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)">
-											<PsalmIcon name="trash" class="text-danger" />
-										</button>
+										<PsalmDeleteButton class="h-[calc(1.25rem+2px)] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)" />
 									</div>
 								</th>
 								<!-- EMPTY CELL FOR SECOND STAFF LIST -->
@@ -128,10 +126,12 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
+	import ProjectButton from "@/components/project/ProjectButton.vue";
 	import ProjectFilterButton from "@/components/project/ProjectFilterButton.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
+	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newID, pathExists } from "@/utils/utils";
@@ -147,7 +147,7 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { PsalmDeleteModal, ProjectAvailabilityButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PsalmDeleteButton, PsalmDeleteModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;
