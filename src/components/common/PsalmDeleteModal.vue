@@ -75,7 +75,6 @@
 		@Prop({ required: true }) type!: string;
 		@Prop({ required: false }) projectName!: string;
 
-		scrollY = window.scrollY;
 		projectDayDateToDelete = "";
 
 		created(): void {

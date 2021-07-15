@@ -1,6 +1,6 @@
 <template>
 	<!-- bg-gradient-to-br from-info-400 via-warning to-secondary  -->
-	<div class="min-w-[100vw] min-h-screen bg-secondary bg-custom-gradient">
+	<div class="w-screen min-h-screen bg-secondary bg-custom-gradient">
 		<!-- HOME BUTTON -->
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')" title="Startseite">
 			<PsalmIcon name="home" />
@@ -16,6 +16,10 @@
 				<h3 class="text-[3vh]">Project Staff And Labor Management</h3>
 			</div>
 		</div>
+		<!-- SAVED TOAST -->
+		<transition name="slide">
+			<div v-if="savedToast" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50">Erfolgreich gespeichert!</div>
+		</transition>
 	</div>
 </template>
 
@@ -35,6 +39,10 @@
 	export default class App extends Vue {
 		loading = true;
 
+		get savedToast(): boolean {
+			return store.state.savedToast;
+		}
+
 		async created(): Promise<void> {
 			Promise.allSettled([await this.createDir(), await this.readStaffJSON(), await this.readProjectsJSON()])
 				.then((results) => {
@@ -49,6 +57,12 @@
 						this.loading = false;
 					}, 1000);
 				});
+
+			document.body.classList.add("overflow-x-hidden");
+
+			// window.addEventListener("keydown", (e) => {
+			// 	e.preventDefault();
+			// });
 		}
 
 		async createDir(): Promise<void> {
@@ -84,13 +98,14 @@
 		background-position: 0 0, 0 0, 0 0;
 
 		background-repeat: no-repeat;
+	}
 
-		/* radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
-		radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
-		radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3) 100%, transparent 10%),
-
-		28vw 28vh, 33vw 33vh, 38vw 38vh,
-
-		12vw 8vh, 65vw 40vh, 25vw 55vh, */
+	.slide-enter-active,
+	.slide-leave-active {
+		transition: margin-top 0.3s ease-in-out;
+	}
+	.slide-enter,
+	.slide-leave-to {
+		margin-top: -5rem;
 	}
 </style>

@@ -1,8 +1,8 @@
 <template>
 	<!-- <div class="grid grid-cols-2 grid-rows-[auto] justify-items-center"> -->
 	<div class="flex flex-col lg:flex-row place-items-center lg:place-items-start lg:justify-center p-2">
-		<ProjectList class="w-[500px] lg:ml-0" />
-		<Staff class="w-[500px] lg:mr-0" />
+		<ProjectList />
+		<Staff />
 	</div>
 </template>
 

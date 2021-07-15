@@ -1,6 +1,6 @@
 <template>
 	<PsalmCard class="w-[200px] h-full">
-		<h2 class="text-center font-semibold mb-4">Mitarbeiter</h2>
+		<h2 class="text-center font-semibold mb-4 overflow-hidden">Mitarbeiter</h2>
 		<ul class="px-2">
 			<li v-for="employee in staff" :key="employee.id">
 				<label class="grid grid-cols-[2rem,auto] cursor-pointer items-center">

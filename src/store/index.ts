@@ -9,12 +9,18 @@ export default new Vuex.Store({
 	state: {
 		staff: [] as Array<Employee>,
 		projects: new Map() as Map<string, Project>,
+		savedToast: false,
 	},
 	mutations: {
+		// GENERELL
+		showSavedToast(currentState): void {
+			currentState.savedToast = true;
+			setTimeout(() => {
+				currentState.savedToast = false;
+			}, 2500);
+		},
+
 		// STAFF
-		// addEmployee(currentState, newEmployee: Employee) {
-		// 	currentState.staff.push(newEmployee);
-		// },
 		updateStaff(currentState, newState: Array<Employee>) {
 			currentState.staff = newState;
 		},

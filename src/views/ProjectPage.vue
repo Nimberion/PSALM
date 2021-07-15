@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col place-items-center p-2">
+	<div class="flex flex-col place-items-center p-2 overflow-hidden">
 		<!-- HEADER -->
 		<PsalmCard class="flex place-items-center p-4 max-w-[calc(100vw-2rem)">
 			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
@@ -11,10 +11,13 @@
 		<!-- CONTENT -->
 		<div class="flex">
 			<!-- PROJECT-STAFF-EDITOR -->
+			<!-- <transition name="slide"> -->
 			<ProjectStaff v-if="projectStaffEditMode" class="max-h-[calc(100vh-6.875rem)] px-2 py-4" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
+			<!-- </transition> -->
 
 			<!-- PROJECT TABLE -->
-			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)]': projectStaffEditMode }">
+			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
+			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
 				<div class="overflow-scroll">
 					<table class="project-table">
 						<thead>
@@ -50,7 +53,7 @@
 							</tr>
 							<tr>
 								<!-- EMPTY CELL FOR STAFF LIST -->
-								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"><button title="copy staff to clipboard">copy temp</button></th>
+								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"><button title="copy staff to clipboard" @click="copyDisplayedStaff">copy temp</button></th>
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
 								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px z-10">
@@ -134,6 +137,7 @@
 	import { newID, pathExists } from "@/utils/utils";
 	import { Employee } from "@/models/interfaces/Employee";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import { writeText } from "@tauri-apps/api/clipboard";
 	import { VueDatePicker } from "@mathieustan/vue-datepicker";
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 	import { Available } from "@/models/enums/Available";
@@ -160,7 +164,6 @@
 
 		get staff(): Array<Employee> {
 			let availableStaff: Array<EmployeeAvailability> | undefined = [];
-			let availableStaffIdArray: Array<string> = [];
 
 			const tempStaff = store.state.staff.filter((item) => this.tempProject.staff.includes(item.id));
 
@@ -170,15 +173,11 @@
 				if (this.activeFilter.column === "available") {
 					availableStaff = this.tempProject.projectDays.find((e) => e.id === this.activeFilter.dayId)?.staffAvailability.filter((item) => item.available === Available.TRUE);
 
-					availableStaff?.forEach((e) => availableStaffIdArray.push(e.employeeId));
-
-					return tempStaff.filter((item) => availableStaffIdArray.includes(item.id));
+					return tempStaff.filter((item) => availableStaff?.map((e) => e.employeeId).includes(item.id));
 				} else {
 					availableStaff = this.tempProject.projectDays.find((e) => e.id === this.activeFilter.dayId)?.staffAvailability.filter((item) => item.deployed !== Deployed.FALSE);
 
-					availableStaff?.forEach((e) => availableStaffIdArray.push(e.employeeId));
-
-					return tempStaff.filter((item) => availableStaffIdArray.includes(item.id));
+					return tempStaff.filter((item) => availableStaff?.map((e) => e.employeeId).includes(item.id));
 				}
 			}
 		}
@@ -265,8 +264,8 @@
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
 
-			//temp
-			console.log("Save complete");
+			// SHOW SAVED TOAST
+			store.commit("showSavedToast");
 		}
 
 		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
@@ -282,6 +281,14 @@
 
 			this.saveProject();
 			this.showDeleteModal = false;
+		}
+
+		copyDisplayedStaff(): void {
+			const currentStaff = this.staff.map((e) => `${e.firstName} ${e.lastName}`).join("\n");
+
+			writeText(currentStaff);
+
+			//add toast
 		}
 
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {
@@ -410,6 +417,21 @@
 	.project-table thead tr:nth-child(4) th {
 		top: calc(((1.5rem + var(--border-b)) * 3) + 4px);
 	}
+
+	/* TRANSITION */
+	/* .slide-enter-active,
+	.slide-leave-active {
+		transition: all 0.5s ease, opacity 0.3s ease;
+	}
+	.slide-enter,
+	.slide-leave-to {
+		opacity: 0;
+		width: 0;
+		padding-right: 0;
+		padding-left: 0;
+		margin-right: 0;
+		margin-left: 0;
+	} */
 </style>
 
 <style>

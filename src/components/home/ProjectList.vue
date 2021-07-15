@@ -1,33 +1,35 @@
 <template>
-	<PsalmCard class="px-2 py-4">
+	<PsalmCard class="px-2 py-4 min-w-[500px] max-w-[500px]">
 		<h2 class="text-xl text-center font-semibold mb-4">Projekte</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,2rem] font-semibold">
 			<div class="px-1" title="Titel">Titel</div>
 		</div>
-		<ul class="">
-			<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
-				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-400"></div>
-				<!-- PROJECTS INPUTS -->
-				<router-link :to="`/project/${project.id}`" v-if="!editMode" class="my-1 px-1 hover:text-secondary min-h-[1.5rem] border border-transparent overflow-ellipsis overflow-hidden whitespace-nowrap" :title="project.title">{{
-					project.title
-				}}</router-link>
-				<PsalmInput v-if="editMode" class="my-1 w-full" type="text" v-model="project.title" placeholder="Titel" :title="project.title" />
-				<button class="place-self-center filter hover:brightness-[0.8]" title="Löschen" @click="triggerDeleteModal(project)"><PsalmIcon name="trash" class="text-danger" /></button>
-			</li>
-			<!-- NO ENTRYS -->
-			<li v-if="projectsArray.length === 0" class="text-center">
-				<!-- HORIZONTAL DIVIDER -->
-				<div class="w-full col-span-4 border-b border-gray-400"></div>
-				<p>Keine Einträge</p>
-			</li>
-		</ul>
+		<div class="lg:overflow-y-scroll max-h-[calc(100vh-8.25rem)]">
+			<ul>
+				<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
+					<!-- HORIZONTAL DIVIDER -->
+					<div class="w-full col-span-4 border-b border-gray-400"></div>
+					<!-- PROJECTS INPUTS -->
+					<router-link :to="`/project/${project.id}`" v-if="!editMode" class="my-1 px-1 hover:text-secondary min-h-[1.5rem] border border-transparent overflow-ellipsis overflow-hidden whitespace-nowrap" :title="project.title">{{
+						project.title
+					}}</router-link>
+					<PsalmInput v-if="editMode" class="my-1 w-full" type="text" v-model="project.title" placeholder="Titel" :title="project.title" />
+					<PsalmDeleteButton @click="triggerDeleteModal(project)" />
+				</li>
+				<!-- NO ENTRYS -->
+				<li v-if="projectsArray.length === 0" class="text-center">
+					<!-- HORIZONTAL DIVIDER -->
+					<div class="w-full col-span-4 border-b border-gray-400"></div>
+					<p>Keine Einträge</p>
+				</li>
+			</ul>
 
-		<div class="flex justify-center">
-			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
-			<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
-			<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
+			<div class="flex justify-center">
+				<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
+				<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
+				<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
+			</div>
 		</div>
 
 		<!-- DELETE MODAL -->
@@ -40,6 +42,7 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
+	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
@@ -49,7 +52,7 @@
 
 	@Component({
 		name: "ProjectList",
-		components: { PsalmDeleteModal, PsalmButton, PsalmCard, PsalmIcon, PsalmInput },
+		components: { PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();
@@ -111,15 +114,15 @@
 
 				// WRITE JSON FILE
 				await writeFile({ contents: JSON.stringify(value), path: `data/projects/${key}.json` });
-				console.log("Save complete");
 			});
 
 			// CREATE ARRAY FOR v-for LOOP
 			this.updateProjectsArray();
 
-			//temp
 			this.editMode = false;
-			console.log("saved", this.tempProjects.entries());
+
+			// SHOW SAVED TOAST
+			store.commit("showSavedToast");
 		}
 
 		updateProjectsArray(): void {
