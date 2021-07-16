@@ -34,7 +34,7 @@
 									<div class="flex m-1 mt-0">
 										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" :minDate="minDate" no-header no-calendar-icon>
 											<template #activator="{ date }">
-												<span class="w-full font-semibold border border-[#6b7280] active:border-secondary" :title="date">{{ date }}</span>
+												<button class="w-full font-semibold rounded-none border border-[#6b7280] focus:border-secondary focus:outline-none" :title="date">{{ date }}</button>
 											</template>
 										</VueDatePicker>
 										<PsalmDeleteButton class="h-[calc(1.25rem+2px)] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)" />
@@ -51,7 +51,9 @@
 							</tr>
 							<tr>
 								<!-- EMPTY CELL FOR STAFF LIST -->
-								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]"><button title="copy staff to clipboard" @click="copyDisplayedStaff">copy temp</button></th>
+								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]">
+									<div class="flex"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /></div>
+								</th>
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
 								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px z-10">
@@ -440,7 +442,7 @@
 	.vd-menu__content {
 		/* background-color: gray; */
 		box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-		outline: 1px solid #f26419;
+		/* outline: 1px solid #f26419; */
 	}
 
 	.vd-picker,

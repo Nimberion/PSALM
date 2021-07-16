@@ -1,9 +1,9 @@
 <template>
-	<button class="flex justify-center relative text-white select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability">
+	<button class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability">
 		<ProjectAvailabilityIcon
-			class="text-primary text-2xl z-[1]"
+			class="text-2xl z-[1]"
 			:class="{
-				'text-primary': currentAvailability === 'TRUE' && column === 'available',
+				'text-primary': (currentAvailability === 'TRUE' && column === 'available') || currentAvailability === 'FALSE',
 				'text-danger': currentAvailability === 'INDISPOSED',
 				'text-warning': currentAvailability === 'RESERVE',
 				'text-success': currentAvailability === 'TRUE' && column !== 'available',

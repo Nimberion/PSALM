@@ -1,6 +1,10 @@
 <template>
-	<button class="text-primary text-xl select-none place-self-center filter hover:brightness-[0.8] ml-2" :title="title" @click="$emit('click')">
-		<PsalmIcon :name="icon" />
+	<button
+		class="flex justify-center text-primary h-6 w-6 text-xl select-none place-self-center rounded-none hover:text-[#29516e] focus:ring-1 ring-offset-[2px] ring-secondary focus:outline-none ml-2"
+		:title="title"
+		@click="$emit('click')"
+	>
+		<PsalmIcon :name="icon" class="place-self-center" />
 	</button>
 </template>
 
