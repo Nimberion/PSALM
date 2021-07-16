@@ -1,9 +1,12 @@
 <template>
-	<PsalmCard class="w-[200px] h-full">
-		<h2 class="text-center font-semibold mb-4 overflow-hidden">Mitarbeiter</h2>
-		<ul class="px-2">
+	<!-- max-h-[calc(100vh-6.875rem)] -->
+	<PsalmCard class="w-[200px] h-full pt-4 pb-2">
+		<h2 class="text-center font-semibold mb-4">Mitarbeiter</h2>
+		<!-- max-h-[calc(100%-2.5rem)] -->
+
+		<ul class="overflow-y-scroll inner-scrollbar max-h-[calc(100vh-10.875rem)] pl-4">
 			<li v-for="employee in staff" :key="employee.id">
-				<label class="grid grid-cols-[2rem,auto] cursor-pointer items-center">
+				<label class="flex cursor-pointer items-center">
 					<input
 						type="checkbox"
 						v-model="tempProjectStaff"

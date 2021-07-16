@@ -1,11 +1,11 @@
 <template>
-	<PsalmCard class="px-2 py-4 min-w-[500px] max-w-[500px]">
+	<PsalmCard class="py-4 min-w-[500px] max-w-[500px]">
 		<h2 class="text-xl text-center font-semibold mb-4">Projekte</h2>
 		<!-- LIST HEADER -->
-		<div class="grid grid-cols-[1fr,2rem] font-semibold">
+		<div class="mx-2 grid grid-cols-[1fr,2rem] font-semibold">
 			<div class="px-1" title="Titel">Titel</div>
 		</div>
-		<div class="lg:overflow-y-scroll max-h-[calc(100vh-8.25rem)]">
+		<div class="lg:overflow-y-scroll inner-scrollbar max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
 			<ul>
 				<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
 					<!-- HORIZONTAL DIVIDER -->
@@ -24,12 +24,11 @@
 					<p>Keine Einträge</p>
 				</li>
 			</ul>
-
-			<div class="flex justify-center">
-				<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
-				<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
-				<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
-			</div>
+		</div>
+		<div class="flex justify-center">
+			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
+			<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
+			<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
 		</div>
 
 		<!-- DELETE MODAL -->

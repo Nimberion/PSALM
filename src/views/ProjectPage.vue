@@ -12,13 +12,14 @@
 		<div class="flex">
 			<!-- PROJECT-STAFF-EDITOR -->
 			<!-- <transition name="slide"> -->
-			<ProjectStaff v-if="projectStaffEditMode" class="max-h-[calc(100vh-6.875rem)] px-2 py-4" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
+			<ProjectStaff v-if="projectStaffEditMode" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
 			<!-- </transition> -->
 
 			<!-- PROJECT TABLE -->
 			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
-			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] p-2 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
-				<div class="overflow-scroll">
+			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
+				<!-- scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thin hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded-full scrollbar-track-rounded-full -->
+				<div class="overflow-scroll inner-scrollbar">
 					<table class="project-table">
 						<thead>
 							<tr>

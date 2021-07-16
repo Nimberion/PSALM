@@ -1,13 +1,13 @@
 <template>
-	<PsalmCard class="px-2 py-4 min-w-[500px] max-w-[500px]">
+	<PsalmCard class="py-4 min-w-[500px] max-w-[500px]">
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
-		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold">
+		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold mx-2 lg:mr-6">
 			<div class="px-1" title="Vorname">Vorname</div>
 			<div class="px-1" title="Nachname">Nachname</div>
 			<div class="text-center" title="Hauptamtlich?">HA?</div>
 		</div>
-		<div class="lg:overflow-y-scroll lg:max-h-[calc(100vh-8.25rem)]">
+		<div class="lg:overflow-y-scroll inner-scrollbar lg:max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
 			<ul>
 				<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto]" v-for="employee in tempStaff" :key="employee.id">
 					<!-- HORIZONTAL DIVIDER -->
@@ -26,11 +26,11 @@
 					<p>Keine Einträge</p>
 				</li>
 			</ul>
-			<div class="flex justify-center">
-				<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
-				<PsalmButton title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
-				<!-- <PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" /> -->
-			</div>
+		</div>
+		<div class="flex justify-center">
+			<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
+			<PsalmButton title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
+			<!-- <PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" /> -->
 		</div>
 
 		<!-- DELETE MODAL -->
