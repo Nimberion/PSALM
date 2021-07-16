@@ -267,7 +267,7 @@
 			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
 
 			// SHOW SAVED TOAST
-			store.commit("showSavedToast");
+			store.commit("showToast", "save");
 		}
 
 		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
@@ -290,7 +290,7 @@
 
 			writeText(currentStaff);
 
-			//add toast
+			store.commit("showToast", "copy");
 		}
 
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {

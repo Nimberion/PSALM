@@ -122,7 +122,7 @@
 			this.editMode = false;
 
 			// SHOW SAVED TOAST
-			store.commit("showSavedToast");
+			store.commit("showToast", "save");
 		}
 
 		updateProjectsArray(): void {

@@ -18,7 +18,7 @@
 		</div>
 		<!-- SAVED TOAST -->
 		<transition name="slide">
-			<div v-if="savedToast" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50">Erfolgreich gespeichert!</div>
+			<div v-if="toast.show" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50">{{ toast.message }}</div>
 		</transition>
 	</div>
 </template>
@@ -30,6 +30,7 @@
 	import store from "@/store/index";
 	import { pathExists } from "@/utils/utils";
 	import { Project } from "./models/interfaces/Project";
+	import { Toast } from "./models/interfaces/Toast";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 
 	@Component({
@@ -39,8 +40,8 @@
 	export default class App extends Vue {
 		loading = true;
 
-		get savedToast(): boolean {
-			return store.state.savedToast;
+		get toast(): Toast {
+			return store.state.toast;
 		}
 
 		async created(): Promise<void> {
