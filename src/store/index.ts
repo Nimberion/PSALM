@@ -10,26 +10,34 @@ export default new Vuex.Store({
 		staff: [] as Array<Employee>,
 		projects: new Map() as Map<string, Project>,
 		toast: { show: false, message: "" },
+		timeouts: [] as Array<number>,
 	},
 	mutations: {
 		// GENERELL
 		showToast(currentState, message): void {
-			currentState.toast.show = true;
-			setTimeout(() => {
-				currentState.toast.show = false;
-			}, 2500);
-
 			switch (message) {
-				case "copy":
+				case "copied":
 					currentState.toast.message = "Mitarbeiter kopiert!";
 					break;
-				case "save":
+				case "saved":
 					currentState.toast.message = "Erfolgreich gespeichert!";
 					break;
 				default:
 					currentState.toast.message = "Error!";
 					break;
 			}
+
+			// CLEAR TIMEOUT IF TOAST WAS ALREADY ACTIVE
+			clearTimeout(currentState.timeouts[0]);
+			currentState.timeouts = [];
+
+			currentState.toast.show = true;
+
+			currentState.timeouts.push(
+				setTimeout(() => {
+					currentState.toast.show = false;
+				}, 2500),
+			);
 		},
 
 		// STAFF

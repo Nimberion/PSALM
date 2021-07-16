@@ -93,7 +93,7 @@
 			await writeFile({ contents: JSON.stringify(store.state.staff), path: "data/staff.json" });
 
 			// SHOW SAVED TOAST
-			store.commit("showToast", "save");
+			store.commit("showToast", "saved");
 		}
 
 		triggerDeleteModal(employeeToDelete: Employee): void {
