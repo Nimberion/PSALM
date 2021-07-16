@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Splashscreen</title>
+		<style>
+			body {
+				margin: 0;
+				background-color: #33658a;
+				width: calc(100vw - 8px);
+				height: calc(100vh - 8px);
+				display: grid;
+				place-items: center;
+				overflow: hidden;
+				font-family: Arial, Helvetica, sans-serif;
+				user-select: none;
+				border: 4px solid white;
+			}
+
+			h1 {
+				margin-bottom: 0.5rem;
+				margin-top: 0.5rem;
+				font-size: 4rem;
+				font-weight: 900;
+				line-height: 1;
+			}
+
+			h3 {
+				margin: 0;
+				font-size: 0.9rem;
+				font-weight: normal;
+			}
+
+			.wrapper {
+				display: grid;
+				place-items: center;
+				color: white;
+				text-align: center;
+			}
+
+			.logo {
+				height: 50vh;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
+			<div class="wrapper grid place-items-center text-white text-center">
+				<img class="logo h-[30vh] shadow-lg" src="../icon.png" alt="logo" />
+				<h1 class="text-[15vh] font-black leading-none">PSALM</h1>
+				<h3 class="text-[3vh]">Project Staff And Labor Management</h3>
+			</div>
+		</div>
+	</body>
+</html>
