@@ -9,13 +9,13 @@
 			<router-view v-if="!loading" class="" />
 		</div>
 		<!-- LOADING SCREEN -->
-		<!-- <div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
+		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
 			<div class="grid place-items-center text-white text-center">
 				<img class="h-[30vh] shadow-lg" src="@/../src-tauri/icons/icon.png" alt="logo" />
 				<h1 class="text-[15vh] font-black leading-none">PSALM</h1>
-				<h3 class="text-[3vh]">Project Staff And Labor Management</h3>
+				<h3 class="text-[3.13vh]">Project Staff And Labor Management</h3>
 			</div>
-		</div> -->
+		</div>
 		<!-- SAVED TOAST -->
 		<transition name="slide">
 			<div v-if="toast.show" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50">{{ toast.message }}</div>
@@ -48,8 +48,6 @@
 		async created(): Promise<void> {
 			Promise.allSettled([await this.createDir(), await this.readStaffJSON(), await this.readProjectsJSON()])
 				.then((results) => {
-					console.log("loading");
-
 					results.forEach((result) => {
 						if (result.status === "rejected") {
 							window.alert(`Error! \n${result.reason}`);
@@ -57,10 +55,10 @@
 					});
 				})
 				.finally(() => {
-					this.loading = false;
+					invoke("show_main_window");
 					setTimeout(() => {
-						invoke("close_splashscreen");
-					}, 500);
+						this.loading = false;
+					}, 1000);
 				});
 
 			document.body.classList.add("overflow-x-hidden");
