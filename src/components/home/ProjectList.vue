@@ -29,16 +29,21 @@
 			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
 			<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
 			<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
+			<PsalmButton title="Doodle Liste importieren" class="bg-primary" @click="showDoodleImportModal = true">Doodle</PsalmButton>
 		</div>
 
 		<!-- DELETE MODAL -->
 		<PsalmDeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
+
+		<!-- DOODLE IMPORT MODAL -->
+		<DoodleImportModal v-if="showDoodleImportModal" @cancel="showDoodleImportModal = false" />
 	</PsalmCard>
 </template>
 
 <script lang="ts">
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
+	import DoodleImportModal from "@/components/home/DoodleImportModal.vue";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
@@ -51,7 +56,7 @@
 
 	@Component({
 		name: "ProjectList",
-		components: { PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput },
+		components: { DoodleImportModal, PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
 		tempProjects: Map<string, Project> = new Map();
@@ -59,6 +64,7 @@
 		editMode = false;
 		showDeleteModal = false;
 		projectToDelete = newProject(newID());
+		showDoodleImportModal = false;
 
 		created(): void {
 			this.tempProjects = new Map(store.state.projects);
@@ -93,12 +99,6 @@
 		}
 
 		async saveProjects(): Promise<void> {
-			//SORT TEMP-PROJECTS
-			// temp
-			// this.tempProjects.sort((e1, e2) => {
-			// 	return e1.lastName >= e2.lastName ? 1 : -1;
-			// });
-
 			// SEARCH FOR EDITED PROJECTS
 			// temp
 

@@ -4,8 +4,8 @@
 		"version": "0.1.0"
 	},
 	"build": {
-		"distDir": "Set automatically by Vue CLI plugin",
-		"devPath": "Set automatically by Vue CLI plugin",
+		"distDir": "../dist",
+		"devPath": "http://localhost:8080/",
 		"beforeDevCommand": "",
 		"beforeBuildCommand": ""
 	},
@@ -43,7 +43,45 @@
 			"active": false
 		},
 		"allowlist": {
-			"all": true
+			"all": false,
+			"fs": {
+				"all": false,
+				"copyFile": false,
+				"createDir": true,
+				"path": false,
+				"readBinaryFile": false,
+				"readDir": true,
+				"readTextFile": true,
+				"removeDir": false,
+				"removeFile": true,
+				"renameFile": false,
+				"writeBinaryFile": false,
+				"writeFile": true
+			},
+			"dialog": {
+				"all": false,
+				"open": true,
+				"save": false
+			},
+			"globalShortcut": {
+				"all": false
+			},
+			"http": {
+				"all": false,
+				"request": false
+			},
+			"notification": {
+				"all": false
+			},
+			"shell": {
+				"all": false,
+				"execute": false,
+				"open": false
+			},
+			"window": {
+				"all": false,
+				"create": false
+			}
 		},
 		"windows": [
 			{

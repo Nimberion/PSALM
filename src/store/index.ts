@@ -10,7 +10,7 @@ export default new Vuex.Store({
 		staff: [] as Array<Employee>,
 		projects: new Map() as Map<string, Project>,
 		toast: { show: false, message: "" },
-		timeouts: [] as Array<number>,
+		activeTimeout: -1,
 	},
 	mutations: {
 		// GENERELL
@@ -28,16 +28,13 @@ export default new Vuex.Store({
 			}
 
 			// CLEAR TIMEOUT IF TOAST WAS ALREADY ACTIVE
-			clearTimeout(currentState.timeouts[0]);
-			currentState.timeouts = [];
+			clearTimeout(currentState.activeTimeout);
 
 			currentState.toast.show = true;
 
-			currentState.timeouts.push(
-				setTimeout(() => {
-					currentState.toast.show = false;
-				}, 2500),
-			);
+			currentState.activeTimeout = setTimeout(() => {
+				currentState.toast.show = false;
+			}, 2500);
 		},
 
 		// STAFF

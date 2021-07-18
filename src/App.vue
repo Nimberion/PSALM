@@ -10,7 +10,7 @@
 		</div>
 		<!-- LOADING SCREEN -->
 		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
-			<div class="grid place-items-center text-white text-center">
+			<div class="grid place-items-center text-white text-center select-none">
 				<img class="h-[30vh] shadow-lg" src="@/../src-tauri/icons/icon.png" alt="logo" />
 				<h1 class="text-[15vh] font-black leading-none">PSALM</h1>
 				<h3 class="text-[3.13vh]">Project Staff And Labor Management</h3>
@@ -18,7 +18,7 @@
 		</div>
 		<!-- SAVED TOAST -->
 		<transition name="slide">
-			<div v-if="toast.show" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50">{{ toast.message }}</div>
+			<div v-if="toast.show" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50 select-none">{{ toast.message }}</div>
 		</transition>
 	</div>
 </template>

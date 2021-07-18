@@ -18,7 +18,6 @@
 			<!-- PROJECT TABLE -->
 			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
 			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
-				<!-- scrollbar scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thin hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded-full scrollbar-track-rounded-full -->
 				<div class="overflow-scroll inner-scrollbar">
 					<table class="project-table">
 						<thead>
