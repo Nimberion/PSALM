@@ -7,14 +7,14 @@
 			<div class="px-1" title="Nachname">Nachname</div>
 			<div class="text-center" title="Hauptamtlich?">HA?</div>
 		</div>
-		<div class="lg:overflow-y-scroll inner-scrollbar lg:max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
+		<div class="lg:overflow-y-scroll scrollbar-p-2 lg:max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
 			<ul>
 				<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto]" v-for="employee in tempStaff" :key="employee.id">
 					<!-- HORIZONTAL DIVIDER -->
 					<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
 					<!-- EMPLOYEE INPUTS -->
-					<PsalmInput class="my-1 mr-2" type="text" v-model="employee.firstName" placeholder="Vorname" :title="employee.firstName" />
-					<PsalmInput class="my-1" type="text" v-model="employee.lastName" placeholder="Nachname" :title="employee.lastName" />
+					<PsalmInput class="my-1 mr-2" type="text" v-model.trim="employee.firstName" placeholder="Vorname" :title="employee.firstName" />
+					<PsalmInput class="my-1" type="text" v-model.trim="employee.lastName" placeholder="Nachname" :title="employee.lastName" />
 					<PsalmInput type="checkbox" v-model="employee.fullTime" />
 
 					<PsalmDeleteButton @click="triggerDeleteModal(employee)" />

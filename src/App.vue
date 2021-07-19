@@ -119,7 +119,11 @@
 		--scroll-padding: 0px;
 	}
 
-	.inner-scrollbar {
+	.scrollbar-p-0 {
+		--scroll-padding: 0rem;
+	}
+
+	.scrollbar-p-2 {
 		--scroll-padding: 0.5rem;
 	}
 

@@ -2,7 +2,7 @@
 	<div class="flex flex-col place-items-center p-2 overflow-hidden">
 		<!-- HEADER -->
 		<PsalmCard class="flex place-items-center p-4 max-w-[calc(100vw-2rem)">
-			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold mr-2" type="text" v-model="tempProject.title" placeholder="Titel" :title="tempProject.title" />
+			<PsalmInput class="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] text-center text-xl font-semibold mr-2" type="text" v-model.trim="tempProject.title" placeholder="Titel" :title="tempProject.title" />
 			<ProjectButton icon="calendar-plus" title="Veranstaltung hinzufügen" @click="addProjectDay" />
 			<ProjectButton icon="users-cog" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode" />
 			<ProjectButton icon="save" title="Speichern" @click="saveProject" />
@@ -18,7 +18,7 @@
 			<!-- PROJECT TABLE -->
 			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
 			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
-				<div class="overflow-scroll inner-scrollbar">
+				<div class="overflow-scroll scrollbar-p-2">
 					<table class="project-table">
 						<thead>
 							<tr>
@@ -26,7 +26,7 @@
 								<th colspan="4" rowspan="2" class="sticky left-0 z-30 br-3px">
 									<div class="w-full h-full p-2">
 										<span class="mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
-										<PsalmInput v-model="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
+										<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 									</div>
 								</th>
 								<!-- DATE & DELETE -->
@@ -46,7 +46,7 @@
 							<tr>
 								<!-- TIME -->
 								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px z-10">
-									<PsalmInput type="text" v-model="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" :title="day.time" />
+									<PsalmInput type="text" v-model.trim="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" :title="day.time" />
 								</th>
 							</tr>
 							<tr>
@@ -57,7 +57,7 @@
 								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
 								<!-- PARTICIPANTS -->
 								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px z-10">
-									<PsalmInput type="text" v-model="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" :title="day.participant" />
+									<PsalmInput type="text" v-model.trim="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" :title="day.participant" />
 								</th>
 							</tr>
 							<tr>

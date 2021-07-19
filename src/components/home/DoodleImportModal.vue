@@ -12,29 +12,32 @@
 			</button>
 			<h2 class="text-xl text-center font-semibold mb-4">Doodle Import</h2>
 			<!-- TITLE -->
-			<PsalmInput class="min-w-[300px] w-[calc(100%-2rem)] font-semibold mb-4 mx-4" type="text" v-model="importedProject.title" placeholder="Titel" :title="importedProject.title" />
+			<PsalmInput class="min-w-[300px] w-[calc(100%-2rem)] font-semibold mb-4 mx-4" type="text" v-model.trim="tempProject.title" placeholder="Titel" :title="tempProject.title" />
 			<!-- LIST -->
-			<div class="pl-4">Header</div>
-			<div class="overflow-y-scroll inner-scrollbar max-h-[calc(100vh-11.25rem)] pl-4">
+			<div class="grid grid-cols-[160px,1fr,3rem] pl-4 pr-6 font-semibold">
+				<p class="pl-1">Doodle Namen</p>
+				<p>PSALM Mitarbeiter</p>
+				<p class="text-center">OKs</p>
+			</div>
+			<div class="overflow-y-scroll scrollbar-p-2 max-h-[calc(100vh-13.75rem)] pl-4">
 				<ul>
-					<li v-for="(importedEmployeeData, index) in importedStaffData" :key="`staff-${index}`" class="grid grid-cols-2 gap-4">
-						<PsalmInput type="text" :value="importedEmployeeData[0]" class="my-1" />
-						<select name="pets" id="pet-select" class="focus:border-secondary focus:ring-0 p-0 px-1 my-1">
+					<li v-for="(importedEmployeeData, index) in importedStaffData" :key="`staff-${index}`" class="grid grid-cols-[160px,1fr,3rem] items-center">
+						<!-- HORIZONTAL DIVIDER -->
+						<hr class="h-[1px] w-full col-span-3 bg-gray-400 border-0" />
+						<div class="px-1" :title="importedEmployeeData[0]">{{ importedEmployeeData[0] }}</div>
+						<!-- v-model="tempProjectStaff[index]" -->
+						<select class="focus:border-secondary focus:ring-0 p-0 px-1 my-1 scrollbar-p-0" @change="updateTempProjectStaff(index, $event)">
 							<option value="">-</option>
-							<option v-for="(employee, index) in staff" :key="index" :value="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+							<option v-for="(employee, index) in staff" :key="index" :value="employee.id" :selected="`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(importedEmployeeData[0].toLowerCase())">
+								{{ employee.firstName }} {{ employee.lastName }}
+							</option>
 						</select>
+						<div class="text-center">{{ importedEmployeeData.filter((e) => e === "OK").length }}</div>
 					</li>
 				</ul>
 			</div>
 			<div class="flex justify-center">
-				<PsalmButton
-					class="bg-primary"
-					@click="
-						$emit('import', importedProject);
-						enableScrolling();
-					"
-					>Importieren</PsalmButton
-				>
+				<PsalmButton class="bg-primary" @click="formatDataToProject">Importieren</PsalmButton>
 				<PsalmButton
 					class="bg-gray-500"
 					@click="
@@ -60,6 +63,7 @@
 	import { open } from "@tauri-apps/api/dialog";
 	import { Employee } from "@/models/interfaces/Employee";
 	import store from "@/store";
+	import { Available } from "@/models/enums/Available";
 
 	@Component({
 		name: "DoodleImportModal",
@@ -71,16 +75,17 @@
 
 		rawData: Array<Array<string>> = [];
 
-		importedProject: Project = newProject(newID());
+		tempProject: Project = newProject(newID());
 		importedStaffData: Array<Array<string>> = [];
+		tempProjectStaff: Array<string> = [];
 
 		get staff(): Array<Employee> {
 			return store.state.staff;
 		}
 
-		get projectStaff(): Array<Employee> {
-			return this.staff.filter((item) => this.importedProject.staff.includes(item.id));
-		}
+		// get projectStaff(): Array<Employee> {
+		// 	return this.staff.filter((item) => this.tempProject.staff.includes(item.id));
+		// }
 
 		created(): void {
 			document.body.classList.add("no-scroll");
@@ -91,6 +96,11 @@
 			document.body.classList.remove("no-scroll");
 		}
 
+		updateTempProjectStaff(index: number, e: { target: HTMLInputElement }): void {
+			this.tempProjectStaff[index] = e.target.value;
+			console.log(this.tempProjectStaff);
+		}
+
 		async importDoddleList(): Promise<void> {
 			// OPEN DIALOG
 			const path = await open({ filters: [{ name: "Doodle Export", extensions: ["xls", "xlsx"] }] });
@@ -98,45 +108,70 @@
 			// READ FILE IF PICKED
 			if (path) {
 				invoke("read_excel_file", { path: path }).then((fileData) => {
-					console.log(JSON.parse(fileData as string) as Array<Array<string>>);
 					this.rawData = JSON.parse(fileData as string) as Array<Array<string>>;
 
-					this.formatDataToProject(this.rawData, []);
+					this.getDataForReview();
 				});
 			} else {
 				this.$emit("cancel");
+				this.enableScrolling();
 			}
 		}
 
-		formatDataToProject(data: Array<Array<string>>, projectStaff: Array<Employee>): void {
-			console.log(data);
-
+		getDataForReview(): void {
 			// GET TITLE
-			this.importedProject.title = data[0][0].match(/"(.*)"/)?.[1] || "Keinen Titel gefunden";
+			this.tempProject.title = this.rawData[0][0].match(/"(.*)"/)?.[1] || "Keinen Titel gefunden";
+
+			// GET STAFF DATA
+			this.importedStaffData = this.rawData.slice(6, -1);
+
+			console.log("### rawData", this.rawData);
+		}
+
+		formatDataToProject(): void {
+			// GET PROJECT STAFF
+			this.tempProject.staff = this.tempProjectStaff.filter((item) => item !== "-");
 
 			// GET PROJECT DAYS
-			const projectDays = [];
-			const dateMY = data[3];
-			const dateDD = data[4];
-			const time = data[5];
+			const dateMY = this.rawData[3];
+			const dateDD = this.rawData[4];
+			const time = this.rawData[5];
 
-			this.importedStaffData = data.slice(6, -1);
-			console.log("staff data", this.importedStaffData);
+			// this.importedStaffData.forEach(() => {
+			// 	this.tempProjectStaff.push("");
+			// });
+			console.log("### importedStaffData", this.importedStaffData);
 
+			// LOOP FOR EACH PROJECT DAY
 			for (let i = 1; i < dateMY.length; i++) {
 				if (dateMY[i] === "") {
 					dateMY[i] = dateMY[i - 1];
 				}
 				const staffAvailability: Array<EmployeeAvailability> = [];
+				// LOOP FOR EACH EMPLOYEE
+				for (let j = 0; j < this.importedStaffData.length; j++) {
+					if (this.tempProjectStaff[j] !== "-") {
+						if (this.importedStaffData[j][i] === "OK") {
+							staffAvailability.push(newEmployeeAvailability(this.tempProjectStaff[j], Available.TRUE));
+						} else {
+							staffAvailability.push(newEmployeeAvailability(this.tempProjectStaff[j], Available.FALSE));
+						}
+					}
+				}
 
-				projectStaff.forEach((e) => staffAvailability.push(newEmployeeAvailability(e.id)));
-
-				// projectDays.push(newProjectDay(projectStaff, newID(), new Date(`${dateDD[i]} ${dateMY[i]} 00:00 UTC`).toISOString().split("T")[0], time[i].replace("–", "-")));
-
-				projectDays.push({ id: newID(), date: new Date(`${dateDD[i]} ${dateMY[i]} 00:00 UTC`).toISOString().split("T")[0], time: time[i].replace("–", "-"), participant: "", staffAvailability: staffAvailability } as ProjectDay);
+				this.tempProject.projectDays.push({
+					id: newID(),
+					date: new Date(`${dateDD[i]} ${dateMY[i]} 00:00 UTC`).toISOString().split("T")[0],
+					time: time[i].replace("–", "-"),
+					participant: "",
+					staffAvailability: staffAvailability,
+				} as ProjectDay);
 			}
 
-			console.log(projectDays);
+			console.log("### tempProjectStaff", this.tempProjectStaff);
+
+			// this.$emit("import", this.tempProject);
+			// this.enableScrolling();
 		}
 	}
 </script>

@@ -5,7 +5,7 @@
 		<div class="mx-2 grid grid-cols-[1fr,2rem] font-semibold">
 			<div class="px-1" title="Titel">Titel</div>
 		</div>
-		<div class="lg:overflow-y-scroll inner-scrollbar max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
+		<div class="lg:overflow-y-scroll scrollbar-p-2 max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
 			<ul>
 				<li class="grid grid-cols-[1fr,2rem] grid-rows-[auto,auto]" v-for="project in projectsArray" :key="project.id">
 					<!-- HORIZONTAL DIVIDER -->
@@ -14,7 +14,7 @@
 					<router-link :to="`/project/${project.id}`" v-if="!editMode" class="my-1 px-1 hover:text-secondary min-h-[1.5rem] border border-transparent overflow-ellipsis overflow-hidden whitespace-nowrap" :title="project.title">{{
 						project.title
 					}}</router-link>
-					<PsalmInput v-if="editMode" class="my-1 w-full" type="text" v-model="project.title" placeholder="Titel" :title="project.title" />
+					<PsalmInput v-if="editMode" class="my-1 w-full" type="text" v-model.trim="project.title" placeholder="Titel" :title="project.title" />
 					<PsalmDeleteButton @click="triggerDeleteModal(project)" />
 				</li>
 				<!-- NO ENTRYS -->
@@ -83,8 +83,9 @@
 				await removeFile(`data/projects/${this.projectToDelete.id}.json`);
 			}
 
-			store.commit("updateProjects", this.tempProjects);
-			this.updateProjectsArray();
+			// store.commit("updateProjects", this.tempProjects);
+			// this.updateProjectsArray();
+			this.saveProjects();
 			this.showDeleteModal = false;
 		}
 
@@ -126,9 +127,14 @@
 
 		updateProjectsArray(): void {
 			this.projectsArray = Array.from(this.tempProjects.values());
-
 			this.projectsArray.sort((a, b) => {
-				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
+				if (a.title === "") {
+					return 1;
+				} else if (b.title === "") {
+					return -1;
+				} else {
+					return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
+				}
 			});
 		}
 	}

@@ -4,7 +4,7 @@
 		<h2 class="text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- max-h-[calc(100%-2.5rem)] -->
 
-		<ul class="overflow-y-scroll inner-scrollbar max-h-[calc(100vh-10.875rem)] pl-4">
+		<ul class="overflow-y-scroll scrollbar-p-2 max-h-[calc(100vh-10.875rem)] pl-4">
 			<li v-for="employee in staff" :key="employee.id">
 				<label class="flex cursor-pointer items-center">
 					<input
