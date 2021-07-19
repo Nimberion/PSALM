@@ -36,7 +36,7 @@
 		<PsalmDeleteModal v-if="showDeleteModal" type="project" :object-to-delete="projectToDelete" @confirm="deleteProject" @cancel="showDeleteModal = false" />
 
 		<!-- DOODLE IMPORT MODAL -->
-		<DoodleImportModal v-if="showDoodleImportModal" @cancel="showDoodleImportModal = false" />
+		<DoodleImportModal v-if="showDoodleImportModal" @import="importProject" @cancel="showDoodleImportModal = false" />
 	</PsalmCard>
 </template>
 
@@ -85,7 +85,8 @@
 
 			// store.commit("updateProjects", this.tempProjects);
 			// this.updateProjectsArray();
-			this.saveProjects();
+			await this.saveProjects();
+			store.commit("showToast", "deleted");
 			this.showDeleteModal = false;
 		}
 
@@ -136,6 +137,17 @@
 					return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
 				}
 			});
+		}
+
+		importProject(projectToImport: Project): void {
+			this.tempProjects.set(projectToImport.id, projectToImport);
+			this.saveProjects();
+
+			console.log("imported");
+
+			this.$router.push(`/project/${projectToImport.id}`);
+
+			store.commit("showToast", "imported");
 		}
 	}
 </script>

@@ -101,13 +101,14 @@
 			this.showDeleteModal = true;
 		}
 
-		deleteEmployee(): void {
+		async deleteEmployee(): Promise<void> {
 			this.tempStaff.splice(
 				this.tempStaff.findIndex((element) => element.id === this.employeeToDelete.id),
 				1,
 			);
 
-			this.saveStaff();
+			await this.saveStaff();
+			store.commit("showToast", "deleted");
 			this.showDeleteModal = false;
 		}
 	}

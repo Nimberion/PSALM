@@ -19,6 +19,12 @@ export default new Vuex.Store({
 				case "copied":
 					currentState.toast.message = "Mitarbeiter kopiert!";
 					break;
+				case "deleted":
+					currentState.toast.message = "Erfolgreich gelöscht!";
+					break;
+				case "imported":
+					currentState.toast.message = "Erfolgreich Importiert!";
+					break;
 				case "saved":
 					currentState.toast.message = "Erfolgreich gespeichert!";
 					break;

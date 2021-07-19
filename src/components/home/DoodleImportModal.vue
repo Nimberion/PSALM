@@ -26,18 +26,17 @@
 						<hr class="h-[1px] w-full col-span-3 bg-gray-400 border-0" />
 						<div class="px-1" :title="importedEmployeeData[0]">{{ importedEmployeeData[0] }}</div>
 						<!-- v-model="tempProjectStaff[index]" -->
-						<select class="focus:border-secondary focus:ring-0 p-0 px-1 my-1 scrollbar-p-0" @change="updateTempProjectStaff(index, $event)">
+						<!-- :selected="`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(importedEmployeeData[0].toLowerCase())" -->
+						<select v-model="tempProjectStaff[index]" class="focus:border-secondary focus:ring-0 p-0 px-1 my-1 scrollbar-p-0" @change="updateTempProjectStaff(index, $event)">
 							<option value="">-</option>
-							<option v-for="(employee, index) in staff" :key="index" :value="employee.id" :selected="`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(importedEmployeeData[0].toLowerCase())">
-								{{ employee.firstName }} {{ employee.lastName }}
-							</option>
+							<option v-for="(employee, index) in staff" :key="index" :value="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
 						</select>
 						<div class="text-center">{{ importedEmployeeData.filter((e) => e === "OK").length }}</div>
 					</li>
 				</ul>
 			</div>
 			<div class="flex justify-center">
-				<PsalmButton class="bg-primary" @click="formatDataToProject">Importieren</PsalmButton>
+				<PsalmButton class="bg-primary" @click="formatDataToProject()">Importieren</PsalmButton>
 				<PsalmButton
 					class="bg-gray-500"
 					@click="
@@ -71,7 +70,6 @@
 	})
 	export default class DoodleImportModal extends Vue {
 		scrollY = window.scrollY; // FOR Y-OFFSET
-		projectDayDateToDelete = "";
 
 		rawData: Array<Array<string>> = [];
 
@@ -82,10 +80,6 @@
 		get staff(): Array<Employee> {
 			return store.state.staff;
 		}
-
-		// get projectStaff(): Array<Employee> {
-		// 	return this.staff.filter((item) => this.tempProject.staff.includes(item.id));
-		// }
 
 		created(): void {
 			document.body.classList.add("no-scroll");
@@ -126,20 +120,35 @@
 			this.importedStaffData = this.rawData.slice(6, -1);
 
 			console.log("### rawData", this.rawData);
+
+			// COMPARE DOODLE STAFF WITH PSALM STAFF
+			for (let i = 0; i < this.importedStaffData.length; i++) {
+				this.staff.forEach((employee) => {
+					if (`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(this.importedStaffData[i][0].toLowerCase())) {
+						this.tempProjectStaff[i] = employee.id;
+						// return;
+					}
+					// else {
+					// 	this.tempProjectStaff[i] = "";
+					// }
+				});
+
+				if (!this.tempProjectStaff[i]) {
+					this.tempProjectStaff[i] = "";
+				}
+			}
 		}
 
 		formatDataToProject(): void {
 			// GET PROJECT STAFF
-			this.tempProject.staff = this.tempProjectStaff.filter((item) => item !== "-");
+			this.tempProject.staff = this.tempProjectStaff.filter((item) => item !== "");
+			this.tempProject.projectDays = [];
 
 			// GET PROJECT DAYS
 			const dateMY = this.rawData[3];
 			const dateDD = this.rawData[4];
 			const time = this.rawData[5];
 
-			// this.importedStaffData.forEach(() => {
-			// 	this.tempProjectStaff.push("");
-			// });
 			console.log("### importedStaffData", this.importedStaffData);
 
 			// LOOP FOR EACH PROJECT DAY
@@ -170,8 +179,8 @@
 
 			console.log("### tempProjectStaff", this.tempProjectStaff);
 
-			// this.$emit("import", this.tempProject);
-			// this.enableScrolling();
+			this.$emit("import", this.tempProject);
+			this.enableScrolling();
 		}
 	}
 </script>

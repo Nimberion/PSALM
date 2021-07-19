@@ -192,6 +192,8 @@
 			if (this.tempProject.staff.length === 0) {
 				this.projectStaffEditMode = true;
 			}
+
+			console.log(this.$route.path);
 		}
 
 		getNameById(id: string): string {
@@ -275,13 +277,14 @@
 			this.showDeleteModal = true;
 		}
 
-		deleteProjectDay(): void {
+		async deleteProjectDay(): Promise<void> {
 			this.tempProject.projectDays.splice(
 				this.tempProject.projectDays.findIndex((e) => e.id === this.projectDayToDelete.id),
 				1,
 			);
 
-			this.saveProject();
+			await this.saveProject();
+			store.commit("showToast", "deleted");
 			this.showDeleteModal = false;
 		}
 
