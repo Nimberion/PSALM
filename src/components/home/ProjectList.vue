@@ -139,9 +139,9 @@
 			});
 		}
 
-		importProject(projectToImport: Project): void {
+		async importProject(projectToImport: Project): Promise<void> {
 			this.tempProjects.set(projectToImport.id, projectToImport);
-			this.saveProjects();
+			await this.saveProjects();
 
 			console.log("imported");
 

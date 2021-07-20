@@ -149,13 +149,27 @@
 			const dateDD = this.rawData[4];
 			const time = this.rawData[5];
 
+			const translateMonth = new Map();
+			translateMonth.set("Januar", "January");
+			translateMonth.set("Februar", "February");
+			translateMonth.set("März", "March");
+			translateMonth.set("Mai", "May");
+			translateMonth.set("Juni", "June");
+			translateMonth.set("Juli", "July");
+			translateMonth.set("Oktober", "October");
+			translateMonth.set("Dezember", "December");
+
 			console.log("### importedStaffData", this.importedStaffData);
 
 			// LOOP FOR EACH PROJECT DAY
 			for (let i = 1; i < dateMY.length; i++) {
-				if (dateMY[i] === "") {
+				if (!dateMY[i]) {
 					dateMY[i] = dateMY[i - 1];
 				}
+
+				// TRANSLATE GERMAN MONTHS TO ENGLISH
+				dateMY[i] = dateMY[i].replace(/\b(?:Januar|Februar|März|Mai|Juni|Juli|Oktober|Dezember)\b/gi, (matched) => translateMonth.get(matched));
+
 				const staffAvailability: Array<EmployeeAvailability> = [];
 				// LOOP FOR EACH EMPLOYEE
 				for (let j = 0; j < this.importedStaffData.length; j++) {
@@ -170,7 +184,7 @@
 
 				this.tempProject.projectDays.push({
 					id: newID(),
-					date: new Date(`${dateDD[i]} ${dateMY[i]} 00:00 UTC`).toISOString().split("T")[0],
+					date: new Date(`${dateDD[i]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0],
 					time: time[i].replace("–", "-"),
 					participant: "",
 					staffAvailability: staffAvailability,
