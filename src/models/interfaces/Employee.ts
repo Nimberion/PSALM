@@ -4,9 +4,8 @@ export interface Employee {
 	firstName: string;
 	lastName: string;
 	fullTime: boolean;
-	projects: Array<string>;
 }
 
-export function newEmployee(id = newID(), firstName = "", lastName = "", fullTime = false, projects: Array<string> = []): Employee {
-	return { id, firstName, lastName, fullTime, projects };
+export function newEmployee(id = newID(), firstName = "", lastName = "", fullTime = false): Employee {
+	return { id, firstName, lastName, fullTime };
 }

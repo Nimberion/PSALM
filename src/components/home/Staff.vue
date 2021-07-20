@@ -30,11 +30,14 @@
 		<div class="flex justify-center">
 			<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
 			<PsalmButton title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
-			<!-- <PsalmButton v-if="!editMode" title="Mitarbeiter bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" /> -->
+			<PsalmButton title="Mitarbeiter importieren" class="bg-primary" @click="showStaffImportModal = true">MA Import</PsalmButton>
 		</div>
 
 		<!-- DELETE MODAL -->
 		<PsalmDeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
+
+		<!-- STAFF IMPORT MODAL -->
+		<StaffImportModal v-if="showStaffImportModal" @import="importStaff" @cancel="showStaffImportModal = false" />
 	</PsalmCard>
 </template>
 
@@ -44,6 +47,7 @@
 	import { Employee, newEmployee } from "@/models/interfaces/Employee";
 	import { pathExists } from "@/utils/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import StaffImportModal from "@/components/home/StaffImportModal.vue";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
@@ -53,13 +57,15 @@
 
 	@Component({
 		name: "Staff",
-		components: { PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput },
+		components: { PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput, StaffImportModal },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];
 
 		showDeleteModal = false;
 		employeeToDelete = newEmployee();
+
+		showStaffImportModal = false;
 
 		get staff(): Array<Employee> {
 			return store.state.staff;
@@ -110,6 +116,17 @@
 			await this.saveStaff();
 			store.commit("showToast", "deleted");
 			this.showDeleteModal = false;
+		}
+
+		async importStaff(staffToImport: Array<Employee>): Promise<void> {
+			staffToImport.forEach((employee) => {
+				this.tempStaff.push(employee);
+			});
+
+			await this.saveStaff();
+			store.commit("showToast", "imported");
+
+			this.showStaffImportModal = false;
 		}
 	}
 </script>

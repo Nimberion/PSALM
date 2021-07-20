@@ -150,14 +150,7 @@
 			const time = this.rawData[5];
 
 			const translateMonth = new Map();
-			translateMonth.set("Januar", "January");
-			translateMonth.set("Februar", "February");
-			translateMonth.set("März", "March");
-			translateMonth.set("Mai", "May");
-			translateMonth.set("Juni", "June");
-			translateMonth.set("Juli", "July");
-			translateMonth.set("Oktober", "October");
-			translateMonth.set("Dezember", "December");
+			translateMonth.set("Januar", "January").set("Februar", "February").set("März", "March").set("Mai", "May").set("Juni", "June").set("Juli", "July").set("Oktober", "October").set("Dezember", "December");
 
 			console.log("### importedStaffData", this.importedStaffData);
 
@@ -181,10 +174,11 @@
 						}
 					}
 				}
+				console.log(new Date(`${dateDD[i].split(" ")[1]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0]);
 
 				this.tempProject.projectDays.push({
 					id: newID(),
-					date: new Date(`${dateDD[i]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0],
+					date: new Date(`${dateDD[i].split(" ")[1]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0],
 					time: time[i].replace("–", "-"),
 					participant: "",
 					staffAvailability: staffAvailability,

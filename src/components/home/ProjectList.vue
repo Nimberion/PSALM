@@ -143,8 +143,6 @@
 			this.tempProjects.set(projectToImport.id, projectToImport);
 			await this.saveProjects();
 
-			console.log("imported");
-
 			this.$router.push(`/project/${projectToImport.id}`);
 
 			store.commit("showToast", "imported");
