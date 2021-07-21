@@ -179,7 +179,7 @@
 				this.tempProject.projectDays.push({
 					id: newID(),
 					date: new Date(`${dateDD[i].split(" ")[1]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0],
-					time: time[i].replace("–", "-"),
+					time: time[i].replaceAll("–", "-"),
 					participant: "",
 					staffAvailability: staffAvailability,
 				} as ProjectDay);

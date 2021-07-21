@@ -2,6 +2,8 @@ import { Available } from "@/models/enums/Available";
 import { Deployed } from "@/models/enums/Deployed";
 import { Employee } from "@/models/interfaces/Employee";
 import { EmployeeAvailability, Project } from "@/models/interfaces/Project";
+import store from "@/store";
+import { jsPDF } from "jspdf";
 
 export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvailability>, employeeId: string): EmployeeAvailability | undefined {
 	return staffAvailability.find((e) => e.employeeId === employeeId);
@@ -69,4 +71,48 @@ export function getSetPointOfDeployments(project: Project, staff: Array<Employee
 			return setPointOfDeployments;
 		}
 	}
+}
+
+export function writePdfForEachEmployee(project: Project): void {
+	const staff = store.state.staff;
+
+	project.staff.forEach((employeeId) => {
+		const employee = staff.find((e) => e.id === employeeId);
+		const deployedProjectDays: Array<{ date: string; time: string; participant: string; reserve: string }> = [];
+
+		project.projectDays.forEach((projectDay) => {
+			const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && (e.deployed === Deployed.TRUE || e.deployed === Deployed.RESERVE));
+
+			if (deployedProjectDay) {
+				const splittedDate = projectDay.date.toString().split("-");
+				const formattedDate = `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
+				const reserve = deployedProjectDay?.deployed === Deployed.RESERVE ? "Ja" : "-";
+
+				deployedProjectDays.push({ date: formattedDate, time: projectDay.time, participant: projectDay.participant, reserve: reserve });
+			}
+		});
+
+		if (deployedProjectDays.length > 0 && employee?.lastName) {
+			const doc = new jsPDF({ format: "a4", orientation: "p", unit: "mm" });
+			doc.setFontSize(20);
+			doc.text(project.title, 105, 25, { align: "center", maxWidth: 160 });
+			doc.setFontSize(14);
+			doc.text(`Name: ${employee?.firstName} ${employee?.lastName}`, 25, 45);
+
+			doc.table(
+				25,
+				55,
+				deployedProjectDays,
+				[
+					{ name: "date", prompt: "Datum", align: "center", padding: 0, width: 38 },
+					{ name: "time", prompt: "Uhrzeit", align: "center", padding: 0, width: 42 },
+					{ name: "participant", prompt: "Teilnehmer", align: "center", padding: 0, width: 92 },
+					{ name: "reserve", prompt: "Reserve?", align: "center", padding: 0, width: 38 },
+				],
+				{ padding: 3, printHeaders: true, autoSize: false },
+			);
+
+			doc.save(`${employee?.lastName.replaceAll(" ", "_")}-${project.title.replaceAll(" ", "_")}.pdf`);
+		}
+	});
 }

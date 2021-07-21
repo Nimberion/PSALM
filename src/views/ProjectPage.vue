@@ -6,6 +6,7 @@
 			<ProjectButton icon="calendar-plus" title="Veranstaltung hinzufügen" @click="addProjectDay" />
 			<ProjectButton icon="users-cog" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode" />
 			<ProjectButton icon="save" title="Speichern" @click="saveProject" />
+			<ProjectButton icon="pdf" title="PDF für jeden Mitarbeiter Exportieren" @click="writePdfForEachEmployee" />
 		</PsalmCard>
 
 		<!-- CONTENT -->
@@ -144,7 +145,7 @@
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
-	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments } from "@/utils/projects";
+	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments, writePdfForEachEmployee } from "@/utils/projects";
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 
 	@Component({
@@ -294,6 +295,10 @@
 			writeText(currentStaff);
 
 			store.commit("showToast", "copied");
+		}
+
+		writePdfForEachEmployee(): void {
+			writePdfForEachEmployee(this.tempProject);
 		}
 
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {
