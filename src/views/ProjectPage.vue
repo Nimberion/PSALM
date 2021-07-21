@@ -119,9 +119,9 @@
 								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
 									<span class="px-1">Gesamt</span>
 								</td>
-								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">E</td>
-								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+2rem)] z-10 bg-inherit">E</td>
-								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">E</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">0</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+2rem)] z-10 bg-inherit">0</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">0</td>
 								<template v-for="day in tempProject.projectDays">
 									<td
 										:key="`total-available-${day.id}`"

@@ -28,7 +28,7 @@
 						<!-- v-model="tempProjectStaff[index]" -->
 						<!-- :selected="`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(importedEmployeeData[0].toLowerCase())" -->
 						<select v-model="tempProjectStaff[index]" class="focus:border-secondary focus:ring-0 p-0 px-1 my-1 scrollbar-p-0" @change="updateTempProjectStaff(index, $event)">
-							<option value="">-</option>
+							<option value="-">-</option>
 							<option v-for="(employee, index) in staff" :key="index" :value="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
 						</select>
 						<div class="text-center">{{ importedEmployeeData.filter((e) => e === "OK").length }}</div>
@@ -92,7 +92,6 @@
 
 		updateTempProjectStaff(index: number, e: { target: HTMLInputElement }): void {
 			this.tempProjectStaff[index] = e.target.value;
-			console.log(this.tempProjectStaff);
 		}
 
 		async importDoddleList(): Promise<void> {
@@ -119,8 +118,6 @@
 			// GET STAFF DATA
 			this.importedStaffData = this.rawData.slice(6, -1);
 
-			console.log("### rawData", this.rawData);
-
 			// COMPARE DOODLE STAFF WITH PSALM STAFF
 			for (let i = 0; i < this.importedStaffData.length; i++) {
 				this.staff.forEach((employee) => {
@@ -134,14 +131,14 @@
 				});
 
 				if (!this.tempProjectStaff[i]) {
-					this.tempProjectStaff[i] = "";
+					this.tempProjectStaff[i] = "-";
 				}
 			}
 		}
 
 		formatDataToProject(): void {
 			// GET PROJECT STAFF
-			this.tempProject.staff = this.tempProjectStaff.filter((item) => item !== "");
+			this.tempProject.staff = this.tempProjectStaff.filter((item) => item !== "-");
 			this.tempProject.projectDays = [];
 
 			// GET PROJECT DAYS
@@ -151,8 +148,6 @@
 
 			const translateMonth = new Map();
 			translateMonth.set("Januar", "January").set("Februar", "February").set("März", "March").set("Mai", "May").set("Juni", "June").set("Juli", "July").set("Oktober", "October").set("Dezember", "December");
-
-			console.log("### importedStaffData", this.importedStaffData);
 
 			// LOOP FOR EACH PROJECT DAY
 			for (let i = 1; i < dateMY.length; i++) {
@@ -166,6 +161,7 @@
 				const staffAvailability: Array<EmployeeAvailability> = [];
 				// LOOP FOR EACH EMPLOYEE
 				for (let j = 0; j < this.importedStaffData.length; j++) {
+					console.log(this.tempProjectStaff[j]);
 					if (this.tempProjectStaff[j] !== "-") {
 						if (this.importedStaffData[j][i] === "OK") {
 							staffAvailability.push(newEmployeeAvailability(this.tempProjectStaff[j], Available.TRUE));
@@ -174,7 +170,6 @@
 						}
 					}
 				}
-				console.log(new Date(`${dateDD[i].split(" ")[1]} ${dateMY[i]} 00:00:00 UTC`).toISOString().split("T")[0]);
 
 				this.tempProject.projectDays.push({
 					id: newID(),
@@ -184,8 +179,6 @@
 					staffAvailability: staffAvailability,
 				} as ProjectDay);
 			}
-
-			console.log("### tempProjectStaff", this.tempProjectStaff);
 
 			this.$emit("import", this.tempProject);
 			this.enableScrolling();
