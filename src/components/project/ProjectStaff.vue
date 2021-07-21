@@ -45,6 +45,7 @@
 
 		mounted(): void {
 			this.tempProjectStaff = this.projectStaff;
+			console.log(this.tempProjectStaff);
 		}
 
 		updateTempProjectStaff(): void {

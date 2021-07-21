@@ -111,8 +111,44 @@
 								</td>
 							</tr>
 							<!-- NO EMPLOYEE SELECTED -->
-							<tr v-if="staff.length === 0">
+							<tr v-if="staff.length === 0" class="no-hover">
 								<td :colspan="5 + tempProject.projectDays.length * 2">Keine Einträge</td>
+							</tr>
+							<!-- TOTAL STATISTICS -->
+							<tr v-if="staff.length > 0" class="font-semibold no-hover">
+								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+									<span class="px-1">Gesamt</span>
+								</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">E</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+2rem)] z-10 bg-inherit">E</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">E</td>
+								<template v-for="day in tempProject.projectDays">
+									<td
+										:key="`total-available-${day.id}`"
+										class="text-white"
+										:class="{
+											'bg-danger': day.staffAvailability.filter((e) => e.available === 'TRUE').length < tempProject.numberOfRequiredStaff,
+											'bg-warning': day.staffAvailability.filter((e) => e.available === 'TRUE').length === tempProject.numberOfRequiredStaff,
+											'bg-success': day.staffAvailability.filter((e) => e.available === 'TRUE').length > tempProject.numberOfRequiredStaff,
+										}"
+									>
+										{{ day.staffAvailability.filter((e) => e.available === "TRUE").length }}
+									</td>
+									<td
+										:key="`total-deployed-${day.id}`"
+										class="text-white"
+										:class="{
+											'bg-danger': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff,
+											'bg-warning': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff,
+											'bg-success': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff,
+										}"
+									>
+										{{ day.staffAvailability.filter((e) => e.deployed === "TRUE" || e.deployed === "RESERVE").length }}
+									</td>
+								</template>
+								<td class="hidden lg:table-cell bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+									<span class="px-1">Gesamt</span>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -194,6 +230,8 @@
 				this.projectStaffEditMode = true;
 			}
 
+			this.deleteRemovedData();
+
 			console.log(this.$route.path);
 		}
 
@@ -229,6 +267,8 @@
 
 		updateTempProjectStaff(newTempProjectStaff: Array<string>): void {
 			this.tempProject.staff = newTempProjectStaff;
+
+			this.deleteRemovedData();
 
 			// UPDATE staffAvailability OF ALL PROJECT-DAYS
 			this.tempProject.projectDays.forEach((day) => {
@@ -287,6 +327,24 @@
 			await this.saveProject();
 			store.commit("showToast", "deleted");
 			this.showDeleteModal = false;
+		}
+
+		deleteRemovedData(): void {
+			// DELETE DELETED EMPLOYEES FROM STAFF LIST
+			this.tempProject.staff.forEach((item, index, object) => {
+				if (!this.staff.find((e) => e.id === item)) {
+					object.splice(index, 1);
+				}
+			});
+
+			// DELETE UNUSED staffAvailability
+			this.tempProject.projectDays.forEach((day) => {
+				day.staffAvailability.forEach((item, index, object) => {
+					if (!this.tempProject.staff.includes(item.employeeId)) {
+						object.splice(index, 1);
+					}
+				});
+			});
 		}
 
 		copyDisplayedStaff(): void {
@@ -377,7 +435,7 @@
 	.project-table tbody tr.fullTime {
 		background-color: lightyellow;
 	}
-	.project-table tbody tr:hover {
+	.project-table tbody tr:hover:not(.no-hover) {
 		background-color: #f8d3be;
 	}
 

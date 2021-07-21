@@ -30,7 +30,7 @@
 		<div class="flex justify-center">
 			<PsalmButton title="Mitarbeiter hinzufügen" icon="user-plus" class="bg-primary" @click="addEmployee" />
 			<PsalmButton title="Mitarbeiter speichern" icon="save" class="bg-primary" @click="saveStaff" />
-			<PsalmButton title="Mitarbeiter importieren" class="bg-primary" @click="showStaffImportModal = true">MA Import</PsalmButton>
+			<PsalmButton title="Mitarbeiter importieren" icon="import" class="bg-primary" @click="showStaffImportModal = true" />
 		</div>
 
 		<!-- DELETE MODAL -->

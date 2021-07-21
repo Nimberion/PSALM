@@ -29,7 +29,7 @@
 			<PsalmButton title="Projekt hinzufügen" icon="folder-plus" class="bg-primary" @click="addProject" />
 			<PsalmButton v-if="editMode" title="Projekttitel speichern" icon="save" class="bg-primary" @click="saveProjects" />
 			<PsalmButton v-if="!editMode" title="Projekttitel bearbeiten" icon="edit" class="bg-primary" @click="editMode = true" />
-			<PsalmButton title="Doodle Liste importieren" class="bg-primary" @click="showDoodleImportModal = true">Doodle</PsalmButton>
+			<PsalmButton title="Doodle Liste importieren" class="bg-primary" icon="import" @click="showDoodleImportModal = true" />
 		</div>
 
 		<!-- DELETE MODAL -->
