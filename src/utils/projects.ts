@@ -40,6 +40,8 @@ export function getNumberOfDeployments(project: Project, employeeId: string): nu
 export function getSetPointOfDeployments(project: Project, staff: Array<Employee>, employee: Employee): number | string {
 	if (employee.fullTime) {
 		return "-";
+	} else if (project.numberOfRequiredStaff === 0) {
+		return "-";
 	} else {
 		// GET NUMBER OF ALL POSSIBLE DEPLOYMENTS (MINUS DEPLOYMENTS OF FULL TIME)
 		let possibleDeployments = project.numberOfRequiredStaff * project.projectDays.length;
@@ -65,7 +67,7 @@ export function getSetPointOfDeployments(project: Project, staff: Array<Employee
 
 		if (setPointOfDeployments > employeeAvailability) {
 			return employeeAvailability;
-		} else if (isNaN(setPointOfDeployments)) {
+		} else if (isNaN(setPointOfDeployments) || setPointOfDeployments < 0) {
 			return "0";
 		} else {
 			return setPointOfDeployments;
@@ -112,7 +114,7 @@ export function writePdfForEachEmployee(project: Project): void {
 				{ padding: 3, printHeaders: true, autoSize: false },
 			);
 
-			doc.save(`${employee?.lastName.replaceAll(" ", "_")}-${project.title.replaceAll(" ", "_")}.pdf`);
+			doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
 		}
 	});
 }
