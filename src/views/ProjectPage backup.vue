@@ -20,131 +20,134 @@
 			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
 			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
 				<div class="overflow-scroll scrollbar-p-2">
-					<table class="project-table table-fixed border-separate text-center whitespace-nowrap">
+					<table class="project-table">
 						<thead>
-							<!-- STAFF HEADER -->
 							<tr>
 								<!-- NEEDED STAFF -->
-								<th class="min-w-[15rem] max-w-[15rem] sticky top-0 left-0 border-r-[3px] border-b border-gray-400 bg-white z-30">
+								<th colspan="4" rowspan="2" class="sticky left-0 z-30 br-3px">
 									<div class="w-full h-full p-2">
-										<span class="text-sm font-normal mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
+										<span class="mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
 										<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 									</div>
-									<ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" />
-									<!-- HEADER FOR STAFF STATISTICS -->
-									<!-- <span class="font-semibold">Statistik</span>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[150px] z-30">Kann</th>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+2rem)] z-30">Ist</th>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+4rem)] z-30 br-3px">Soll</th> -->
 								</th>
-
-								<!-- HEADER PER DAY -->
-								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" class="sticky top-0 border-r-[3px] last:border-r-0 border-gray-400 text-sm p-0 m-0 bg-white z-10">
-									<!-- DATE & DELETE -->
+								<!-- DATE & DELETE -->
+								<th v-for="day in tempProject.projectDays" :key="`date-${day.id}`" colspan="2" class="br-3px z-10">
 									<div class="flex m-1 mt-0">
 										<VueDatePicker v-model="day.date" class="mr-1" format="DD.MM.YYYY" color="#33658A" :minDate="minDate" no-header no-calendar-icon>
 											<template #activator="{ date }">
 												<button class="w-full font-semibold rounded-none border border-[#6b7280] focus:border-secondary focus:outline-none" :title="date">{{ date }}</button>
 											</template>
 										</VueDatePicker>
-										<PsalmDeleteButton title="Tag löschen" @click="triggerDeleteModal(day)" />
-									</div>
-									<!-- TIME -->
-
-									<div class="m-1 mt-0">
-										<PsalmInput type="text" v-model.trim="day.time" class="w-24 text-sm text-center" placeholder="Uhrzeit" :title="day.time" />
-									</div>
-									<!-- PARTICIPANTS -->
-									<div class="m-1 mt-0">
-										<PsalmInput type="text" v-model.trim="day.participant" class="w-24 text-sm text-center" placeholder="Teilnehmer" :title="day.participant" />
-									</div>
-									<!-- HEADER FOR STAFF AVAILABILITIES AND DEPLOYMENTS -->
-									<div class="flex border-b border-t border-gray-400">
-										<div class="w-1/2 border-r border-gray-400">
-											<ProjectFilterButton column="available" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'available')" />
-										</div>
-										<div class="w-1/2">
-											<ProjectFilterButton column="deployed" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'deployed')" />
-										</div>
+										<PsalmDeleteButton class="h-[calc(1.25rem+2px)] px-0.5" title="Tag löschen" @click="triggerDeleteModal(day)" />
 									</div>
 								</th>
 								<!-- EMPTY CELL FOR SECOND STAFF LIST -->
-								<th class="hidden lg:table-cell sticky top-0 right-0 w-[9.5rem] bg-white border-l-[3px] border-b border-gray-400 z-20"></th>
+								<th rowspan="4" class="hidden lg:table-cell bl-3px sticky right-0 z-20 max-w-[150px] min-w-[150px]"></th>
+							</tr>
+							<tr>
+								<!-- TIME -->
+								<th v-for="day in tempProject.projectDays" :key="`time-${day.id}`" colspan="2" class="br-3px z-10">
+									<PsalmInput type="text" v-model.trim="day.time" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Uhrzeit" :title="day.time" />
+								</th>
+							</tr>
+							<tr>
+								<!-- EMPTY CELL FOR STAFF LIST -->
+								<th rowspan="2" class="sticky left-0 z-30 min-w-[150px] max-w-[150px]">
+									<div class="flex"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /></div>
+								</th>
+								<th colspan="3" class="sticky left-[150px] z-30 br-3px bt-1px"><span class="font-semibold">Statistik</span></th>
+								<!-- PARTICIPANTS -->
+								<th v-for="day in tempProject.projectDays" :key="`participant-${day.id}`" colspan="2" class="br-3px z-10">
+									<PsalmInput type="text" v-model.trim="day.participant" class="w-[6rem] text-sm text-center m-1 mt-0" placeholder="Teilnehmer" :title="day.participant" />
+								</th>
+							</tr>
+							<tr>
+								<!-- HEADER FOR STAFF STATISTICS -->
+								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[150px] z-30">Kann</th>
+								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+2rem)] z-30">Ist</th>
+								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+4rem)] z-30 br-3px">Soll</th>
+								<!-- HEADER FOR STAFF AVAILABILITIES AND DEPLOYMENTS -->
+								<template v-for="day in tempProject.projectDays">
+									<th :key="`available-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs z-10">
+										<ProjectFilterButton column="available" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'available')" />
+									</th>
+									<th :key="`deployed-header-${day.id}`" class="max-w-[3rem] min-w-[3rem] text-xs br-3px z-10">
+										<ProjectFilterButton column="deployed" :day-id="day.id" :active-filter="activeFilter" @click="toggleFilter(day.id, 'deployed')" />
+									</th>
+								</template>
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="employee in staff" :key="employee.id" class="bg-white hover:bg-[#f8d3be]" :class="{ 'bg-yellow-100': employee.fullTime, 'even:bg-gray-200': !employee.fullTime }">
+							<tr v-for="employee in staff" :key="employee.id" :class="{ fullTime: employee.fullTime }">
 								<!-- STAFF LIST -->
-								<td class="sticky left-0 z-10 bg-inherit text-left p-0" :title="`${employee.firstName} ${employee.lastName}`">
-									<div class="h-full flex justify-between">
-										<span class="w-36 overflow-ellipsis overflow-hidden border-r border-b border-gray-400 px-1 py-1">{{ employee.firstName }} {{ employee.lastName }}</span>
-										<!-- EMPLOYEE STATISTICS -->
-										<div class="flex text-center">
-											<div class="w-8 border-r border-b border-gray-400 py-1">{{ getNumberOfAvailabilities(tempProject, employee.id) }}</div>
-											<div class="w-8 border-r border-b border-gray-400 py-1">{{ getNumberOfDeployments(tempProject, employee.id) }}</div>
-											<div class="w-8 border-r-[3px] border-b border-gray-400 py-1">{{ getSetPointOfDeployments(tempProject, staff, employee) }}</div>
-										</div>
-									</div>
+								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left" :title="`${employee.firstName} ${employee.lastName}`">
+									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
-
+								<!-- EMPLOYEE STATISTICS -->
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">
+									{{ getNumberOfAvailabilities(tempProject, employee.id) }}
+								</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+2rem)] z-10 bg-inherit">
+									{{ getNumberOfDeployments(tempProject, employee.id) }}
+								</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">
+									{{ getSetPointOfDeployments(tempProject, staff, employee) }}
+								</td>
 								<!-- EMPLOYEE AVAILABILITIES AND DEPLOYMENTS -->
 								<template v-for="day in tempProject.projectDays">
-									<td :key="`${day.id}`" class="border-b border-r-[3px] border-gray-400 p-0">
-										<div class="flex w-full">
-											<div class="w-1/2 py-1 border-r border-gray-400">
-												<ProjectAvailabilityButton class="mx-auto" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
-											</div>
-											<div class="w-1/2 py-1">
-												<ProjectAvailabilityButton class="mx-auto" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
-											</div>
-										</div>
+									<td :key="`available-${day.id}`">
+										<ProjectAvailabilityButton class="mx-auto" column="available" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
+									</td>
+									<td :key="`deployed-${day.id}`">
+										<ProjectAvailabilityButton class="mx-auto" column="deployed" :day="day" :employee-id="employee.id" @change="updateEmployeeAvailability" />
 									</td>
 								</template>
 								<!-- SECOND STAFF LIST -->
 								<td
-									class="hidden lg:table-cell sticky right-0 z-10 overflow-ellipsis overflow-hidden bg-inherit text-left border-l-[3px] border-b border-gray-400 min-w-[9.5rem] max-w-[9.5rem]"
+									class="hidden lg:table-cell bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left"
 									:title="`${employee.firstName} ${employee.lastName}`"
 								>
 									<span class="px-1">{{ employee.firstName }} {{ employee.lastName }}</span>
 								</td>
 							</tr>
 							<!-- NO EMPLOYEE SELECTED -->
-							<tr v-if="staff.length === 0">
-								<td :colspan="2 + tempProject.projectDays.length * 2">Keine Einträge</td>
+							<tr v-if="staff.length === 0" class="no-hover">
+								<td :colspan="5 + tempProject.projectDays.length * 2">Keine Einträge</td>
 							</tr>
 							<!-- TOTAL STATISTICS -->
-							<tr v-if="staff.length > 0" class="font-semibold">
-								<td class="overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-white text-left border-r-[3px] border-gray-400">
-									<span class="px-1 py-0.5">Gesamt</span>
+							<tr v-if="staff.length > 0" class="font-semibold no-hover">
+								<td class="max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+									<span class="px-1">Gesamt</span>
 								</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[150px] z-10 bg-inherit p-0">0</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+2rem)] z-10 bg-inherit">0</td>
+								<td class="max-w-[2rem] min-w-[2rem] overflow-hidden sticky left-[calc(150px+4rem)] z-10 bg-inherit">0</td>
 								<template v-for="day in tempProject.projectDays">
-									<td :key="`total-${day.id}`" class="border-r-[3px] border-gray-400 p-0">
-										<div class="flex w-full">
-											<div
-												class="w-1/2 text-white border-r border-gray-400 py-0.5"
-												:class="{
-													'bg-danger': day.staffAvailability.filter((e) => e.available === 'TRUE').length < tempProject.numberOfRequiredStaff,
-													'bg-warning': day.staffAvailability.filter((e) => e.available === 'TRUE').length === tempProject.numberOfRequiredStaff,
-													'bg-success': day.staffAvailability.filter((e) => e.available === 'TRUE').length > tempProject.numberOfRequiredStaff,
-												}"
-											>
-												{{ day.staffAvailability.filter((e) => e.available === "TRUE").length }}
-											</div>
-											<div
-												class="w-1/2 text-white py-0.5"
-												:class="{
-													'bg-danger': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff,
-													'bg-warning': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff,
-													'bg-success': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff,
-												}"
-											>
-												{{ day.staffAvailability.filter((e) => e.deployed === "TRUE" || e.deployed === "RESERVE").length }}
-											</div>
-										</div>
+									<td
+										:key="`total-available-${day.id}`"
+										class="text-white"
+										:class="{
+											'bg-danger': day.staffAvailability.filter((e) => e.available === 'TRUE').length < tempProject.numberOfRequiredStaff,
+											'bg-warning': day.staffAvailability.filter((e) => e.available === 'TRUE').length === tempProject.numberOfRequiredStaff,
+											'bg-success': day.staffAvailability.filter((e) => e.available === 'TRUE').length > tempProject.numberOfRequiredStaff,
+										}"
+									>
+										{{ day.staffAvailability.filter((e) => e.available === "TRUE").length }}
+									</td>
+									<td
+										:key="`total-deployed-${day.id}`"
+										class="text-white"
+										:class="{
+											'bg-danger': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff,
+											'bg-warning': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff,
+											'bg-success': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff,
+										}"
+									>
+										{{ day.staffAvailability.filter((e) => e.deployed === "TRUE" || e.deployed === "RESERVE").length }}
 									</td>
 								</template>
-								<td class="hidden lg:table-cell sticky right-0 z-10 sticky left-0 z-10 bg-white text-left border-l-[3px] border-gray-400">
-									<span class="px-1 py-0.5">Gesamt</span>
+								<td class="hidden lg:table-cell bl-3px sticky right-0 z-10 max-w-[150px] min-w-[150px] overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-inherit text-left">
+									<span class="px-1">Gesamt</span>
 								</td>
 							</tr>
 						</tbody>
@@ -372,12 +375,115 @@
 
 <style scoped>
 	.project-table {
-		border-spacing: 0;
+		--border-color: #adadad;
+		--border-b: 1px;
+		--border-r: 1px;
+
+		border-collapse: collapse;
+		white-space: nowrap;
+		text-align: center;
 	}
 
-	.project-table thead th:nth-last-child(2),
-	.project-table tbody td:nth-last-child(2) {
-		border-right: 0;
+	.project-table thead th {
+		--cell-padding: 0px;
+
+		font-weight: normal;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+
+		position: sticky;
+		background-color: white;
+		color: black;
+	}
+
+	.project-table tbody td {
+		--cell-padding: 0.25rem;
+	}
+
+	.br-3px {
+		--border-r: 3px;
+	}
+
+	.bt-1px {
+		--border-t: 1px;
+		box-shadow: inset 0 calc(var(--border-b) * -1) 0 var(--border-color), inset calc(var(--border-r) * -1) 0 0 var(--border-color), inset 0 calc(var(--border-t)) 0 var(--border-color) !important;
+		border-top: var(--border-t);
+	}
+
+	.bl-3px {
+		--border-l: 3px;
+		box-shadow: inset 0 calc(var(--border-b) * -1) 0 var(--border-color), inset calc(var(--border-l)) 0 0 var(--border-color) !important;
+		padding-top: var(--cell-padding);
+		padding-left: calc(var(--cell-padding) + var(--border-l));
+		padding-right: var(--cell-padding);
+		padding-bottom: calc(var(--cell-padding) + var(--border-b));
+	}
+
+	/* thead SMALL TEXT IN LAST ROW */
+	.project-table thead tr:last-child th {
+		font-size: 0.75rem;
+		line-height: 1rem;
+	}
+
+	/* tbody COLORING ROWS */
+	.project-table tbody tr:nth-of-type(even) {
+		background-color: #eeeeee;
+	}
+	.project-table tbody tr:nth-of-type(odd) {
+		background-color: white;
+	}
+	.project-table tbody tr.fullTime {
+		background-color: lightyellow;
+	}
+	.project-table tbody tr:hover:not(.no-hover) {
+		background-color: #f8d3be;
+	}
+
+	/* BORDERS & PADDING */
+	.project-table th,
+	.project-table td {
+		box-shadow: inset 0 calc(var(--border-b) * -1) 0 var(--border-color), inset calc(var(--border-r) * -1) 0 0 var(--border-color);
+		padding-top: var(--cell-padding);
+		padding-left: var(--cell-padding);
+		padding-right: calc(var(--cell-padding) + var(--border-r));
+		padding-bottom: calc(var(--cell-padding) + var(--border-b));
+	}
+
+	/* tbody BOLD BORDERS RIGHT  */
+	.project-table tbody tr td:nth-child(n + 4):nth-of-type(even):not(:last-of-type) {
+		--border-r: 3px;
+	}
+
+	/* thead REMOVING BOTTOM BORDER & PADDING */
+	.project-table tr:nth-child(-n + 2) th:not(:empty) {
+		--border-b: 0px;
+	}
+
+	/* REMOVING LAST RIGHT BORDER & PADDING */
+	.project-table td:nth-last-child(2),
+	.project-table tr:first-of-type th:nth-last-child(2),
+	.project-table td:last-of-type,
+	.project-table th:last-of-type {
+		--border-r: 0px !important;
+	}
+
+	/* tbody REMOVING LAST BOTTOM BORDER & PADDING */
+	.project-table tbody tr:last-of-type td {
+		--border-b: 0px;
+	}
+
+	/* STICKY thead POSITIONS */
+	.project-table thead tr:nth-child(1) th {
+		top: 0;
+	}
+	.project-table thead tr:nth-child(2) th {
+		top: calc(1.5rem + var(--border-b) +2px);
+	}
+	.project-table thead tr:nth-child(3) th {
+		top: calc(((1.5rem + var(--border-b)) * 2) + 2px);
+	}
+	.project-table thead tr:nth-child(4) th {
+		top: calc(((1.5rem + var(--border-b)) * 3) + 4px);
 	}
 
 	/* TRANSITION */

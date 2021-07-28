@@ -2,17 +2,14 @@
 	<PsalmCard class="py-4 min-w-[500px] max-w-[500px]">
 		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
-		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold mx-2 lg:mr-6">
+		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold border-b border-gray-400 mx-2 lg:mr-6">
 			<div class="px-1" title="Vorname">Vorname</div>
 			<div class="px-1" title="Nachname">Nachname</div>
 			<div class="text-center" title="Hauptamtlich?">HA?</div>
 		</div>
 		<div class="lg:overflow-y-scroll scrollbar-p-2 lg:max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
 			<ul>
-				<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto]" v-for="employee in tempStaff" :key="employee.id">
-					<!-- HORIZONTAL DIVIDER -->
-					<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
-					<!-- EMPLOYEE INPUTS -->
+				<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto] border-b border-gray-400 last:border-b-0" v-for="employee in tempStaff" :key="employee.id">
 					<PsalmInput class="my-1 mr-2" type="text" v-model.trim="employee.firstName" placeholder="Vorname" :title="employee.firstName" />
 					<PsalmInput class="my-1" type="text" v-model.trim="employee.lastName" placeholder="Nachname" :title="employee.lastName" />
 					<PsalmInput type="checkbox" v-model="employee.fullTime" />
@@ -20,11 +17,7 @@
 					<PsalmDeleteButton @click="triggerDeleteModal(employee)" />
 				</li>
 				<!-- NO ENTRYS -->
-				<li v-if="tempStaff.length === 0" class="text-center">
-					<!-- HORIZONTAL DIVIDER -->
-					<hr class="h-[1px] w-full col-span-4 bg-gray-400 border-0" />
-					<p>Keine Einträge</p>
-				</li>
+				<li v-if="tempStaff.length === 0" class="text-center">Keine Einträge</li>
 			</ul>
 		</div>
 		<div class="flex justify-center">
