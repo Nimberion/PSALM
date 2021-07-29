@@ -22,20 +22,32 @@
 				<div class="overflow-scroll scrollbar-p-2">
 					<table class="project-table table-fixed border-separate text-center whitespace-nowrap">
 						<thead>
-							<!-- STAFF HEADER -->
 							<tr>
-								<!-- NEEDED STAFF -->
-								<th class="min-w-[15rem] max-w-[15rem] sticky top-0 left-0 border-r-[3px] border-b border-gray-400 bg-white z-30">
-									<div class="w-full h-full p-2">
-										<span class="text-sm font-normal mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
-										<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
+								<!-- STAFF HEADER -->
+								<th class="relative min-w-[15rem] max-w-[15rem] sticky top-0 left-0 border-r-[3px] border-b border-gray-400 bg-white z-30 p-0 align-bottom">
+									<div class="flex flex-col absolute top-0 h-full w-full justify-between">
+										<!-- NEEDED STAFF -->
+										<!-- <div class="absolute top-0 text-center h-full w-full"> -->
+										<div class="text-center w-full">
+											<span class="text-sm font-normal mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
+											<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
+										</div>
+
+										<div class="flex self-end">
+											<!-- BUTTONS -->
+											<div class="flex w-36 border-r border-gray-400"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /> <button @click="test">Test</button></div>
+
+											<!-- HEADER FOR STAFF STATISTICS -->
+											<div>
+												<div class="text-xs border-t border-gray-400 font-semibold">Statistik</div>
+												<div class="flex">
+													<div class="w-8 text-xs font-normal border-t border-r border-gray-400">Kann</div>
+													<div class="w-8 text-xs font-normal border-t border-r border-gray-400">Ist</div>
+													<div class="w-[1.8125rem] text-xs font-normal border-t border-gray-400">Soll</div>
+												</div>
+											</div>
+										</div>
 									</div>
-									<ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" />
-									<!-- HEADER FOR STAFF STATISTICS -->
-									<!-- <span class="font-semibold">Statistik</span>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[150px] z-30">Kann</th>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+2rem)] z-30">Ist</th>
-								<th class="max-w-[2rem] min-w-[2rem] text-xs sticky left-[calc(150px+4rem)] z-30 br-3px">Soll</th> -->
 								</th>
 
 								<!-- HEADER PER DAY -->
@@ -73,7 +85,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="employee in staff" :key="employee.id" class="bg-white hover:bg-[#f8d3be]" :class="{ 'bg-yellow-100': employee.fullTime, 'even:bg-gray-200': !employee.fullTime }">
+							<tr v-for="employee in staff" :key="employee.id" class="bg-white hover:bg-[#f8d3be]" :class="{ 'bg-[#FFFFE0]': employee.fullTime, 'even:bg-gray-200': !employee.fullTime }">
 								<!-- STAFF LIST -->
 								<td class="sticky left-0 z-10 bg-inherit text-left p-0" :title="`${employee.firstName} ${employee.lastName}`">
 									<div class="h-full flex justify-between">
@@ -121,21 +133,26 @@
 									<td :key="`total-${day.id}`" class="border-r-[3px] border-gray-400 p-0">
 										<div class="flex w-full">
 											<div
-												class="w-1/2 text-white border-r border-gray-400 py-0.5"
+												class="w-1/2 border-r border-gray-400 py-0.5"
 												:class="{
-													'bg-danger': day.staffAvailability.filter((e) => e.available === 'TRUE').length < tempProject.numberOfRequiredStaff,
-													'bg-warning': day.staffAvailability.filter((e) => e.available === 'TRUE').length === tempProject.numberOfRequiredStaff,
-													'bg-success': day.staffAvailability.filter((e) => e.available === 'TRUE').length > tempProject.numberOfRequiredStaff,
+													'bg-danger text-white': day.staffAvailability.filter((e) => e.available === 'TRUE').length < tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-warning text-white': day.staffAvailability.filter((e) => e.available === 'TRUE').length === tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-success text-white': day.staffAvailability.filter((e) => e.available === 'TRUE').length > tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-white text-black': tempProject.numberOfRequiredStaff === 0,
 												}"
 											>
 												{{ day.staffAvailability.filter((e) => e.available === "TRUE").length }}
 											</div>
 											<div
-												class="w-1/2 text-white py-0.5"
+												class="w-1/2 py-0.5"
 												:class="{
-													'bg-danger': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff,
-													'bg-warning': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff,
-													'bg-success': day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff,
+													'bg-danger text-white':
+														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-warning text-white':
+														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-success text-white':
+														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-white text-black': tempProject.numberOfRequiredStaff === 0,
 												}"
 											>
 												{{ day.staffAvailability.filter((e) => e.deployed === "TRUE" || e.deployed === "RESERVE").length }}
@@ -159,7 +176,7 @@
 <script lang="ts">
 	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
-	import { Component, Vue } from "vue-property-decorator";
+	import { Component, Watch, Vue } from "vue-property-decorator";
 	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectButton from "@/components/project/ProjectButton.vue";
@@ -170,7 +187,7 @@
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { newID, pathExists } from "@/utils/utils";
+	import { equal, newID, pathExists } from "@/utils/utils";
 	import { Employee } from "@/models/interfaces/Employee";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 	import { writeText } from "@tauri-apps/api/clipboard";
@@ -186,6 +203,7 @@
 		components: { PsalmDeleteButton, PsalmDeleteModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
+		projectId = this.$route.path.split("/")[2];
 		projectStaffEditMode = false;
 		tempProject: Project = newProject(newID());
 		projectDayToDelete: ProjectDay = newProjectDay([]);
@@ -193,10 +211,6 @@
 		showDeleteModal = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
-
-		get project(): Project {
-			return store.state.projects.get(this.$route.path.split("/")[2]) as Project;
-		}
 
 		get staff(): Array<Employee> {
 			let availableStaff: Array<EmployeeAvailability> | undefined = [];
@@ -218,8 +232,24 @@
 			}
 		}
 
+		get unsavedChanges(): boolean {
+			return !equal(this.tempProject, store.state.projects.get(this.projectId));
+		}
+
+		@Watch("unsavedChanges")
+		updateWindowTitle(value: boolean): void {
+			store.commit("updateUnsavedChanges", value);
+			store.commit("updateWindowTitle", value);
+		}
+
+		test(): void {
+			console.log("unsavedChanges", !equal(this.tempProject, store.state.projects.get(this.projectId)));
+
+			console.log(this.unsavedChanges);
+		}
+
 		created(): void {
-			this.tempProject = JSON.parse(JSON.stringify(this.project));
+			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.get(this.projectId)));
 
 			this.minDate.setMonth(this.minDate.getMonth() - 12);
 
@@ -230,6 +260,7 @@
 			this.deleteRemovedData();
 
 			console.log(this.$route.path);
+			console.log(this.unsavedChanges);
 		}
 
 		getNameById(id: string): string {
@@ -265,8 +296,6 @@
 		updateTempProjectStaff(newTempProjectStaff: Array<string>): void {
 			this.tempProject.staff = newTempProjectStaff;
 
-			this.deleteRemovedData();
-
 			// UPDATE staffAvailability OF ALL PROJECT-DAYS
 			this.tempProject.projectDays.forEach((day) => {
 				const tempStaffAvailability: Array<EmployeeAvailability> = day.staffAvailability;
@@ -282,7 +311,8 @@
 		}
 
 		async saveProject(): Promise<void> {
-			//delete unused staffAvailabilitys?
+			//DELETE UNUSED STAFFAVAILABILITYS
+			this.deleteRemovedData();
 
 			//SORT projectDays
 			this.tempProject.projectDays.sort((a, b) => {
@@ -295,7 +325,7 @@
 				return a.participant.localeCompare(b.participant, "de", { ignorePunctuation: true, sensitivity: "base" });
 			});
 
-			// UPDTAE tempProject IN STORE
+			// UPDATE tempProject IN STORE
 			store.commit("updateProject", this.tempProject);
 
 			// DELETE OLD JSON FILE
@@ -305,6 +335,9 @@
 
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
+
+			// CUT LINK BETWEEN STORE AND tempProject
+			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.get(this.projectId)));
 
 			// SHOW SAVED TOAST
 			store.commit("showToast", "saved");

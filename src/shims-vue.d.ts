@@ -4,3 +4,4 @@ declare module "*.vue" {
 }
 
 declare module "@mathieustan/vue-datepicker";
+declare module "object-hash";

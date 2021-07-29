@@ -1,5 +1,6 @@
 import { Employee } from "@/models/interfaces/Employee";
 import { Project } from "@/models/interfaces/Project";
+import { WindowManager } from "@tauri-apps/api/window";
 import Vue from "vue";
 import Vuex from "vuex";
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
 		projects: new Map() as Map<string, Project>,
 		toast: { show: false, message: "" },
 		activeTimeout: -1,
+		unsavedChanges: false,
 	},
 	mutations: {
 		// GENERELL
@@ -55,6 +57,21 @@ export default new Vuex.Store({
 
 		updateProject(currentState, newState) {
 			currentState.projects.set(newState.id, newState);
+		},
+
+		updateUnsavedChanges(currentState, newState) {
+			currentState.unsavedChanges = newState;
+		},
+
+		updateWindowTitle(currentState): void {
+			const appTitle = "PSALM - Project Staff And Labor Management";
+			let unsavedChanges = "";
+
+			if (currentState.unsavedChanges) {
+				unsavedChanges = " (ungespeicherte Änderungen)";
+			}
+
+			new WindowManager().setTitle(appTitle + unsavedChanges);
 		},
 	},
 	actions: {},

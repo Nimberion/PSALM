@@ -1,6 +1,6 @@
 <template>
 	<!-- bg-gradient-to-br from-info-400 via-warning to-secondary  -->
-	<div class="w-screen min-h-screen bg-secondary bg-custom-gradient">
+	<div class="w-screen min-h-screen bg-custom-gradient">
 		<!-- HOME BUTTON -->
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')" title="Startseite">
 			<PsalmIcon name="home" />

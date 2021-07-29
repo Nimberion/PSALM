@@ -79,7 +79,7 @@
 				"open": false
 			},
 			"window": {
-				"all": false,
+				"all": true,
 				"create": false
 			}
 		},
