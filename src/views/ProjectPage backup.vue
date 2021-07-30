@@ -155,7 +155,7 @@
 				</div>
 			</PsalmCard>
 		</div>
-		<PsalmDeleteModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
+		<PsalmModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
 	</div>
 </template>
 
@@ -163,7 +163,7 @@
 	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Vue } from "vue-property-decorator";
-	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
+	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectButton from "@/components/project/ProjectButton.vue";
 	import ProjectFilterButton from "@/components/project/ProjectFilterButton.vue";
@@ -186,7 +186,7 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { PsalmDeleteButton, PsalmDeleteModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PsalmDeleteButton, PsalmModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectStaffEditMode = false;

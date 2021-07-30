@@ -7,7 +7,7 @@
 			<div class="px-1" title="Nachname">Nachname</div>
 			<div class="text-center" title="Hauptamtlich?">HA?</div>
 		</div>
-		<div class="lg:overflow-y-scroll scrollbar-p-2 lg:max-h-[calc(100vh-11.25rem)] mx-2 lg:mr-0">
+		<div class="lg:overflow-y-scroll scrollbar-p-2 lg:max-h-[calc(100vh-11.3125rem)] mx-2 lg:mr-0">
 			<ul>
 				<li class="grid grid-cols-[1fr,1fr,3rem,2rem] grid-rows-[auto,auto] border-b border-gray-400 last:border-b-0" v-for="employee in tempStaff" :key="employee.id">
 					<PsalmInput class="my-1 mr-2" type="text" v-model.trim="employee.firstName" placeholder="Vorname" :title="employee.firstName" />
@@ -27,7 +27,7 @@
 		</div>
 
 		<!-- DELETE MODAL -->
-		<PsalmDeleteModal v-if="showDeleteModal" type="employee" :object-to-delete="employeeToDelete" @confirm="deleteEmployee" @cancel="showDeleteModal = false" />
+		<PsalmModal v-if="modal.show && modal.type === 'DELETE_EMPLOYEE'" @confirm="deleteEmployee" />
 
 		<!-- STAFF IMPORT MODAL -->
 		<StaffImportModal v-if="showStaffImportModal" @import="importStaff" @cancel="showStaffImportModal = false" />
@@ -41,24 +41,27 @@
 	import { pathExists } from "@/utils/utils";
 	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 	import StaffImportModal from "@/components/home/StaffImportModal.vue";
-	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
+	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
+	import { ModalType } from "@/models/enums/ModalType";
+	import { Modal } from "@/models/interfaces/Modal";
 
 	@Component({
 		name: "Staff",
-		components: { PsalmDeleteModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput, StaffImportModal },
+		components: { PsalmModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput, StaffImportModal },
 	})
 	export default class Staff extends Vue {
 		tempStaff: Array<Employee> = [];
 
-		showDeleteModal = false;
-		employeeToDelete = newEmployee();
-
 		showStaffImportModal = false;
+
+		get modal(): Modal {
+			return store.state.modal;
+		}
 
 		get staff(): Array<Employee> {
 			return store.state.staff;
@@ -96,19 +99,20 @@
 		}
 
 		triggerDeleteModal(employeeToDelete: Employee): void {
-			this.employeeToDelete = employeeToDelete;
-			this.showDeleteModal = true;
+			store.commit("showModal", { type: ModalType.DELETE_EMPLOYEE, content: employeeToDelete });
 		}
 
 		async deleteEmployee(): Promise<void> {
+			const employeeToDelete = store.state.modal.content as Employee;
+
 			this.tempStaff.splice(
-				this.tempStaff.findIndex((element) => element.id === this.employeeToDelete.id),
+				this.tempStaff.findIndex((element) => element.id === employeeToDelete.id),
 				1,
 			);
 
 			await this.saveStaff();
 			store.commit("showToast", "deleted");
-			this.showDeleteModal = false;
+			store.commit("resetModal");
 		}
 
 		async importStaff(staffToImport: Array<Employee>): Promise<void> {

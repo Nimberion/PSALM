@@ -12,12 +12,9 @@
 		<!-- CONTENT -->
 		<div class="flex">
 			<!-- PROJECT-STAFF-EDITOR -->
-			<!-- <transition name="slide"> -->
 			<ProjectStaff v-if="projectStaffEditMode" :project-staff="tempProject.staff" @update="updateTempProjectStaff" />
-			<!-- </transition> -->
 
 			<!-- PROJECT TABLE -->
-			<!-- transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)]  -->
 			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
 				<div class="overflow-scroll scrollbar-p-2">
 					<table class="project-table table-fixed border-separate text-center whitespace-nowrap">
@@ -169,7 +166,7 @@
 				</div>
 			</PsalmCard>
 		</div>
-		<PsalmDeleteModal v-if="showDeleteModal" type="projectDay" :object-to-delete="projectDayToDelete" @confirm="deleteProjectDay" @cancel="showDeleteModal = false" />
+		<PsalmModal v-if="modal.show && modal.type === 'DELETE_PROJECT_DAY'" @confirm="deleteProjectDay" />
 	</div>
 </template>
 
@@ -177,7 +174,7 @@
 	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Watch, Vue } from "vue-property-decorator";
-	import PsalmDeleteModal from "@/components/common/PsalmDeleteModal.vue";
+	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectButton from "@/components/project/ProjectButton.vue";
 	import ProjectFilterButton from "@/components/project/ProjectFilterButton.vue";
@@ -197,20 +194,24 @@
 	import { Deployed } from "@/models/enums/Deployed";
 	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments, writePdfForEachEmployee } from "@/utils/projects";
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
+	import { Modal } from "@/models/interfaces/Modal";
+	import { ModalType } from "@/models/enums/ModalType";
 
 	@Component({
 		name: "ProjectPage",
-		components: { PsalmDeleteButton, PsalmDeleteModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PsalmDeleteButton, PsalmModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectId = this.$route.path.split("/")[2];
 		projectStaffEditMode = false;
 		tempProject: Project = newProject(newID());
-		projectDayToDelete: ProjectDay = newProjectDay([]);
 		showSecondStaffList = false;
-		showDeleteModal = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
+
+		get modal(): Modal {
+			return store.state.modal;
+		}
 
 		get staff(): Array<Employee> {
 			let availableStaff: Array<EmployeeAvailability> | undefined = [];
@@ -239,7 +240,7 @@
 		@Watch("unsavedChanges")
 		updateWindowTitle(value: boolean): void {
 			store.commit("updateUnsavedChanges", value);
-			store.commit("updateWindowTitle", value);
+			store.commit("updateWindowTitle");
 		}
 
 		test(): void {
@@ -336,27 +337,25 @@
 			// WRITE JSON FILE
 			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
 
-			// CUT LINK BETWEEN STORE AND tempProject
-			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.get(this.projectId)));
-
 			// SHOW SAVED TOAST
 			store.commit("showToast", "saved");
 		}
 
 		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
-			this.projectDayToDelete = projectDayToDelete;
-			this.showDeleteModal = true;
+			store.commit("showModal", { type: ModalType.DELETE_PROJECT_DAY, content: projectDayToDelete });
 		}
 
 		async deleteProjectDay(): Promise<void> {
+			const projectDayToDelete = store.state.modal.content as ProjectDay;
+
 			this.tempProject.projectDays.splice(
-				this.tempProject.projectDays.findIndex((e) => e.id === this.projectDayToDelete.id),
+				this.tempProject.projectDays.findIndex((e) => e.id === projectDayToDelete.id),
 				1,
 			);
 
 			await this.saveProject();
 			store.commit("showToast", "deleted");
-			this.showDeleteModal = false;
+			store.commit("resetModal");
 		}
 
 		deleteRemovedData(): void {
@@ -412,21 +411,6 @@
 	.project-table tbody td:nth-last-child(2) {
 		border-right: 0;
 	}
-
-	/* TRANSITION */
-	/* .slide-enter-active,
-	.slide-leave-active {
-		transition: all 0.5s ease, opacity 0.3s ease;
-	}
-	.slide-enter,
-	.slide-leave-to {
-		opacity: 0;
-		width: 0;
-		padding-right: 0;
-		padding-left: 0;
-		margin-right: 0;
-		margin-left: 0;
-	} */
 </style>
 
 <style>
@@ -442,7 +426,7 @@
 	.vd-menu__content,
 	.vd-picker__table-day__effect,
 	.vd-picker__table-day__current {
-		border-radius: 0px;
+		border-radius: 0.125rem;
 	}
 
 	.vd-picker__table-day__current {

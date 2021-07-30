@@ -17,10 +17,10 @@
 		class="text-center focus:border-secondary focus:ring-0 overflow-ellipsis"
 		autocomplete="randomStuffToDisable"
 		@focus="$event.target.select()"
-		@change="update"
+		@input="update"
 	/>
 
-	<input v-else-if="type === 'text'" type="text" :value="value" class="focus:border-secondary focus:ring-0 px-1 overflow-ellipsis" autocomplete="randomStuffToDisable" @change="update" spellcheck="false" />
+	<input v-else-if="type === 'text'" type="text" :value="value" class="focus:border-secondary focus:ring-0 px-1 overflow-ellipsis" autocomplete="randomStuffToDisable" @input="update" spellcheck="false" />
 </template>
 
 <script lang="ts">

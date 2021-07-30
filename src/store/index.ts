@@ -1,8 +1,11 @@
+import { Modal } from "@/models/interfaces/Modal";
 import { Employee } from "@/models/interfaces/Employee";
-import { Project } from "@/models/interfaces/Project";
+import { Project, ProjectDay } from "@/models/interfaces/Project";
 import { WindowManager } from "@tauri-apps/api/window";
 import Vue from "vue";
 import Vuex from "vuex";
+import { Toast } from "@/models/interfaces/Toast";
+import { ModalType } from "@/models/enums/ModalType";
 
 Vue.use(Vuex);
 
@@ -10,12 +13,21 @@ export default new Vuex.Store({
 	state: {
 		staff: [] as Array<Employee>,
 		projects: new Map() as Map<string, Project>,
-		toast: { show: false, message: "" },
+		toast: { show: false, message: "" } as Toast,
 		activeTimeout: -1,
 		unsavedChanges: false,
+		modal: { show: false, type: ModalType.ERROR, content: "" } as Modal,
 	},
 	mutations: {
 		// GENERELL
+		showModal(currentState, { type, content }: { type: ModalType; content: Employee | Project | ProjectDay | string }): void {
+			currentState.modal = { show: true, type: type, content: content };
+		},
+
+		resetModal(currentState): void {
+			currentState.modal = { show: false, type: ModalType.ERROR, content: "" };
+		},
+
 		showToast(currentState, message): void {
 			switch (message) {
 				case "copied":
@@ -46,17 +58,18 @@ export default new Vuex.Store({
 		},
 
 		// STAFF
-		updateStaff(currentState, newState: Array<Employee>) {
-			currentState.staff = newState;
+		updateStaff(currentState, newStaff: Array<Employee>) {
+			currentState.staff = JSON.parse(JSON.stringify(newStaff));
 		},
 
 		// PROJECTS
-		updateProjects(currentState, newState: Map<string, Project>) {
-			currentState.projects = newState;
+		updateProjects(currentState, newProjects: Map<string, Project>) {
+			currentState.projects = new Map(JSON.parse(JSON.stringify(Array.from(newProjects))));
 		},
 
-		updateProject(currentState, newState) {
-			currentState.projects.set(newState.id, newState);
+		updateProject(currentState, newProject) {
+			//JSON.parse & .stingify TO CREATE A DEEP COPY
+			currentState.projects.set(newProject.id, JSON.parse(JSON.stringify(newProject)));
 		},
 
 		updateUnsavedChanges(currentState, newState) {
