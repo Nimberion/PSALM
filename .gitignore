@@ -22,3 +22,5 @@ pnpm-debug.log*
 *.sln
 *.sw?
 src-tauri/data/staff.json
+src-tauri/data pa/staff.json
+src-tauri/data pa/projects/8e30c5ad0.json
