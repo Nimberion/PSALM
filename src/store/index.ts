@@ -17,6 +17,7 @@ export default new Vuex.Store({
 		activeTimeout: -1,
 		unsavedChanges: false,
 		modal: { show: false, type: ModalType.ERROR, content: "" } as Modal,
+		enableHospitation: false,
 	},
 	mutations: {
 		// GENERELL
@@ -55,6 +56,10 @@ export default new Vuex.Store({
 			currentState.activeTimeout = setTimeout(() => {
 				currentState.toast.show = false;
 			}, 2500);
+		},
+
+		toggleEnableHospitation(currentState) {
+			currentState.enableHospitation = !currentState.enableHospitation;
 		},
 
 		// STAFF

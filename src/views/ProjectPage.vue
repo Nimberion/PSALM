@@ -30,6 +30,18 @@
 											<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 										</div>
 
+										<div>
+											<label class="cursor-pointer items-center">
+												<input
+													v-model="enableHospitation"
+													type="checkbox"
+													class="h-[0.875rem] w-[0.875rem] border-2 border-primary place-self-center text-primary focus:ring-secondary focus:ring-1 cursor-pointer mr-1 my-1"
+													@change="toggleEnableHospitation"
+												/>
+												<span class="text-sm font-normal" title="Hospitation"> Hospitation</span>
+											</label>
+										</div>
+
 										<div class="flex self-end">
 											<!-- BUTTONS -->
 											<div class="flex w-36 border-r border-gray-400"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /> <button @click="test">Test</button></div>
@@ -90,8 +102,16 @@
 										<!-- EMPLOYEE STATISTICS -->
 										<div class="flex text-center">
 											<div class="w-8 border-r border-b border-gray-400 py-1">{{ getNumberOfAvailabilities(tempProject, employee.id) }}</div>
-											<div class="w-8 border-r border-b border-gray-400 py-1">{{ getNumberOfDeployments(tempProject, employee.id) }}</div>
-											<div class="w-8 border-r-[3px] border-b border-gray-400 py-1">{{ getSetPointOfDeployments(tempProject, staff, employee) }}</div>
+											<div class="w-8 border-r border-b border-gray-400 text-xs">
+												<div title="Eingeteilt">{{ getNumberOfDeployments(tempProject, employee.id) }}</div>
+												<div title="Reserve">{{ getNumberOfReserves(tempProject, employee.id) }}</div>
+											</div>
+											<div class="w-8 border-r-[3px] border-b border-gray-400 text-xs" :class="{ 'text-base py-1': employee.fullTime || tempProject.numberOfRequiredStaff === 0 }">
+												<div :title="employee.fullTime || tempProject.numberOfRequiredStaff === 0 ? '' : 'Eingesetzt'">{{ getSetPointOfDeployments(tempProject, staff, employee) }}</div>
+												<div v-if="!(employee.fullTime || tempProject.numberOfRequiredStaff === 0)" title="Reserve">
+													{{ getSetPointOfReserves(tempProject, staff, employee) }}
+												</div>
+											</div>
 										</div>
 									</div>
 								</td>
@@ -123,11 +143,11 @@
 							</tr>
 							<!-- TOTAL STATISTICS -->
 							<tr v-if="staff.length > 0" class="font-semibold">
-								<td class="overflow-ellipsis overflow-hidden sticky left-0 z-10 bg-white text-left border-r-[3px] border-gray-400">
+								<td class="overflow-ellipsis overflow-hidden sticky left-0 bottom-0 z-20 bg-white text-left border-r-[3px] border-gray-400">
 									<span class="px-1 py-0.5">Gesamt</span>
 								</td>
 								<template v-for="day in tempProject.projectDays">
-									<td :key="`total-${day.id}`" class="border-r-[3px] border-gray-400 p-0">
+									<td :key="`total-${day.id}`" class="border-r-[3px] border-gray-400 p-0 sticky bottom-0 z-10">
 										<div class="flex w-full">
 											<div
 												class="w-1/2 border-r border-gray-400 py-0.5"
@@ -143,12 +163,12 @@
 											<div
 												class="w-1/2 py-0.5"
 												:class="{
-													'bg-danger text-white':
-														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length < tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
-													'bg-warning text-white':
-														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length === tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-danger text-white': day.staffAvailability.filter((e) => e.deployed === 'TRUE').length !== tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-warning text-white': day.staffAvailability.filter((e) => e.deployed === 'TRUE').length === tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
 													'bg-success text-white':
-														day.staffAvailability.filter((e) => e.deployed === 'TRUE' || e.deployed === 'RESERVE').length > tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+														day.staffAvailability.filter((e) => e.deployed === 'TRUE').length === tempProject.numberOfRequiredStaff &&
+														day.staffAvailability.filter((e) => e.deployed === 'RESERVE').length === 1 &&
+														tempProject.numberOfRequiredStaff !== 0,
 													'bg-white text-black': tempProject.numberOfRequiredStaff === 0,
 												}"
 											>
@@ -157,7 +177,7 @@
 										</div>
 									</td>
 								</template>
-								<td class="hidden lg:table-cell sticky right-0 z-10 sticky left-0 z-10 bg-white text-left border-l-[3px] border-gray-400">
+								<td class="hidden lg:table-cell sticky right-0 bottom-0 z-20 sticky left-0 z-10 bg-white text-left border-l-[3px] border-gray-400">
 									<span class="px-1 py-0.5">Gesamt</span>
 								</td>
 							</tr>
@@ -192,7 +212,7 @@
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
-	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getSetPointOfDeployments, writePdfForEachEmployee } from "@/utils/projects";
+	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getNumberOfReserves, getSetPointOfDeployments, getSetPointOfReserves, writePdfForEachEmployee } from "@/utils/projects";
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
@@ -208,6 +228,7 @@
 		showSecondStaffList = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
+		enableHospitation = store.state.enableHospitation;
 
 		get modal(): Modal {
 			return store.state.modal;
@@ -361,7 +382,7 @@
 		deleteRemovedData(): void {
 			// DELETE DELETED EMPLOYEES FROM STAFF LIST
 			this.tempProject.staff.forEach((item, index, object) => {
-				if (!this.staff.find((e) => e.id === item)) {
+				if (!store.state.staff.find((e) => e.id === item)) {
 					object.splice(index, 1);
 				}
 			});
@@ -396,8 +417,19 @@
 			return getNumberOfDeployments(project, employeeId);
 		}
 
+		getNumberOfReserves(project: Project, employeeId: string): number {
+			return getNumberOfReserves(project, employeeId);
+		}
+
 		getSetPointOfDeployments(project: Project, staff: Array<Employee>, employee: Employee): number | string {
 			return getSetPointOfDeployments(project, staff, employee);
+		}
+
+		getSetPointOfReserves(project: Project, staff: Array<Employee>, employee: Employee): number | string {
+			return getSetPointOfReserves(project, staff, employee);
+		}
+		toggleEnableHospitation(): void {
+			store.commit("toggleEnableHospitation");
 		}
 	}
 </script>
@@ -411,6 +443,10 @@
 	.project-table tbody td:nth-last-child(2) {
 		border-right: 0;
 	}
+
+	/* .project-table tbody tr:nth-last-child(2) td {
+		border-bottom: transparent;
+	} */
 </style>
 
 <style>

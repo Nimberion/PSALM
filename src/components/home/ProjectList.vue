@@ -79,12 +79,12 @@
 		}
 
 		async deleteProject(): Promise<void> {
-			const projectToDelete = this.modal.content as Project;
+			const projectId = (this.modal.content as Project).id;
 
-			this.tempProjects.delete(projectToDelete.id);
+			this.tempProjects.delete(projectId);
 
-			if (await pathExists("data\\projects", `data\\projects\\${projectToDelete.id}.json`)) {
-				await removeFile(`data/projects/${projectToDelete.id}.json`);
+			if (await pathExists("data\\projects", `data\\projects\\${projectId}.json`)) {
+				await removeFile(`data/projects/${projectId}.json`);
 			}
 
 			await this.saveProjects();
@@ -105,7 +105,7 @@
 		async saveProjects(): Promise<void> {
 			this.tempProjects.forEach(async (value, key) => {
 				// SEARCH FOR EDITED PROJECTS
-				if (!store.state.projects.get(key) || !equal(value, store.state.projects.get(key))) {
+				if (!equal(value, store.state.projects.get(key) || {})) {
 					// DELETE OLD JSON FILE
 					if (await pathExists("data\\projects", `data\\projects\\${key}.json`)) {
 						await removeFile(`data/projects/${key}.json`);

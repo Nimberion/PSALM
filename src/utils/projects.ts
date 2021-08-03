@@ -10,31 +10,15 @@ export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvaila
 }
 
 export function getNumberOfAvailabilities(project: Project, employeeId: string): number {
-	let i = 0;
-
-	project.projectDays.forEach((e) => {
-		const isEmployeeAvailable = findEmployeeAvailability(e.staffAvailability, employeeId)?.available;
-
-		if (isEmployeeAvailable === Available.TRUE) {
-			i++;
-		}
-	});
-
-	return i;
+	return project.projectDays.filter((e) => findEmployeeAvailability(e.staffAvailability, employeeId)?.available === Available.TRUE).length;
 }
 
 export function getNumberOfDeployments(project: Project, employeeId: string): number {
-	let i = 0;
+	return project.projectDays.filter((e) => findEmployeeAvailability(e.staffAvailability, employeeId)?.deployed === Deployed.TRUE).length;
+}
 
-	project.projectDays.forEach((e) => {
-		const isEmployeeAvailable = findEmployeeAvailability(e.staffAvailability, employeeId)?.deployed;
-
-		if (isEmployeeAvailable === Deployed.TRUE) {
-			i++;
-		}
-	});
-
-	return i;
+export function getNumberOfReserves(project: Project, employeeId: string): number {
+	return project.projectDays.filter((e) => findEmployeeAvailability(e.staffAvailability, employeeId)?.deployed === Deployed.RESERVE).length;
 }
 
 export function getSetPointOfDeployments(project: Project, staff: Array<Employee>, employee: Employee): number | string {
@@ -75,26 +59,68 @@ export function getSetPointOfDeployments(project: Project, staff: Array<Employee
 	}
 }
 
+export function getSetPointOfReserves(project: Project, staff: Array<Employee>, employee: Employee): number | string {
+	// GET NUMBER OF ALL POSSIBLE RESERVES (MINUS RESERVES OF FULL TIME)
+	let possibleReserves = project.projectDays.length;
+
+	staff.forEach((tempEmployee) => {
+		if (tempEmployee.fullTime) {
+			possibleReserves -= getNumberOfReserves(project, tempEmployee.id);
+		}
+	});
+
+	// GET NUMBER OF ALL STAFF AVAILABILITIES (EXCEPT FOR FULL TIME)
+	let allAvailabilities = 0;
+
+	staff.forEach((tempEmployee) => {
+		if (!tempEmployee.fullTime) {
+			allAvailabilities += getNumberOfAvailabilities(project, tempEmployee.id);
+		}
+	});
+
+	// RETURN SET POINT BASED ON THE PERCENTAGE AVAILABILITY, BUT NOT HIGHTER THAN THE OWN AVAILABILITY
+	const setPointOfReserves = Math.round((getNumberOfAvailabilities(project, employee.id) / allAvailabilities) * possibleReserves * 10) / 10;
+	const employeeAvailability = getNumberOfAvailabilities(project, employee.id);
+
+	if (setPointOfReserves > employeeAvailability) {
+		return employeeAvailability;
+	} else if (isNaN(setPointOfReserves) || setPointOfReserves < 0) {
+		return "0";
+	} else {
+		return setPointOfReserves;
+	}
+}
+
 export function writePdfForEachEmployee(project: Project): void {
 	const staff = store.state.staff;
+	// console.log(project.projectDays);
+	let i = 1;
 
 	project.staff.forEach((employeeId) => {
 		const employee = staff.find((e) => e.id === employeeId);
-		const deployedProjectDays: Array<{ date: string; time: string; participant: string; reserve: string }> = [];
+		const deployedProjectDays: Array<{ date: string; time: string; participant: string; annotation: string }> = [];
 
 		project.projectDays.forEach((projectDay) => {
-			const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && (e.deployed === Deployed.TRUE || e.deployed === Deployed.RESERVE));
+			const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && e.deployed !== Deployed.FALSE);
 
 			if (deployedProjectDay) {
 				const splittedDate = projectDay.date.toString().split("-");
 				const formattedDate = `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
-				const reserve = deployedProjectDay?.deployed === Deployed.RESERVE ? "Ja" : "-";
+				let annotation = "-";
 
-				deployedProjectDays.push({ date: formattedDate, time: projectDay.time, participant: projectDay.participant, reserve: reserve });
+				if (deployedProjectDay?.deployed === Deployed.RESERVE) {
+					annotation = "Reserve";
+				} else if (deployedProjectDay?.deployed === Deployed.HOSPITATION) {
+					annotation = "Hospitation";
+				}
+
+				deployedProjectDays.push({ date: formattedDate, time: projectDay.time, participant: projectDay.participant, annotation: annotation });
 			}
 		});
 
 		if (deployedProjectDays.length > 0 && employee?.lastName) {
+			console.log(employee.lastName);
+
 			const doc = new jsPDF({ format: "a4", orientation: "p", unit: "mm" });
 			doc.setFontSize(20);
 			doc.text(project.title, 105, 25, { align: "center", maxWidth: 160 });
@@ -108,13 +134,20 @@ export function writePdfForEachEmployee(project: Project): void {
 				[
 					{ name: "date", prompt: "Datum", align: "center", padding: 0, width: 38 },
 					{ name: "time", prompt: "Uhrzeit", align: "center", padding: 0, width: 42 },
-					{ name: "participant", prompt: "Teilnehmer", align: "center", padding: 0, width: 92 },
-					{ name: "reserve", prompt: "Reserve?", align: "center", padding: 0, width: 38 },
+					{ name: "participant", prompt: "Teilnehmer", align: "center", padding: 0, width: 90 },
+					{ name: "annotation", prompt: "Anmerkung", align: "center", padding: 0, width: 40 },
 				],
 				{ padding: 3, printHeaders: true, autoSize: false },
 			);
 
-			doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
+			console.log(i);
+
+			setTimeout(function () {
+				doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
+			}, 100 * i);
+
+			i++;
+			// doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
 		}
 	});
 }

@@ -1,12 +1,14 @@
 <template>
-	<button class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability">
+	<button class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability" :disabled="disabled">
 		<ProjectAvailabilityIcon
 			class="text-2xl z-[1]"
 			:class="{
 				'text-primary': (currentAvailability === 'TRUE' && column === 'available') || currentAvailability === 'FALSE',
 				'text-danger': currentAvailability === 'INDISPOSED',
 				'text-warning': currentAvailability === 'RESERVE',
+				'text-info-400': currentAvailability === 'HOSPITATION',
 				'text-success': currentAvailability === 'TRUE' && column !== 'available',
+				'text-gray-400 cursor-default': disabled,
 			}"
 			:name="currentAvailability"
 		/>
@@ -22,6 +24,7 @@
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
 	import { findEmployeeAvailability } from "@/utils/projects";
+	import store from "@/store";
 
 	@Component({
 		name: "ProjectAvailabilityButton",
@@ -34,39 +37,59 @@
 
 		tempStaffAvailability: Array<EmployeeAvailability> = this.day.staffAvailability;
 		currentAvailability: Available | Deployed = Available.FALSE;
-		buttonTitle = "";
+
+		get enableHospitation(): boolean {
+			return store.state.enableHospitation;
+		}
+
+		get disabled(): boolean {
+			if (this.column === "available" || (findEmployeeAvailability(this.tempStaffAvailability, this.employeeId)?.available as Available) === Available.TRUE) {
+				return false;
+			} else {
+				this.currentAvailability = Deployed.FALSE;
+				this.$emit("change", this.day, this.employeeId, this.column, this.currentAvailability);
+				return true;
+			}
+		}
+
+		get buttonTitle(): string {
+			if (this.disabled) {
+				return "Nicht verfügbar";
+			} else {
+				switch (this.currentAvailability) {
+					case "FALSE":
+						if (this.column === "available") {
+							return "Nicht verfügbar";
+						} else {
+							return "Nicht eingeteilt";
+						}
+					case "TRUE":
+						if (this.column === "available") {
+							return "Verfügbar";
+						} else {
+							return "Eingeteilt";
+						}
+
+					case "INDISPOSED":
+						return "Abgesagt";
+
+					case "RESERVE":
+						return "Reserve";
+
+					case "HOSPITATION":
+						return "Honspitation";
+
+					default:
+						return "";
+				}
+			}
+		}
 
 		created(): void {
 			if (this.column === "available") {
 				this.currentAvailability = findEmployeeAvailability(this.tempStaffAvailability, this.employeeId)?.available as Available;
 			} else {
 				this.currentAvailability = findEmployeeAvailability(this.tempStaffAvailability, this.employeeId)?.deployed as Deployed;
-			}
-			this.getTitle();
-		}
-
-		getTitle(): void {
-			switch (this.currentAvailability) {
-				case "FALSE":
-					if (this.column === "available") {
-						this.buttonTitle = "Nicht verfügbar";
-					} else {
-						this.buttonTitle = "Nicht eingeteilt";
-					}
-					break;
-				case "TRUE":
-					if (this.column === "available") {
-						this.buttonTitle = "Verfügbar";
-					} else {
-						this.buttonTitle = "Eingeteilt";
-					}
-					break;
-				case "INDISPOSED":
-					this.buttonTitle = "Abgesagt";
-					break;
-				case "RESERVE":
-					this.buttonTitle = "Reserve";
-					break;
 			}
 		}
 
@@ -86,11 +109,17 @@
 					this.currentAvailability = Available.FALSE;
 					break;
 				case "RESERVE":
+					if (this.enableHospitation) {
+						this.currentAvailability = Deployed.HOSPITATION;
+					} else {
+						this.currentAvailability = Deployed.FALSE;
+					}
+					break;
+				case "HOSPITATION":
 					this.currentAvailability = Deployed.FALSE;
 					break;
 			}
 			this.$emit("change", this.day, this.employeeId, this.column, this.currentAvailability);
-			this.getTitle();
 		}
 	}
 </script>
