@@ -24,11 +24,11 @@
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from "vue-property-decorator";
+	import { Component, Vue, Watch } from "vue-property-decorator";
 	import { readTextFile, createDir, readDir } from "@tauri-apps/api/fs";
 	import { Employee } from "@/models/interfaces/Employee";
 	import store from "@/store/index";
-	import { pathExists } from "@/utils/utils";
+	import { pathExists, unequal } from "@/utils/utils";
 	import { Project } from "./models/interfaces/Project";
 	import { Toast } from "./models/interfaces/Toast";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
@@ -43,6 +43,16 @@
 
 		get toast(): Toast {
 			return store.state.toast;
+		}
+
+		get unsavedChanges(): boolean {
+			return unequal(store.state.fileStaff, store.state.tempStaff) || unequal(store.state.fileProjects, store.state.tempProjects);
+		}
+
+		@Watch("unsavedChanges")
+		updateWindowTitle(value: boolean): void {
+			store.commit("updateUnsavedChanges", value);
+			store.commit("updateWindowTitle");
 		}
 
 		async created(): Promise<void> {

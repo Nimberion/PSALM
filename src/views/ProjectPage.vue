@@ -43,7 +43,7 @@
 
 										<div class="flex self-end">
 											<!-- BUTTONS -->
-											<div class="flex w-36 border-r border-gray-400"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /> <button @click="test">Test</button></div>
+											<div class="flex w-36 border-r border-gray-400"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /></div>
 
 											<!-- HEADER FOR STAFF STATISTICS -->
 											<div>
@@ -197,7 +197,7 @@
 <script lang="ts">
 	import { EmployeeAvailability, newEmployeeAvailability, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
-	import { Component, Watch, Vue } from "vue-property-decorator";
+	import { Component, Vue } from "vue-property-decorator";
 	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectButton from "@/components/project/ProjectButton.vue";
@@ -208,7 +208,6 @@
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { unequal } from "@/utils/utils";
 	import { Employee } from "@/models/interfaces/Employee";
 	import { writeText } from "@tauri-apps/api/clipboard";
 	import { VueDatePicker } from "@mathieustan/vue-datepicker";
@@ -260,31 +259,6 @@
 			}
 		}
 
-		get unsavedChanges(): boolean {
-			return unequal(
-				this.tempProject,
-				store.state.fileProjects.find((e) => e.id === this.projectId),
-			);
-		}
-
-		@Watch("unsavedChanges")
-		updateWindowTitle(value: boolean): void {
-			store.commit("updateUnsavedChanges", value);
-			store.commit("updateWindowTitle");
-		}
-
-		test(): void {
-			console.log(
-				"unsavedChanges",
-				unequal(
-					this.tempProject,
-					store.state.fileProjects.find((e) => e.id === this.projectId),
-				),
-			);
-
-			console.log(this.unsavedChanges);
-		}
-
 		created(): void {
 			this.minDate.setMonth(this.minDate.getMonth() - 12);
 
@@ -295,7 +269,6 @@
 			this.deleteRemovedData();
 
 			console.log(this.$route.path);
-			console.log(this.unsavedChanges);
 		}
 
 		getNameById(id: string): string {

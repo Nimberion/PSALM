@@ -1,6 +1,6 @@
 <template>
 	<PsalmCard class="py-4 min-w-[500px] max-w-[500px]">
-		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter {{ unequal() }}</h2>
+		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold border-b border-gray-400 mx-2 lg:mr-6">
 			<div class="px-1" title="Vorname">Vorname</div>
@@ -62,10 +62,6 @@
 
 		get modal(): Modal {
 			return store.state.modal;
-		}
-
-		unequal(): boolean {
-			return unequal(store.state.fileStaff, store.state.tempStaff);
 		}
 
 		addEmployee(): void {
