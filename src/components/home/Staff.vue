@@ -1,6 +1,6 @@
 <template>
 	<PsalmCard class="py-4 min-w-[500px] max-w-[500px]">
-		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter</h2>
+		<h2 class="text-xl text-center font-semibold mb-4">Mitarbeiter {{ unequal() }}</h2>
 		<!-- LIST HEADER -->
 		<div class="grid grid-cols-[1fr,1fr,3rem,2rem] font-semibold border-b border-gray-400 mx-2 lg:mr-6">
 			<div class="px-1" title="Vorname">Vorname</div>
@@ -38,8 +38,7 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import store from "@/store/index";
 	import { Employee, newEmployee } from "@/models/interfaces/Employee";
-	import { pathExists } from "@/utils/utils";
-	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import { unequal } from "@/utils/utils";
 	import StaffImportModal from "@/components/home/StaffImportModal.vue";
 	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
@@ -55,20 +54,18 @@
 		components: { PsalmModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput, StaffImportModal },
 	})
 	export default class Staff extends Vue {
-		tempStaff: Array<Employee> = [];
-
 		showStaffImportModal = false;
+
+		get tempStaff(): Array<Employee> {
+			return store.state.tempStaff;
+		}
 
 		get modal(): Modal {
 			return store.state.modal;
 		}
 
-		get staff(): Array<Employee> {
-			return store.state.staff;
-		}
-
-		created(): void {
-			this.tempStaff = JSON.parse(JSON.stringify(this.staff));
+		unequal(): boolean {
+			return unequal(store.state.fileStaff, store.state.tempStaff);
 		}
 
 		addEmployee(): void {
@@ -76,26 +73,7 @@
 		}
 
 		async saveStaff(): Promise<void> {
-			//SORT TEMP-STAFF
-			this.tempStaff.sort((a, b) => {
-				const lastNameSortingResult = a.lastName.localeCompare(b.lastName, "de", { ignorePunctuation: true, sensitivity: "base" });
-				const firstNameSortingResult = a.firstName.localeCompare(b.firstName, "de", { ignorePunctuation: true, sensitivity: "base" });
-
-				return lastNameSortingResult !== 0 ? lastNameSortingResult : firstNameSortingResult;
-			});
-
-			// PUSH TEMP-STAFF TO STORE
-			store.commit("updateStaff", this.tempStaff);
-
-			// DELETE JSON FILE
-			if (await pathExists("data", "data\\staff.json")) {
-				await removeFile("data/staff.json");
-			}
-			// WRITE JSON FILE
-			await writeFile({ contents: JSON.stringify(store.state.staff), path: "data/staff.json" });
-
-			// SHOW SAVED TOAST
-			store.commit("showToast", "saved");
+			await store.dispatch("saveTempStatesToFiles");
 		}
 
 		triggerDeleteModal(employeeToDelete: Employee): void {

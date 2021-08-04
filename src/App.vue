@@ -76,7 +76,8 @@
 
 		async readStaffJSON(): Promise<void> {
 			if (await pathExists("data", "data\\staff.json")) {
-				store.commit("updateStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
+				store.commit("updateFileStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
+				store.commit("updateTempStaff", JSON.parse(await readTextFile("data/staff.json")) as Array<Employee>);
 			}
 		}
 
@@ -85,15 +86,15 @@
 			const projects: Array<Project> = [];
 
 			for (let i = 0; i < projectsDir.length; i++) {
-				const filename: string = projectsDir[i].name?.split(".json")[0] as string;
-				projects.push(JSON.parse(await readTextFile(`data/projects/${filename}.json`)));
+				projects.push(JSON.parse(await readTextFile(`data/projects/${projectsDir[i].name}`)));
 			}
 
 			projects.sort((a, b) => {
 				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
 			});
 
-			store.commit("updateProjects", projects);
+			store.commit("updateFileProjects", projects);
+			store.commit("updateTempProjects", projects);
 		}
 	}
 </script>

@@ -10,6 +10,6 @@ export async function pathExists(dir: string, path: string): Promise<boolean> {
 }
 
 // eslint-disable-next-line
-export function equal(a: any, b: any): boolean {
-	return hash(a) === hash(b);
+export function unequal(a: any, b: any): boolean {
+	return hash(a) !== hash(b);
 }

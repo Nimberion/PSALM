@@ -45,8 +45,8 @@
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newProject, Project } from "@/models/interfaces/Project";
-	import { equal, newID, pathExists } from "@/utils/utils";
-	import { removeFile, writeFile } from "@tauri-apps/api/fs";
+	import { newID, pathExists } from "@/utils/utils";
+	import { removeFile } from "@tauri-apps/api/fs";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
 
@@ -55,16 +55,15 @@
 		components: { DoodleImportModal, PsalmModal, PsalmButton, PsalmDeleteButton, PsalmCard, PsalmIcon, PsalmInput },
 	})
 	export default class ProjectList extends Vue {
-		tempProjects: Array<Project> = [];
 		editMode = false;
 		showDoodleImportModal = false;
 
-		get modal(): Modal {
-			return store.state.modal;
+		get tempProjects(): Array<Project> {
+			return store.state.tempProjects;
 		}
 
-		created(): void {
-			this.tempProjects = JSON.parse(JSON.stringify(store.state.projects));
+		get modal(): Modal {
+			return store.state.modal;
 		}
 
 		triggerDeleteModal(projectToDelete: Project): void {
@@ -94,30 +93,8 @@
 		}
 
 		async saveProjects(): Promise<void> {
-			this.tempProjects.sort((a, b) => {
-				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
-			});
-
-			this.tempProjects.forEach(async (tempProject) => {
-				// SEARCH FOR EDITED PROJECTS
-				if (!equal(tempProject, store.state.projects.find((storeProject) => storeProject.id === tempProject.id) || {})) {
-					// DELETE OLD JSON FILE
-					if (await pathExists("data\\projects", `data\\projects\\${tempProject.id}.json`)) {
-						await removeFile(`data/projects/${tempProject.id}.json`);
-					}
-
-					// WRITE NEW JSON FILE
-					await writeFile({ contents: JSON.stringify(tempProject), path: `data/projects/${tempProject.id}.json` });
-				}
-			});
-
-			// PUSH TEMP-PROJECTS TO STORE
-			store.commit("updateProjects", this.tempProjects);
-
+			await store.dispatch("saveTempStatesToFiles");
 			this.editMode = false;
-
-			// SHOW SAVED TOAST
-			store.commit("showToast", "saved");
 		}
 
 		async importProject(projectToImport: Project): Promise<void> {

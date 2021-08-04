@@ -195,7 +195,7 @@
 </template>
 
 <script lang="ts">
-	import { EmployeeAvailability, newEmployeeAvailability, newProject, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
+	import { EmployeeAvailability, newEmployeeAvailability, newProjectDay, Project, ProjectDay } from "@/models/interfaces/Project";
 	import store from "@/store";
 	import { Component, Watch, Vue } from "vue-property-decorator";
 	import PsalmModal from "@/components/common/PsalmModal.vue";
@@ -208,9 +208,8 @@
 	import PsalmDeleteButton from "@/components/common/PsalmDeleteButton.vue";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
-	import { equal, newID, pathExists } from "@/utils/utils";
+	import { unequal } from "@/utils/utils";
 	import { Employee } from "@/models/interfaces/Employee";
-	import { removeFile, writeFile } from "@tauri-apps/api/fs";
 	import { writeText } from "@tauri-apps/api/clipboard";
 	import { VueDatePicker } from "@mathieustan/vue-datepicker";
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
@@ -228,11 +227,14 @@
 	export default class ProjectPage extends Vue {
 		projectId = this.$route.path.split("/")[2];
 		projectStaffEditMode = false;
-		tempProject: Project = newProject(newID());
 		showSecondStaffList = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
 		enableHospitation = store.state.enableHospitation;
+
+		get tempProject(): Project {
+			return store.state.tempProjects.find((e) => e.id === this.projectId) as Project;
+		}
 
 		get modal(): Modal {
 			return store.state.modal;
@@ -241,7 +243,7 @@
 		get staff(): Array<Employee> {
 			let availableStaff: Array<EmployeeAvailability> | undefined = [];
 
-			const tempStaff = store.state.staff.filter((item) => this.tempProject.staff.includes(item.id));
+			const tempStaff = store.state.fileStaff.filter((item) => this.tempProject.staff.includes(item.id));
 
 			if (this.activeFilter.dayId === "") {
 				return tempStaff;
@@ -259,9 +261,9 @@
 		}
 
 		get unsavedChanges(): boolean {
-			return !equal(
+			return unequal(
 				this.tempProject,
-				store.state.projects.find((e) => e.id === this.projectId),
+				store.state.fileProjects.find((e) => e.id === this.projectId),
 			);
 		}
 
@@ -274,9 +276,9 @@
 		test(): void {
 			console.log(
 				"unsavedChanges",
-				!equal(
+				unequal(
 					this.tempProject,
-					store.state.projects.find((e) => e.id === this.projectId),
+					store.state.fileProjects.find((e) => e.id === this.projectId),
 				),
 			);
 
@@ -284,8 +286,6 @@
 		}
 
 		created(): void {
-			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.find((e) => e.id === this.projectId)));
-
 			this.minDate.setMonth(this.minDate.getMonth() - 12);
 
 			if (this.tempProject.staff.length === 0) {
@@ -349,30 +349,7 @@
 			//DELETE UNUSED STAFFAVAILABILITYS
 			this.deleteRemovedData();
 
-			//SORT projectDays
-			this.tempProject.projectDays.sort((a, b) => {
-				if (a.date > b.date) return 1;
-				if (a.date < b.date) return -1;
-
-				if (a.time > b.time) return 1;
-				if (a.time < b.time) return -1;
-
-				return a.participant.localeCompare(b.participant, "de", { ignorePunctuation: true, sensitivity: "base" });
-			});
-
-			// UPDATE tempProject IN STORE
-			store.commit("updateProject", this.tempProject);
-
-			// DELETE OLD JSON FILE
-			if (await pathExists("data\\projects", `data\\projects\\${this.tempProject.id}.json`)) {
-				await removeFile(`data/projects/${this.tempProject.id}.json`);
-			}
-
-			// WRITE JSON FILE
-			await writeFile({ contents: JSON.stringify(this.tempProject), path: `data/projects/${this.tempProject.id}.json` });
-
-			// SHOW SAVED TOAST
-			store.commit("showToast", "saved");
+			await store.dispatch("saveTempStatesToFiles");
 		}
 
 		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
@@ -395,7 +372,7 @@
 		deleteRemovedData(): void {
 			// DELETE DELETED EMPLOYEES FROM STAFF LIST
 			this.tempProject.staff.forEach((item, index, object) => {
-				if (!store.state.staff.find((e) => e.id === item)) {
+				if (!store.state.fileStaff.find((e) => e.id === item)) {
 					object.splice(index, 1);
 				}
 			});

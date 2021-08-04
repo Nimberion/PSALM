@@ -92,7 +92,7 @@ export function getSetPointOfReserves(project: Project, staff: Array<Employee>, 
 }
 
 export function writePdfForEachEmployee(project: Project): void {
-	const staff = store.state.staff;
+	const staff = store.state.fileStaff;
 	// console.log(project.projectDays);
 	let i = 1;
 

@@ -78,7 +78,7 @@
 		tempProjectStaff: Array<string> = [];
 
 		get staff(): Array<Employee> {
-			return store.state.staff;
+			return store.state.fileStaff;
 		}
 
 		created(): void {
