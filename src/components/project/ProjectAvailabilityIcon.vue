@@ -1,11 +1,10 @@
 <template>
 	<!--### TABLE OF CONTENT ###
 		##
-		##  C
-		##  C
-		##  E
-		##  TRUE
-		##  F
+		##  FALSE
+		##  INDISPOSED
+		##  RESERVE
+		##  TRUE || HOSPITATION
 		##
 		#########################-->
 	<!-- FALSE -->

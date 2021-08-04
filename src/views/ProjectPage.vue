@@ -24,9 +24,8 @@
 								<th class="relative min-w-[15rem] max-w-[15rem] sticky top-0 left-0 border-r-[3px] border-b border-gray-400 bg-white z-30 p-0 align-bottom">
 									<div class="flex flex-col absolute top-0 h-full w-full justify-between">
 										<!-- NEEDED STAFF -->
-										<!-- <div class="absolute top-0 text-center h-full w-full"> -->
 										<div class="text-center w-full">
-											<span class="text-sm font-normal mr-2 lg:[show]">Benötigte Mitarbeiter:</span>
+											<span class="text-sm font-normal mr-2">Benötigte Mitarbeiter:</span>
 											<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 										</div>
 
@@ -163,8 +162,13 @@
 											<div
 												class="w-1/2 py-0.5"
 												:class="{
-													'bg-danger text-white': day.staffAvailability.filter((e) => e.deployed === 'TRUE').length !== tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
-													'bg-warning text-white': day.staffAvailability.filter((e) => e.deployed === 'TRUE').length === tempProject.numberOfRequiredStaff && tempProject.numberOfRequiredStaff !== 0,
+													'bg-danger text-white':
+														(day.staffAvailability.filter((e) => e.deployed === 'TRUE').length !== tempProject.numberOfRequiredStaff || day.staffAvailability.filter((e) => e.deployed === 'RESERVE').length > 1) &&
+														tempProject.numberOfRequiredStaff !== 0,
+													'bg-warning text-white':
+														day.staffAvailability.filter((e) => e.deployed === 'TRUE').length === tempProject.numberOfRequiredStaff &&
+														day.staffAvailability.filter((e) => e.deployed === 'RESERVE').length === 0 &&
+														tempProject.numberOfRequiredStaff !== 0,
 													'bg-success text-white':
 														day.staffAvailability.filter((e) => e.deployed === 'TRUE').length === tempProject.numberOfRequiredStaff &&
 														day.staffAvailability.filter((e) => e.deployed === 'RESERVE').length === 1 &&
@@ -255,7 +259,10 @@
 		}
 
 		get unsavedChanges(): boolean {
-			return !equal(this.tempProject, store.state.projects.get(this.projectId));
+			return !equal(
+				this.tempProject,
+				store.state.projects.find((e) => e.id === this.projectId),
+			);
 		}
 
 		@Watch("unsavedChanges")
@@ -265,13 +272,19 @@
 		}
 
 		test(): void {
-			console.log("unsavedChanges", !equal(this.tempProject, store.state.projects.get(this.projectId)));
+			console.log(
+				"unsavedChanges",
+				!equal(
+					this.tempProject,
+					store.state.projects.find((e) => e.id === this.projectId),
+				),
+			);
 
 			console.log(this.unsavedChanges);
 		}
 
 		created(): void {
-			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.get(this.projectId)));
+			this.tempProject = JSON.parse(JSON.stringify(store.state.projects.find((e) => e.id === this.projectId)));
 
 			this.minDate.setMonth(this.minDate.getMonth() - 12);
 
@@ -443,10 +456,6 @@
 	.project-table tbody td:nth-last-child(2) {
 		border-right: 0;
 	}
-
-	/* .project-table tbody tr:nth-last-child(2) td {
-		border-bottom: transparent;
-	} */
 </style>
 
 <style>

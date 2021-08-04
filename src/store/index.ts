@@ -12,7 +12,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		staff: [] as Array<Employee>,
-		projects: new Map() as Map<string, Project>,
+		projects: [] as Array<Project>,
 		toast: { show: false, message: "" } as Toast,
 		activeTimeout: -1,
 		unsavedChanges: false,
@@ -69,12 +69,16 @@ export default new Vuex.Store({
 
 		// PROJECTS
 		updateProjects(currentState, newProjects: Map<string, Project>) {
-			currentState.projects = new Map(JSON.parse(JSON.stringify(Array.from(newProjects))));
+			currentState.projects = JSON.parse(JSON.stringify(newProjects));
 		},
 
 		updateProject(currentState, newProject) {
 			//JSON.parse & .stingify TO CREATE A DEEP COPY
-			currentState.projects.set(newProject.id, JSON.parse(JSON.stringify(newProject)));
+			currentState.projects[
+				currentState.projects.findIndex((e) => {
+					e.id === newProject.id;
+				})
+			] = JSON.parse(JSON.stringify(newProject));
 		},
 
 		updateUnsavedChanges(currentState, newState) {
@@ -94,12 +98,5 @@ export default new Vuex.Store({
 	},
 	actions: {},
 	modules: {},
-	getters: {
-		//move to updateStaff
-		sortedStaff: (state) => {
-			return state.staff.sort((e1, e2) => {
-				return e1.lastName >= e2.lastName ? 1 : -1;
-			});
-		},
-	},
+	getters: {},
 });

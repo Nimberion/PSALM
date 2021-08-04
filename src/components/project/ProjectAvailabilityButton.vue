@@ -77,7 +77,7 @@
 						return "Reserve";
 
 					case "HOSPITATION":
-						return "Honspitation";
+						return "Hospitation";
 
 					default:
 						return "";

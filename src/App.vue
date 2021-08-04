@@ -82,12 +82,17 @@
 
 		async readProjectsJSON(): Promise<void> {
 			const projectsDir = await readDir("data\\projects");
-			const projects: Map<string, Project> = new Map();
+			const projects: Array<Project> = [];
 
 			for (let i = 0; i < projectsDir.length; i++) {
 				const filename: string = projectsDir[i].name?.split(".json")[0] as string;
-				projects.set(filename, JSON.parse(await readTextFile(`data/projects/${filename}.json`)));
+				projects.push(JSON.parse(await readTextFile(`data/projects/${filename}.json`)));
 			}
+
+			projects.sort((a, b) => {
+				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
+			});
+
 			store.commit("updateProjects", projects);
 		}
 	}
