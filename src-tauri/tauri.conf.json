@@ -48,7 +48,6 @@
 				"all": false,
 				"copyFile": false,
 				"createDir": true,
-				"path": false,
 				"readBinaryFile": false,
 				"readDir": true,
 				"readTextFile": true,
@@ -61,7 +60,7 @@
 			"dialog": {
 				"all": false,
 				"open": true,
-				"save": false
+				"save": true
 			},
 			"globalShortcut": {
 				"all": false

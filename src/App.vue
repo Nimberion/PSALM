@@ -5,9 +5,14 @@
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')" title="Startseite">
 			<PsalmIcon name="home" />
 		</button>
-		<div>
-			<router-view v-if="!loading" class="" />
-		</div>
+
+		<!-- <div class="w-full h-7 bg-white sticky top-0 flex text-sm">
+			<div class="hover:bg-gray-200 h-full flex place-items-center p-2">Datei</div>
+			<div class="hover:bg-gray-200 h-full flex place-items-center p-2">Bearbeiten</div>
+		</div> -->
+
+		<router-view v-if="!loading" />
+
 		<!-- LOADING SCREEN -->
 		<div v-if="loading" class="grid place-items-center absolute top-0 left-0 min-h-screen min-w-[100vw] bg-primary z-50">
 			<div class="grid place-items-center text-white text-center select-none">
@@ -76,6 +81,8 @@
 			// window.addEventListener("keydown", (e) => {
 			// 	e.preventDefault();
 			// });
+
+			// this.loading = false;
 		}
 
 		async createDir(): Promise<void> {

@@ -51,6 +51,7 @@
 	import store from "@/store";
 	import { ModalType } from "@/models/enums/ModalType";
 	import { Modal } from "@/models/interfaces/Modal";
+	import { formatDate } from "@/utils/utils";
 
 	@Component({
 		name: "DeleteModal",
@@ -72,9 +73,7 @@
 			if (this.modal.type === ModalType.DELETE_PROJECT_DAY) {
 				const projectDayToDelete = this.modal.content as ProjectDay;
 
-				const splittedDate = projectDayToDelete.date.toString().split("-");
-
-				this.projectDayDateToDelete = `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
+				this.projectDayDateToDelete = formatDate(projectDayToDelete.date);
 			}
 		}
 

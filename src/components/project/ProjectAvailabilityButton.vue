@@ -1,4 +1,5 @@
 <template>
+	<!-- <div class="flex justify-center"> -->
 	<button class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" @click="toggleEmployeeAvailability" :disabled="disabled">
 		<ProjectAvailabilityIcon
 			class="text-2xl z-[1]"
@@ -15,6 +16,11 @@
 		<!-- CHECKBOX BG -->
 		<span class="bg-white w-4 h-4 absolute z-0 top-1/2 bottom-1/2 my-auto" />
 	</button>
+	<!-- <svg class="place-self-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M0 0h24v24H0V0z" fill="none" />
+			<path d="M7 10l5 5 5-5H7z" />
+		</svg> -->
+	<!-- </div> -->
 </template>
 
 <script lang="ts">

@@ -45,7 +45,7 @@
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newProject, Project } from "@/models/interfaces/Project";
-	import { newID, pathExists } from "@/utils/utils";
+	import { pathExists } from "@/utils/utils";
 	import { removeFile } from "@tauri-apps/api/fs";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
@@ -89,7 +89,7 @@
 
 		addProject(): void {
 			this.editMode = true;
-			this.tempProjects.push(newProject(newID()));
+			this.tempProjects.push(newProject());
 		}
 
 		async saveProjects(): Promise<void> {

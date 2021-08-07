@@ -13,3 +13,9 @@ export async function pathExists(dir: string, path: string): Promise<boolean> {
 export function unequal(a: any, b: any): boolean {
 	return hash(a) !== hash(b);
 }
+
+export function formatDate(rawDate: string | Date): string {
+	const splittedDate = rawDate.toString().split("-");
+
+	return `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
+}

@@ -25,8 +25,6 @@
 						<!-- HORIZONTAL DIVIDER -->
 						<hr class="h-[1px] w-full col-span-3 bg-gray-400 border-0" />
 						<div class="px-1" :title="importedEmployeeData[0]">{{ importedEmployeeData[0] }}</div>
-						<!-- v-model="tempProjectStaff[index]" -->
-						<!-- :selected="`${employee.firstName} ${employee.lastName}`.toLowerCase().includes(importedEmployeeData[0].toLowerCase())" -->
 						<select v-model="tempProjectStaff[index]" class="focus:border-secondary focus:ring-0 p-0 px-1 my-1 scrollbar-p-0" @change="updateTempProjectStaff(index, $event)">
 							<option value="-">-</option>
 							<option v-for="(employee, index) in staff" :key="index" :value="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
@@ -73,7 +71,7 @@
 
 		rawData: Array<Array<string>> = [];
 
-		tempProject: Project = newProject(newID());
+		tempProject: Project = newProject();
 		importedStaffData: Array<Array<string>> = [];
 		tempProjectStaff: Array<string> = [];
 

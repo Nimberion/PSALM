@@ -3,7 +3,10 @@ import { Deployed } from "@/models/enums/Deployed";
 import { Employee } from "@/models/interfaces/Employee";
 import { EmployeeAvailability, Project } from "@/models/interfaces/Project";
 import store from "@/store";
+import { save } from "@tauri-apps/api/dialog";
+import { writeFile } from "@tauri-apps/api/fs";
 import { jsPDF } from "jspdf";
+import { formatDate } from "./utils";
 
 export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvailability>, employeeId: string): EmployeeAvailability | undefined {
 	return staffAvailability.find((e) => e.employeeId === employeeId);
@@ -104,8 +107,6 @@ export function writePdfForEachEmployee(project: Project): void {
 			const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && e.deployed !== Deployed.FALSE);
 
 			if (deployedProjectDay) {
-				const splittedDate = projectDay.date.toString().split("-");
-				const formattedDate = `${splittedDate[2]}.${splittedDate[1]}.${splittedDate[0]}`;
 				let annotation = "-";
 
 				if (deployedProjectDay?.deployed === Deployed.RESERVE) {
@@ -114,7 +115,7 @@ export function writePdfForEachEmployee(project: Project): void {
 					annotation = "Hospitation";
 				}
 
-				deployedProjectDays.push({ date: formattedDate, time: projectDay.time, participant: projectDay.participant, annotation: annotation });
+				deployedProjectDays.push({ date: formatDate(projectDay.date), time: projectDay.time, participant: projectDay.participant, annotation: annotation });
 			}
 		});
 
@@ -150,4 +151,50 @@ export function writePdfForEachEmployee(project: Project): void {
 			// doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
 		}
 	});
+}
+
+export async function saveCSVFile(project: Project): Promise<void> {
+	const path = await save({ filters: [{ name: "CSV", extensions: ["csv"] }] });
+
+	if (path) {
+		let CSVContent = `${project.title};\r\n\r\n`;
+		const header = [";;;;", ";;;;", ";Statistik;;;", ";Kann;Ist;Soll;"];
+		project.projectDays.forEach((projectDay) => {
+			header[0] += `${formatDate(projectDay.date)};;`;
+			header[1] += `${projectDay.time};;`;
+			header[2] += `${projectDay.participant};;`;
+			header[3] += "Kann;Ist;";
+		});
+
+		header.forEach((e) => {
+			CSVContent += `${e}\r\n`;
+		});
+
+		const staff = store.state.tempStaff.filter((item) => project.staff.includes(item.id));
+
+		staff.forEach((employee) => {
+			let row = `${employee.firstName} ${employee.lastName};${getNumberOfAvailabilities(project, employee.id)};1: ${getNumberOfDeployments(project, employee.id)}, R: ${getNumberOfReserves(project, employee.id)};${
+				employee.fullTime ? "-" : `1: ${getSetPointOfDeployments(project, staff, employee)}, R: ${getSetPointOfReserves(project, staff, employee)}`
+			};`;
+
+			project.projectDays.forEach((projectDay) => {
+				row += `${(findEmployeeAvailability(projectDay.staffAvailability, employee.id)?.available as Available).toString()};${(findEmployeeAvailability(projectDay.staffAvailability, employee.id)?.deployed as Deployed).toString()};`;
+			});
+
+			row = row.replaceAll("TRUE", "1").replaceAll("FALSE", "").replaceAll("RESERVE", "R").replaceAll("HOSPITATION", "H").replaceAll("INDISPOSED", "X");
+
+			console.log(row);
+
+			CSVContent += `${row}\r\n`;
+		});
+
+		let totalStatistics = "Gesamt;;;;";
+		project.projectDays.forEach((projectDay) => {
+			totalStatistics += `${projectDay.staffAvailability.filter((e) => e.available === "TRUE").length};${projectDay.staffAvailability.filter((e) => e.deployed === "TRUE" || e.deployed === "RESERVE").length};`;
+		});
+
+		CSVContent += `${totalStatistics}\r\n`;
+
+		await writeFile({ contents: CSVContent, path: path });
+	}
 }

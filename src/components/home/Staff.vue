@@ -38,7 +38,6 @@
 	import { Component, Vue } from "vue-property-decorator";
 	import store from "@/store/index";
 	import { Employee, newEmployee } from "@/models/interfaces/Employee";
-	import { unequal } from "@/utils/utils";
 	import StaffImportModal from "@/components/home/StaffImportModal.vue";
 	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";

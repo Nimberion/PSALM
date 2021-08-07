@@ -43,7 +43,10 @@
 
 										<div class="flex self-end">
 											<!-- BUTTONS -->
-											<div class="flex w-36 border-r border-gray-400"><ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" /></div>
+											<div class="flex w-36 border-r border-gray-400">
+												<ProjectButton icon="copy" title="Angezeigte Mitarbeiter kopieren" @click="copyDisplayedStaff" />
+												<button class="text-primary text-2xl font-bold ml-1" title="Projekt als CSV-Datei exportieren" @click="saveCSVFile(tempProject)">CSV</button>
+											</div>
 
 											<!-- HEADER FOR STAFF STATISTICS -->
 											<div>
@@ -214,7 +217,7 @@
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
-	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getNumberOfReserves, getSetPointOfDeployments, getSetPointOfReserves, writePdfForEachEmployee } from "@/utils/projects";
+	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getNumberOfReserves, getSetPointOfDeployments, getSetPointOfReserves, saveCSVFile, writePdfForEachEmployee } from "@/utils/projects";
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
@@ -265,10 +268,6 @@
 			if (this.tempProject.staff.length === 0) {
 				this.projectStaffEditMode = true;
 			}
-
-			this.deleteRemovedData();
-
-			console.log(this.$route.path);
 		}
 
 		getNameById(id: string): string {
@@ -319,9 +318,6 @@
 		}
 
 		async saveProject(): Promise<void> {
-			//DELETE UNUSED STAFFAVAILABILITYS
-			this.deleteRemovedData();
-
 			await store.dispatch("saveTempStatesToFiles");
 		}
 
@@ -340,24 +336,6 @@
 			await this.saveProject();
 			store.commit("showToast", "deleted");
 			store.commit("resetModal");
-		}
-
-		deleteRemovedData(): void {
-			// DELETE DELETED EMPLOYEES FROM STAFF LIST
-			this.tempProject.staff.forEach((item, index, object) => {
-				if (!store.state.fileStaff.find((e) => e.id === item)) {
-					object.splice(index, 1);
-				}
-			});
-
-			// DELETE UNUSED staffAvailability
-			this.tempProject.projectDays.forEach((day) => {
-				day.staffAvailability.forEach((item, index, object) => {
-					if (!this.tempProject.staff.includes(item.employeeId)) {
-						object.splice(index, 1);
-					}
-				});
-			});
 		}
 
 		copyDisplayedStaff(): void {
@@ -393,6 +371,10 @@
 		}
 		toggleEnableHospitation(): void {
 			store.commit("toggleEnableHospitation");
+		}
+
+		saveCSVFile(project: Project): void {
+			saveCSVFile(project);
 		}
 	}
 </script>

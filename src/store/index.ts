@@ -120,7 +120,23 @@ export default new Vuex.Store({
 				return a.title.localeCompare(b.title, "de", { ignorePunctuation: true, sensitivity: "base" });
 			});
 
+			// state.tempProjects.forEach(async (tempProject) => {
+			// 	// DELETE DELETED EMPLOYEES FROM STAFF LIST
+			// 	tempProject.staff.forEach((employeeId, index, projectStaff) => {
+			// 		if (!state.fileStaff.find((e) => e.id === employeeId)) {
+			// 			projectStaff.splice(index, 1);
+			// 		}
+			// 	});
+			// });
+
 			state.tempProjects.forEach(async (tempProject) => {
+				// DELETE DELETED EMPLOYEES FROM STAFF LIST
+				tempProject.staff.forEach((employeeId, index, projectStaff) => {
+					if (!state.fileStaff.find((e) => e.id === employeeId)) {
+						projectStaff.splice(index, 1);
+					}
+				});
+
 				// SEARCH FOR EDITED PROJECTS
 				if (unequal(tempProject, state.fileProjects.find((fileProject) => fileProject.id === tempProject.id) || {})) {
 					//SORT projectDays
@@ -132,6 +148,15 @@ export default new Vuex.Store({
 						if (a.time < b.time) return -1;
 
 						return a.participant.localeCompare(b.participant, "de", { ignorePunctuation: true, sensitivity: "base" });
+					});
+
+					// DELETE UNUSED staffAvailability
+					tempProject.projectDays.forEach((day) => {
+						day.staffAvailability.forEach((item, index, object) => {
+							if (!tempProject.staff.includes(item.employeeId)) {
+								object.splice(index, 1);
+							}
+						});
 					});
 
 					// DELETE OLD JSON FILE
