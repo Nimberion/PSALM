@@ -25,6 +25,9 @@
 		<transition name="slide">
 			<div v-if="toast.show" class="flex transition-all duration-1000 ease-in-out w-max fixed top-6 right-0 left-0 bg-secondary text-white text-xs shadow-card mx-auto py-2 px-3 z-50 select-none">{{ toast.message }}</div>
 		</transition>
+
+		<!-- DELETE MODAL -->
+		<PsalmModal v-if="modal.show" />
 	</div>
 </template>
 
@@ -32,22 +35,29 @@
 	import { Component, Vue, Watch } from "vue-property-decorator";
 	import { readTextFile, createDir, readDir } from "@tauri-apps/api/fs";
 	import { Employee } from "@/models/interfaces/Employee";
+	import PsalmModal from "@/components/common/PsalmModal.vue";
 	import store from "@/store/index";
 	import { pathExists, unequal } from "@/utils/utils";
 	import { Project } from "./models/interfaces/Project";
 	import { Toast } from "./models/interfaces/Toast";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import { invoke } from "@tauri-apps/api/tauri";
+	import { emit, listen } from "@tauri-apps/api/event";
+	import { Modal } from "./models/interfaces/Modal";
 
 	@Component({
 		name: "App",
-		components: { PsalmIcon },
+		components: { PsalmIcon, PsalmModal },
 	})
 	export default class App extends Vue {
 		loading = true;
 
 		get toast(): Toast {
 			return store.state.toast;
+		}
+
+		get modal(): Modal {
+			return store.state.modal;
 		}
 
 		get unsavedChanges(): boolean {
@@ -78,11 +88,32 @@
 
 			document.body.classList.add("overflow-x-hidden");
 
+			window.onbeforeunload = (e: BeforeUnloadEvent) => {
+				if (this.unsavedChanges) {
+					e.returnValue = "";
+					// store.commit("showModal", { type: ModalType.RELOAD, content: "" });
+				}
+			};
+
+			// window.onbeforeunload = function () {
+			// 	return "You have unsaved changes!";
+			// };
+
+			listen("tauri://close-requested", (e) => {
+				console.log(e.payload);
+				console.log("wanne close");
+				// emit("tauri://close-requested", "false");
+			});
+
 			// window.addEventListener("keydown", (e) => {
 			// 	e.preventDefault();
 			// });
 
 			// this.loading = false;
+		}
+
+		some(): void {
+			console.log("some");
 		}
 
 		async createDir(): Promise<void> {

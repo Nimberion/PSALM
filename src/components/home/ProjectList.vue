@@ -26,9 +26,6 @@
 			<PsalmButton title="Doodle Liste importieren" class="bg-primary" icon="import" @click="showDoodleImportModal = true" />
 		</div>
 
-		<!-- MODAL -->
-		<PsalmModal v-if="modal.show && modal.type === 'DELETE_PROJECT'" @confirm="deleteProject" />
-
 		<!-- DOODLE IMPORT MODAL -->
 		<DoodleImportModal v-if="showDoodleImportModal" @import="importProject" @cancel="showDoodleImportModal = false" />
 	</PsalmCard>
@@ -45,8 +42,6 @@
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import { newProject, Project } from "@/models/interfaces/Project";
-	import { pathExists } from "@/utils/utils";
-	import { removeFile } from "@tauri-apps/api/fs";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
 
@@ -68,23 +63,6 @@
 
 		triggerDeleteModal(projectToDelete: Project): void {
 			store.commit("showModal", { type: ModalType.DELETE_PROJECT, content: projectToDelete });
-		}
-
-		async deleteProject(): Promise<void> {
-			const projectId = (this.modal.content as Project).id;
-
-			this.tempProjects.splice(
-				this.tempProjects.findIndex((e) => e.id === projectId),
-				1,
-			);
-
-			if (await pathExists("data\\projects", `data\\projects\\${projectId}.json`)) {
-				await removeFile(`data/projects/${projectId}.json`);
-			}
-
-			await this.saveProjects();
-			store.commit("showToast", "deleted");
-			store.commit("resetModal");
 		}
 
 		addProject(): void {

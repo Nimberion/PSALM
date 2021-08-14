@@ -26,9 +26,6 @@
 			<PsalmButton title="Mitarbeiter importieren" icon="import" class="bg-primary" @click="showStaffImportModal = true" />
 		</div>
 
-		<!-- DELETE MODAL -->
-		<PsalmModal v-if="modal.show && modal.type === 'DELETE_EMPLOYEE'" @confirm="deleteEmployee" />
-
 		<!-- STAFF IMPORT MODAL -->
 		<StaffImportModal v-if="showStaffImportModal" @import="importStaff" @cancel="showStaffImportModal = false" />
 	</PsalmCard>
@@ -46,7 +43,6 @@
 	import PsalmInput from "@/components/common/PsalmInput.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
 	import { ModalType } from "@/models/enums/ModalType";
-	import { Modal } from "@/models/interfaces/Modal";
 
 	@Component({
 		name: "Staff",
@@ -59,10 +55,6 @@
 			return store.state.tempStaff;
 		}
 
-		get modal(): Modal {
-			return store.state.modal;
-		}
-
 		addEmployee(): void {
 			this.tempStaff.push(newEmployee());
 		}
@@ -73,19 +65,6 @@
 
 		triggerDeleteModal(employeeToDelete: Employee): void {
 			store.commit("showModal", { type: ModalType.DELETE_EMPLOYEE, content: employeeToDelete });
-		}
-
-		async deleteEmployee(): Promise<void> {
-			const employeeToDelete = store.state.modal.content as Employee;
-
-			this.tempStaff.splice(
-				this.tempStaff.findIndex((element) => element.id === employeeToDelete.id),
-				1,
-			);
-
-			await this.saveStaff();
-			store.commit("showToast", "deleted");
-			store.commit("resetModal");
 		}
 
 		async importStaff(staffToImport: Array<Employee>): Promise<void> {

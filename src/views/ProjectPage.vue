@@ -193,7 +193,6 @@
 				</div>
 			</PsalmCard>
 		</div>
-		<PsalmModal v-if="modal.show && modal.type === 'DELETE_PROJECT_DAY'" @confirm="deleteProjectDay" />
 	</div>
 </template>
 
@@ -323,19 +322,6 @@
 
 		triggerDeleteModal(projectDayToDelete: ProjectDay): void {
 			store.commit("showModal", { type: ModalType.DELETE_PROJECT_DAY, content: projectDayToDelete });
-		}
-
-		async deleteProjectDay(): Promise<void> {
-			const projectDayToDelete = store.state.modal.content as ProjectDay;
-
-			this.tempProject.projectDays.splice(
-				this.tempProject.projectDays.findIndex((e) => e.id === projectDayToDelete.id),
-				1,
-			);
-
-			await this.saveProject();
-			store.commit("showToast", "deleted");
-			store.commit("resetModal");
 		}
 
 		copyDisplayedStaff(): void {
