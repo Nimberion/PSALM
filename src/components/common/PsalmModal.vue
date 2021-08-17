@@ -83,6 +83,7 @@
 		close(): void {
 			store.commit("resetModal");
 			document.body.classList.remove("no-scroll");
+			// this.$emit("close");
 		}
 
 		// enableScrolling(): void {

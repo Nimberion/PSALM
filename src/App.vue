@@ -42,7 +42,7 @@
 	import { Toast } from "./models/interfaces/Toast";
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import { invoke } from "@tauri-apps/api/tauri";
-	import { emit, listen } from "@tauri-apps/api/event";
+	import { listen } from "@tauri-apps/api/event";
 	import { Modal } from "./models/interfaces/Modal";
 
 	@Component({
@@ -88,33 +88,23 @@
 
 			document.body.classList.add("overflow-x-hidden");
 
-			window.onbeforeunload = (e: BeforeUnloadEvent) => {
+			window.addEventListener("beforeunload", (e: BeforeUnloadEvent) => {
 				if (this.unsavedChanges) {
+					e.preventDefault();
 					e.returnValue = "";
-					// store.commit("showModal", { type: ModalType.RELOAD, content: "" });
 				}
-			};
-
-			// window.onbeforeunload = function () {
-			// 	return "You have unsaved changes!";
-			// };
+			});
 
 			listen("tauri://close-requested", (e) => {
-				console.log(e.payload);
+				console.log(e);
 				console.log("wanne close");
 				// emit("tauri://close-requested", "false");
 			});
 
-			// window.addEventListener("keydown", (e) => {
-			// 	e.preventDefault();
-			// });
-
 			// this.loading = false;
 		}
 
-		some(): void {
-			console.log("some");
-		}
+		// 	await new Promise((resolve) => setTimeout(resolve, 10000));
 
 		async createDir(): Promise<void> {
 			if (!(await pathExists("", "data\\projects"))) {
