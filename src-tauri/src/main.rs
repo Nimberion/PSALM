@@ -5,7 +5,7 @@
 
 use calamine::{open_workbook_auto, Reader};
 use std::sync::{Arc, Mutex};
-use tauri::{Manager, State, Window};
+use tauri::{Event, Manager, State, Window};
 // wrappers around each Window
 // we use a dedicated type because Tauri can only manage a single instance of a given type
 struct MainWindow(Arc<Mutex<Window>>);
@@ -57,7 +57,7 @@ fn read_excel_file(path: String) -> String {
 }
 
 fn main() {
-  tauri::Builder::default()
+  let app = tauri::Builder::default()
     .setup(|app| {
       // set the main windows to be globally available with the tauri state API
       app.manage(MainWindow(Arc::new(Mutex::new(
@@ -66,6 +66,14 @@ fn main() {
       Ok(())
     })
     .invoke_handler(tauri::generate_handler![show_main_window, read_excel_file])
-    .run(tauri::generate_context!())
+    .build(tauri::generate_context!())
     .expect("failed to run app");
+
+  app.run(|app_handle, e| {
+    if let Event::CloseRequested { label, api, .. } = e {
+      api.prevent_close();
+      let window = app_handle.get_window(&label).unwrap();
+      window.emit("close-requested", ()).unwrap();
+    }
+  })
 }

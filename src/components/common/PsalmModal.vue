@@ -2,7 +2,7 @@
 	<div class="absolute left-0 bottom-0 right-0 top-0 h-full min-h-screen min-w-[100vw] grid place-items-center bg-[rgba(0,0,0,0.8)] overflow-hidden z-50" :style="`top: ${scrollY}px;`">
 		<PsalmCard class="w-[450px] relative p-6 pt-4 z-50">
 			<!-- CLOSE BUTTON -->
-			<button @click="close()" class="absolute top-0 right-0">
+			<button @click="closeModal()" class="absolute top-0 right-0">
 				<PsalmIcon name="close" class="text-[30px] p-[5px] hover:bg-danger hover:text-white rounded-bl-sm" />
 			</button>
 
@@ -22,14 +22,14 @@
 					Bist du sicher, dass du die Veranstaltung am <span class="font-semibold">{{ projectDayDateToDelete }}</span> mit <span class="font-semibold">"{{ modal.content.participant }}"</span> löschen möchtest?
 				</div>
 				<div v-else-if="modal.type === 'ERROR'">Error</div>
-				<div v-else-if="modal.type === 'EXIT'">Exit</div>
+				<div v-else-if="modal.type === 'EXIT'">Du hast <span class="font-semibold">ungespeicherte Änderungen</span>. Möchtest du trotzdem beenden?</div>
 				<div v-else-if="modal.type === 'RELOAD'">Reload</div>
 				<div v-else-if="modal.type === 'ROUTE'">Route</div>
 			</div>
 			<!-- BUTTONS -->
 			<div class="flex justify-center">
 				<PsalmButton class="bg-primary" @click="confirm()">Bestätigen</PsalmButton>
-				<PsalmButton class="bg-gray-500" @click="close()">Abbrechen</PsalmButton>
+				<PsalmButton class="bg-gray-500" @click="closeModal()">Abbrechen</PsalmButton>
 			</div>
 		</PsalmCard>
 	</div>
@@ -47,6 +47,7 @@
 	import { formatDate, pathExists } from "@/utils/utils";
 	import { Employee } from "@/models/interfaces/Employee";
 	import { removeFile } from "@tauri-apps/api/fs";
+	import { WindowManager } from "@tauri-apps/api/window";
 
 	@Component({
 		name: "DeleteModal",
@@ -80,12 +81,11 @@
 			}
 		}
 
-		close(): void {
+		closeModal(): void {
 			store.commit("resetModal");
 			document.body.classList.remove("no-scroll");
 			// this.$emit("close");
 		}
-
 		// enableScrolling(): void {
 		// 	document.body.classList.remove("no-scroll");
 		// }
@@ -105,7 +105,7 @@
 					// await this.deleteEmployee();
 					break;
 				case "EXIT":
-					// await this.deleteEmployee();
+					new WindowManager("main").close();
 					break;
 				case "RELOAD":
 					// await this.deleteEmployee();
@@ -115,7 +115,7 @@
 					break;
 			}
 
-			this.close();
+			this.closeModal();
 		}
 
 		async deleteEmployee(): Promise<void> {

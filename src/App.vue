@@ -43,7 +43,9 @@
 	import PsalmIcon from "@/components/common/PsalmIcon.vue";
 	import { invoke } from "@tauri-apps/api/tauri";
 	import { listen } from "@tauri-apps/api/event";
+	import { WindowManager } from "@tauri-apps/api/window";
 	import { Modal } from "./models/interfaces/Modal";
+	import { ModalType } from "./models/enums/ModalType";
 
 	@Component({
 		name: "App",
@@ -95,10 +97,16 @@
 				}
 			});
 
-			listen("tauri://close-requested", (e) => {
-				console.log(e);
-				console.log("wanne close");
-				// emit("tauri://close-requested", "false");
+			listen("tauri://close-requested", () => {
+				if (this.unsavedChanges) {
+					if (this.modal.type === ModalType.EXIT) {
+						// highlight modal
+					} else {
+						store.commit("showModal", { type: ModalType.EXIT, content: "" });
+					}
+				} else {
+					new WindowManager("main").close();
+				}
 			});
 
 			// this.loading = false;

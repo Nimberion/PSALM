@@ -110,7 +110,7 @@ export default new Vuex.Store({
 				unsavedChanges = " (ungespeicherte Änderungen)";
 			}
 
-			new WindowManager().setTitle(appTitle + unsavedChanges);
+			new WindowManager("main").setTitle(appTitle + unsavedChanges);
 		},
 	},
 	actions: {
