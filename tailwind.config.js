@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const forms = require("@tailwindcss/forms");
-const scrollbar = require("tailwind-scrollbar");
 const typography = require("tailwindcss-typography");
 const aspectRatio = require("@tailwindcss/aspect-ratio");
 
@@ -37,5 +36,5 @@ module.exports = {
 			boxShadow: ["active"],
 		},
 	},
-	plugins: [forms, scrollbar, typography, aspectRatio],
+	plugins: [forms, typography, aspectRatio],
 };
