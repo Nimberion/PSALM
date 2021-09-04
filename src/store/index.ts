@@ -8,6 +8,7 @@ import { Toast } from "@/models/interfaces/Toast";
 import { ModalType } from "@/models/enums/ModalType";
 import { pathExists, unequal } from "@/utils/utils";
 import { removeFile, writeFile } from "@tauri-apps/api/fs";
+import { ProjectMenu } from "@/models/interfaces/ProjectMenu";
 
 Vue.use(Vuex);
 
@@ -22,9 +23,10 @@ export default new Vuex.Store({
 		toast: { show: false, message: "" } as Toast,
 		activeTimeout: -1,
 
+		projectMenu: { show: false, id: "" } as ProjectMenu,
+
 		modal: { show: false, type: ModalType.ERROR, content: "" } as Modal,
 
-		enableHospitation: false,
 		unsavedChanges: false,
 	},
 	mutations: {
@@ -66,8 +68,8 @@ export default new Vuex.Store({
 			}, 2500);
 		},
 
-		toggleEnableHospitation(currentState) {
-			currentState.enableHospitation = !currentState.enableHospitation;
+		toggleProjectMenu(currentState, newState) {
+			currentState.projectMenu = newState;
 		},
 
 		// FILE STAFF

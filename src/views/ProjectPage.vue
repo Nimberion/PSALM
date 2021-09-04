@@ -16,7 +16,7 @@
 
 			<!-- PROJECT TABLE -->
 			<PsalmCard class="flex h-full max-h-[calc(100vh-6.875rem)] max-w-[calc(100vw-2rem)] pl-2 pr-0 pb-0 pt-4" :class="{ 'max-w-[calc(100vw-3rem-200px)] ': projectStaffEditMode }">
-				<div class="overflow-scroll scrollbar-p-2">
+				<div class="overflow-scroll scrollbar-p-2" @scroll="projectMenu.show ? closeProjectMenu() : undefined">
 					<table class="project-table table-fixed border-separate text-center whitespace-nowrap">
 						<thead>
 							<tr>
@@ -29,17 +29,17 @@
 											<PsalmInput v-model.trim="tempProject.numberOfRequiredStaff" class="w-8 text-sm" type="number" />
 										</div>
 
-										<div>
+										<!-- <div>
 											<label class="cursor-pointer items-center">
 												<input
-													v-model="enableHospitation"
+													v-model=""
 													type="checkbox"
 													class="h-[0.875rem] w-[0.875rem] border-2 border-primary place-self-center text-primary focus:ring-secondary focus:ring-1 cursor-pointer mr-1 my-1"
 													@change="toggleEnableHospitation"
 												/>
 												<span class="text-sm font-normal" title="Hospitation"> Hospitation</span>
 											</label>
-										</div>
+										</div> -->
 
 										<div class="flex self-end">
 											<!-- BUTTONS -->
@@ -220,6 +220,7 @@
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
+	import { ProjectMenu } from "@/models/interfaces/ProjectMenu";
 
 	@Component({
 		name: "ProjectPage",
@@ -231,7 +232,6 @@
 		showSecondStaffList = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
-		enableHospitation = store.state.enableHospitation;
 
 		get tempProject(): Project {
 			return store.state.tempProjects.find((e) => e.id === this.projectId) as Project;
@@ -239,6 +239,10 @@
 
 		get modal(): Modal {
 			return store.state.modal;
+		}
+
+		get projectMenu(): ProjectMenu {
+			return store.state.projectMenu;
 		}
 
 		get staff(): Array<Employee> {
@@ -355,8 +359,9 @@
 		getSetPointOfReserves(project: Project, staff: Array<Employee>, employee: Employee): number | string {
 			return getSetPointOfReserves(project, staff, employee);
 		}
-		toggleEnableHospitation(): void {
-			store.commit("toggleEnableHospitation");
+
+		closeProjectMenu(): void {
+			store.commit("toggleProjectMenu", { show: false, id: "" });
 		}
 
 		saveCSVFile(project: Project): void {

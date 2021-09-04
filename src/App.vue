@@ -1,6 +1,6 @@
 <template>
 	<!-- bg-gradient-to-br from-info-400 via-warning to-secondary  -->
-	<div class="w-screen min-h-screen bg-custom-gradient">
+	<div class="w-screen min-h-screen bg-custom-gradient" @click="projectMenu.show ? closeProjectMenu() : undefined">
 		<!-- HOME BUTTON -->
 		<button v-if="$route.name !== 'Home'" to="/" class="absolute top-0 left-0 bg-white shadow-lg border-b border-r rounded-br text-[1.5rem] p-2" @click="$router.push('/')" title="Startseite">
 			<PsalmIcon name="home" />
@@ -46,13 +46,19 @@
 	import { WindowManager } from "@tauri-apps/api/window";
 	import { Modal } from "./models/interfaces/Modal";
 	import { ModalType } from "./models/enums/ModalType";
+	import { ProjectMenu } from "./models/interfaces/ProjectMenu";
 
 	@Component({
 		name: "App",
 		components: { PsalmIcon, PsalmModal },
 	})
 	export default class App extends Vue {
+		windowManager = new WindowManager("main");
 		loading = true;
+
+		get projectMenu(): ProjectMenu {
+			return store.state.projectMenu;
+		}
 
 		get toast(): Toast {
 			return store.state.toast;
@@ -83,6 +89,7 @@
 				})
 				.finally(() => {
 					invoke("show_main_window");
+					// this.windowManager.maximize();
 					setTimeout(() => {
 						this.loading = false;
 					}, 1000);
@@ -105,7 +112,7 @@
 						store.commit("showModal", { type: ModalType.EXIT, content: "" });
 					}
 				} else {
-					new WindowManager("main").close();
+					this.windowManager.close();
 				}
 			});
 
@@ -141,6 +148,10 @@
 
 			store.commit("updateFileProjects", projects);
 			store.commit("updateTempProjects", projects);
+		}
+
+		closeProjectMenu(): void {
+			store.commit("toggleProjectMenu", { show: false, id: "" });
 		}
 	}
 </script>
