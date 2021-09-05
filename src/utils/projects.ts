@@ -116,7 +116,7 @@ export async function writePdfForEachEmployee(project: Project, path: string, se
 							annotation = "Hospitation";
 						}
 
-						deployedProjectDays.push({ date: formatDate(projectDay.date) || "-", time: projectDay.time || "-", participant: projectDay.participant || "-", annotation: annotation || "-" });
+						deployedProjectDays.push({ date: formatDate(projectDay.date) || "-", time: projectDay.time || "-", participant: projectDay.participant || "-", annotation: annotation });
 					}
 				});
 
@@ -146,7 +146,7 @@ export async function writePdfForEachEmployee(project: Project, path: string, se
 						await removeFile(`${path}\\${filename}`);
 					}
 
-					// WRIET NEW FILE
+					// WRITE NEW FILE
 					await writeBinaryFile({ contents: doc.output("arraybuffer"), path: `${path}\\${filename}` });
 				}
 			}
