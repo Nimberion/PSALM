@@ -1,21 +1,43 @@
 <template>
 	<div class="flex justify-center">
 		<!-- TRIGGER BUTTON -->
-		<button :ref="buttonRef" class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0" :title="buttonTitle" :disabled="disabled" @click.stop="toggleMenu">
-			<ProjectAvailabilityIcon
-				class="text-2xl z-[1]"
-				:class="{
-					'text-primary': (currentAvailability === 'TRUE' && column === 'available') || currentAvailability === 'FALSE',
-					'text-danger': currentAvailability === 'INDISPOSED',
-					'text-warning': currentAvailability === 'RESERVE',
-					'text-info-400': currentAvailability === 'HOSPITATION',
-					'text-success': currentAvailability === 'TRUE' && column !== 'available',
-					'text-gray-400 cursor-default': disabled,
-				}"
-				:name="currentAvailability"
-			/>
-			<!-- CHECKBOX BG -->
-			<span class="bg-white w-4 h-4 absolute z-0 top-1/2 bottom-1/2 my-auto" />
+		<button
+			:ref="buttonRef"
+			class="flex justify-center relative select-none focus:ring-secondary rounded-none focus:ring-1 focus:outline-none p-0"
+			:class="{ 'cursor-default': disabled }"
+			:title="buttonTitle"
+			:disabled="disabled"
+			@click.stop="toggleMenu"
+		>
+			<div class="flex justify-center relative">
+				<ProjectAvailabilityIcon
+					class="text-2xl z-[1]"
+					:class="{
+						'text-primary': (currentAvailability === 'TRUE' && column === 'available') || currentAvailability === 'FALSE',
+						'text-danger': currentAvailability === 'INDISPOSED',
+						'text-warning': currentAvailability === 'RESERVE',
+						'text-info-400': currentAvailability === 'HOSPITATION',
+						'text-success': currentAvailability === 'TRUE' && column !== 'available',
+						'text-gray-400': disabled,
+					}"
+					:name="currentAvailability"
+				/>
+				<!-- CHECKBOX BG -->
+				<span class="bg-white w-4 h-4 absolute z-0 top-1/2 bottom-1/2 my-auto" />
+			</div>
+			<!-- DD-ARROW -->
+			<svg
+				class="place-self-center -mx-0.5"
+				:class="{ 'rotate-180': projectMenu.show && projectMenu.id === buttonRef, 'text-gray-400': disabled }"
+				xmlns="http://www.w3.org/2000/svg"
+				height="auto"
+				viewBox="0 0 24 24"
+				width="1rem"
+				fill="currentColor"
+			>
+				<path d="M0 0h24v24H0V0z" fill="none" />
+				<path d="M7 10l5 5 5-5H7z" />
+			</svg>
 		</button>
 		<!-- MENU -->
 		<div :ref="`${buttonRef}-menu`" v-if="projectMenu.show && projectMenu.id === buttonRef" class="rounded-sm bg-white text-sm shadow-card p-1 z-50">
