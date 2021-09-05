@@ -4,9 +4,9 @@ import { Employee } from "@/models/interfaces/Employee";
 import { EmployeeAvailability, Project } from "@/models/interfaces/Project";
 import store from "@/store";
 import { save } from "@tauri-apps/api/dialog";
-import { writeFile } from "@tauri-apps/api/fs";
+import { removeFile, writeBinaryFile, writeFile } from "@tauri-apps/api/fs";
 import { jsPDF } from "jspdf";
-import { formatDate } from "./utils";
+import { formatDate, pathExists } from "./utils";
 
 export function findEmployeeAvailability(staffAvailability: Array<EmployeeAvailability>, employeeId: string): EmployeeAvailability | undefined {
 	return staffAvailability.find((e) => e.employeeId === employeeId);
@@ -94,63 +94,63 @@ export function getSetPointOfReserves(project: Project, staff: Array<Employee>, 
 	}
 }
 
-export function writePdfForEachEmployee(project: Project): void {
-	const staff = store.state.fileStaff;
-	// console.log(project.projectDays);
-	let i = 1;
+export async function writePdfForEachEmployee(project: Project, path: string, selectedEmployeesForPdfExport: Array<string>): Promise<void> {
+	const staff = store.state.tempStaff;
 
-	project.staff.forEach((employeeId) => {
-		const employee = staff.find((e) => e.id === employeeId);
-		const deployedProjectDays: Array<{ date: string; time: string; participant: string; annotation: string }> = [];
+	project.staff
+		.filter((e) => selectedEmployeesForPdfExport.includes(e))
+		.forEach(async (employeeId) => {
+			const employee = staff.find((e) => e.id === employeeId);
+			const deployedProjectDays: Array<{ date: string; time: string; participant: string; annotation: string }> = [];
 
-		project.projectDays.forEach((projectDay) => {
-			const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && e.deployed !== Deployed.FALSE);
+			if (employee) {
+				project.projectDays.forEach((projectDay) => {
+					const deployedProjectDay = projectDay.staffAvailability.find((e) => e.employeeId === employeeId && e.deployed !== Deployed.FALSE);
 
-			if (deployedProjectDay) {
-				let annotation = "-";
+					if (deployedProjectDay) {
+						let annotation = "-";
 
-				if (deployedProjectDay?.deployed === Deployed.RESERVE) {
-					annotation = "Reserve";
-				} else if (deployedProjectDay?.deployed === Deployed.HOSPITATION) {
-					annotation = "Hospitation";
+						if (deployedProjectDay.deployed === Deployed.RESERVE) {
+							annotation = "Reserve";
+						} else if (deployedProjectDay.deployed === Deployed.HOSPITATION) {
+							annotation = "Hospitation";
+						}
+
+						deployedProjectDays.push({ date: formatDate(projectDay.date) || "-", time: projectDay.time || "-", participant: projectDay.participant || "-", annotation: annotation || "-" });
+					}
+				});
+
+				if (deployedProjectDays.length) {
+					const doc = new jsPDF({ format: "a4", orientation: "p", unit: "mm" });
+					doc.setFontSize(20);
+					doc.text(project.title, 105, 25, { align: "center", maxWidth: 160 });
+					doc.setFontSize(14);
+					doc.text(`Name: ${employee.firstName} ${employee.lastName}`, 25, 45);
+
+					doc.table(
+						25,
+						55,
+						deployedProjectDays,
+						[
+							{ name: "date", prompt: "Datum", align: "center", padding: 0, width: 38 },
+							{ name: "time", prompt: "Uhrzeit", align: "center", padding: 0, width: 42 },
+							{ name: "participant", prompt: "Teilnehmer", align: "center", padding: 0, width: 90 },
+							{ name: "annotation", prompt: "Anmerkung", align: "center", padding: 0, width: 40 },
+						],
+						{ padding: 3, printHeaders: true, autoSize: false },
+					);
+					const filename = `${employee.lastName.replaceAll(" ", "_")}_${employee.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`;
+
+					// DELETE OLD FILE
+					if (await pathExists(path, `${path}\\${filename}`)) {
+						await removeFile(`${path}\\${filename}`);
+					}
+
+					// WRIET NEW FILE
+					await writeBinaryFile({ contents: doc.output("arraybuffer"), path: `${path}\\${filename}` });
 				}
-
-				deployedProjectDays.push({ date: formatDate(projectDay.date), time: projectDay.time, participant: projectDay.participant, annotation: annotation });
 			}
 		});
-
-		if (deployedProjectDays.length > 0 && employee?.lastName) {
-			console.log(employee.lastName);
-
-			const doc = new jsPDF({ format: "a4", orientation: "p", unit: "mm" });
-			doc.setFontSize(20);
-			doc.text(project.title, 105, 25, { align: "center", maxWidth: 160 });
-			doc.setFontSize(14);
-			doc.text(`Name: ${employee?.firstName} ${employee?.lastName}`, 25, 45);
-
-			doc.table(
-				25,
-				55,
-				deployedProjectDays,
-				[
-					{ name: "date", prompt: "Datum", align: "center", padding: 0, width: 38 },
-					{ name: "time", prompt: "Uhrzeit", align: "center", padding: 0, width: 42 },
-					{ name: "participant", prompt: "Teilnehmer", align: "center", padding: 0, width: 90 },
-					{ name: "annotation", prompt: "Anmerkung", align: "center", padding: 0, width: 40 },
-				],
-				{ padding: 3, printHeaders: true, autoSize: false },
-			);
-
-			console.log(i);
-
-			setTimeout(function () {
-				doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
-			}, 100 * i);
-
-			i++;
-			// doc.save(`${employee?.lastName.replaceAll(" ", "_")}_${employee?.firstName.replaceAll(" ", "_")}_-_${project.title.replaceAll(" ", "_")}.pdf`);
-		}
-	});
 }
 
 export async function saveCSVFile(project: Project): Promise<void> {

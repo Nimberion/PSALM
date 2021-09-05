@@ -54,7 +54,7 @@
 				"removeDir": false,
 				"removeFile": true,
 				"renameFile": false,
-				"writeBinaryFile": false,
+				"writeBinaryFile": true,
 				"writeFile": true
 			},
 			"dialog": {

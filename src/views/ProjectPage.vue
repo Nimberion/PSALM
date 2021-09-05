@@ -6,7 +6,7 @@
 			<ProjectButton icon="calendar-plus" title="Veranstaltung hinzufügen" @click="addProjectDay" />
 			<ProjectButton icon="users-cog" title="Mitarbeiterliste ein- und ausblenden" @click="projectStaffEditMode = !projectStaffEditMode" />
 			<ProjectButton icon="save" title="Speichern" @click="saveProject" />
-			<ProjectButton icon="pdf" title="PDF für jeden Mitarbeiter Exportieren" @click="writePdfForEachEmployee" />
+			<ProjectButton icon="pdf" title="PDF für jeden Mitarbeiter Exportieren" @click="showPdfDownloadModal = true" />
 		</PsalmCard>
 
 		<!-- CONTENT -->
@@ -192,6 +192,7 @@
 					</table>
 				</div>
 			</PsalmCard>
+			<PdfDownloadModal v-if="showPdfDownloadModal" :temp-project="tempProject" @cancel="showPdfDownloadModal = false" />
 		</div>
 	</div>
 </template>
@@ -204,6 +205,7 @@
 	import ProjectAvailabilityButton from "@/components/project/ProjectAvailabilityButton.vue";
 	import ProjectButton from "@/components/project/ProjectButton.vue";
 	import ProjectFilterButton from "@/components/project/ProjectFilterButton.vue";
+	import PdfDownloadModal from "@/components/project/PdfDownloadModal.vue";
 	import ProjectStaff from "@/components/project/ProjectStaff.vue";
 	import PsalmButton from "@/components/common/PsalmButton.vue";
 	import PsalmCard from "@/components/common/PsalmCard.vue";
@@ -216,7 +218,7 @@
 	import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
 	import { Available } from "@/models/enums/Available";
 	import { Deployed } from "@/models/enums/Deployed";
-	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getNumberOfReserves, getSetPointOfDeployments, getSetPointOfReserves, saveCSVFile, writePdfForEachEmployee } from "@/utils/projects";
+	import { findEmployeeAvailability, getNumberOfAvailabilities, getNumberOfDeployments, getNumberOfReserves, getSetPointOfDeployments, getSetPointOfReserves, saveCSVFile } from "@/utils/projects";
 	import { ActiveFilter, resetActiveFilter } from "@/models/interfaces/ActiveFilter";
 	import { Modal } from "@/models/interfaces/Modal";
 	import { ModalType } from "@/models/enums/ModalType";
@@ -224,7 +226,7 @@
 
 	@Component({
 		name: "ProjectPage",
-		components: { PsalmDeleteButton, PsalmModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
+		components: { PdfDownloadModal, PsalmDeleteButton, PsalmModal, ProjectAvailabilityButton, ProjectButton, ProjectFilterButton, ProjectStaff, PsalmButton, PsalmCard, PsalmIcon, PsalmInput, VueDatePicker },
 	})
 	export default class ProjectPage extends Vue {
 		projectId = this.$route.path.split("/")[2];
@@ -232,6 +234,7 @@
 		showSecondStaffList = false;
 		minDate = new Date();
 		activeFilter: ActiveFilter = resetActiveFilter();
+		showPdfDownloadModal = false;
 
 		get tempProject(): Project {
 			return store.state.tempProjects.find((e) => e.id === this.projectId) as Project;
@@ -334,10 +337,6 @@
 			writeText(currentStaff);
 
 			store.commit("showToast", "copied");
-		}
-
-		writePdfForEachEmployee(): void {
-			writePdfForEachEmployee(this.tempProject);
 		}
 
 		getNumberOfAvailabilities(project: Project, employeeId: string): number {
