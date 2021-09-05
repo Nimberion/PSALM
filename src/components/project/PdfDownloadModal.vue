@@ -41,11 +41,11 @@
 							<div class="text-center">{{ getNumberOfEntrys(employee.id) }}</div>
 						</label>
 					</li>
-					<li class="text-danger font-semibold text-sm text-center mt-4">Achtung! Bereits vorhandene Dateien werden überschrieben.</li>
-
+					<!-- NO ENTRYS -->
 					<li v-if="staff.length === 0" class="text-center border-t border-gray-400">Keine Einträge</li>
 				</ul>
 			</div>
+			<div class="text-danger font-semibold text-sm text-center mt-4">Achtung! Bereits vorhandene Dateien werden überschrieben.</div>
 			<div class="flex justify-center">
 				<PsalmButton
 					class="bg-primary"
